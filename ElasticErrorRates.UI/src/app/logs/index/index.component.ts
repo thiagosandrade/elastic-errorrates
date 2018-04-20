@@ -26,7 +26,6 @@ export class IndexComponent {
     this.apiService.getLogs().subscribe((logs : ILogResponse) => {
       this.logs = logs.records;
       this.totalRecords = logs.totalRecords
-      console.log(this.logs);
     },
     (err : any) => {
       console.log(err);

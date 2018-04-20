@@ -10,26 +10,20 @@ using Nest;
 namespace ElasticErrorRates.Persistence.Repository
 {
     public class ElasticRepository<T> : IElasticRepository<T> where T : class
-    { 
-        private static readonly ConnectionSettings ConnSettings = new ConnectionSettings(new Uri("http://pc092nel.hitachiconsulting.net:9200/"));
-        private static readonly ElasticClient ElasticClient = new ElasticClient(ConnSettings);
+    {
+        private readonly IElasticContext _elasticContext;
         private static readonly string defaultIndex = "default";
 
-        public ElasticRepository()
+        public ElasticRepository(IElasticContext elasticContext)
         {
-            if (!ElasticClient.IndexExists(defaultIndex).Exists)
-            {
-                ElasticClient.CreateIndex(defaultIndex, i => i
-                    .Mappings(m => m
-                        .Map<Shakespeare>(ms => ms.AutoMap())
-                    )
-                );
-            }
+            _elasticContext = elasticContext;
+
+            _elasticContext.SetupIndex<Shakespeare>(defaultIndex);
         }
 
         public async Task<ElasticResponse<Shakespeare>> Search()
         {
-                var result = await ElasticClient.SearchAsync<Shakespeare>(x => x.
+                var result = await _elasticContext.ElasticClient.SearchAsync<Shakespeare>(x => x.
                     Index(defaultIndex)
                     .AllTypes()
                     .From(0)
@@ -49,7 +43,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task<ElasticResponse<Shakespeare>> Find(string term, bool sort, bool match)
         {
-                var result = await ElasticClient.SearchAsync<Shakespeare>(x => x
+                var result = await _elasticContext.ElasticClient.SearchAsync<Shakespeare>(x => x
                     .Index(defaultIndex)
                     .AllTypes()
                     .Query(q => q
@@ -152,12 +146,12 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task Create(Shakespeare product)
         {
-            await ElasticClient.IndexAsync<Shakespeare>(product, x => x.Index(defaultIndex));
+            await _elasticContext.ElasticClient.IndexAsync<Shakespeare>(product, x => x.Index(defaultIndex));
         }
 
         public async Task Delete(Shakespeare product)
         {
-            await ElasticClient.DeleteAsync<Shakespeare>(product, x => x.Index(defaultIndex));
+            await _elasticContext.ElasticClient.DeleteAsync<Shakespeare>(product, x => x.Index(defaultIndex));
         }
 
         
