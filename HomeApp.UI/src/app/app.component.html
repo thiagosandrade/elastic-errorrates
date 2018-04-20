@@ -1,0 +1,34 @@
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-background">
+    &nbsp;
+    <ng-container *ngIf="!hideHeaderMenu">
+      <a class="navbar-brand" href="#">Error Rates - Elastic Search | </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="navbarCollapse" class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+              <a class="nav-link" routerLink="/products" routerLinkActive="active"><i class="fas fa-list-alt"></i> PRODUCTS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/logs" routerLinkActive="active"><i class="fas fa-list-alt"></i> LOGS</a>
+        </li>
+        </ul>
+      </div>
+    </ng-container>
+  </nav>
+</header>
+
+<section id="main" class="container-fluid">
+  <router-outlet></router-outlet>
+</section>
+
+<footer class="footer">
+  <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm">&copy; {{currentDate | date:'yyyy'}}</div>
+      </div>
+  </div>
+</footer>

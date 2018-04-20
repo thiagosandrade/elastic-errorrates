@@ -1,0 +1,49 @@
+
+<div class="row justify-content-md-center">
+    <div class="col-8">
+        <div class="card">
+            <div class="card-header" style="font-size:large">
+                Log List
+            </div>
+
+            <div class="card-body">
+                <input type="text" (input)="onInputText($event.target.value)" style="height: 40px; width: 100%;font-size: 20px;">
+                <hr>
+                <div *ngIf="isProcessing" class="dimOverlay"></div>
+                <div>
+                    <div>
+                        <table class="table-condensed tables menuoptions">
+                            <thead>
+                                <tr>
+                                    <td>Total Records - {{ totalRecords }}</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <table class="table table-striped tables">
+                        <thead>
+                            <tr>
+                                <td>Id</td>
+                                <td>Level</td>
+                                <td>Message</td>
+                                <td>Source</td>
+                                <td>Exception</td>
+                                <td>HttpUrl</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let log of logs">
+                                <td>{{ log.id }}</td>
+                                <td>{{ log.level }}</td>
+                                <td class="ellipsis">{{ log.message }}</td>
+                                <td class="ellipsis">{{ log.source }}</td>
+                                <td class="ellipsis">{{ log.exception }}</td>
+                                <td class="ellipsis">{{ log.httpUrl }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

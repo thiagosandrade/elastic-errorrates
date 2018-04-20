@@ -1,0 +1,11 @@
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\bin\Debug\netcoreapp2.0\ElasticSearch.Persistence.deps.json
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\bin\Debug\netcoreapp2.0\ElasticSearch.Persistence.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\bin\Debug\netcoreapp2.0\ElasticSearch.Persistence.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\bin\Debug\netcoreapp2.0\ElasticSearch.Core.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\bin\Debug\netcoreapp2.0\ElasticSearch.Core.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\obj\Debug\netcoreapp2.0\ElasticSearch.Persistence.csprojResolveAssemblyReference.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\obj\Debug\netcoreapp2.0\ElasticSearch.Persistence.csproj.CoreCompileInputs.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\obj\Debug\netcoreapp2.0\ElasticSearch.Persistence.AssemblyInfoInputs.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\obj\Debug\netcoreapp2.0\ElasticSearch.Persistence.AssemblyInfo.cs
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\obj\Debug\netcoreapp2.0\ElasticSearch.Persistence.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.Persistence\obj\Debug\netcoreapp2.0\ElasticSearch.Persistence.pdb
