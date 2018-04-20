@@ -1,8 +1,10 @@
 ﻿using ElasticErrorRates.Injection;
+using ElasticErrorRates.Persistence.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nest;
 
 namespace ElasticErrorRates.API
 {
@@ -10,7 +12,7 @@ namespace ElasticErrorRates.API
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+           Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }

@@ -5,42 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
+using ElasticErrorRates.Persistence.Context;
 using Nest;
 
 namespace ElasticErrorRates.Persistence.Repository
 {
     public class LogElasticRepository<T> : ILogElasticRepository<T> where T : class
     {
-        private static readonly ConnectionSettings ConnSettings = new ConnectionSettings(new Uri("http://pc092nel.hitachiconsulting.net:9200/"));
-        private static readonly ElasticClient ElasticClient = new ElasticClient(ConnSettings);
+        private readonly IElasticContext _elasticContext;
         private static readonly string defaultIndex = "errorlog";
 
-        public LogElasticRepository()
+        public LogElasticRepository(IElasticContext elasticContext)
         {
-            if (!ElasticClient.IndexExists(defaultIndex).Exists)
-            {
-                var settings = new IndexState()
-                {
-                    Settings = new IndexSettings()
-                    {
-                        NumberOfReplicas = 1,
-                        NumberOfShards = 5,
-                    }
-                };
+            _elasticContext = elasticContext;
 
-                ElasticClient.CreateIndex(defaultIndex, i => i
-                    .Mappings(m => m
-                        .Map<Log>(ms => ms.AutoMap())
-                    ).InitializeUsing(settings)
-                );
-            }
+            _elasticContext.SetupIndex<Log>(defaultIndex);
 
-            ConnSettings.DefaultIndex(defaultIndex);
         }
 
         public async Task<ElasticResponse<Log>> Search()
         {
-                var result = await ElasticClient.SearchAsync<Log>(x => x.
+                var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
                     Index(defaultIndex)
                     .AllTypes()
                     .From(0)
@@ -60,7 +45,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task<ElasticResponse<Log>> Find(string term, bool sort, bool match)
         {
-                var result = await ElasticClient.SearchAsync<Log>(x => x
+                var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x
                     .Index(defaultIndex)
                     .AllTypes()
                     .Query(q => q
@@ -163,20 +148,17 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task Create(T log)
         {
-            await ElasticClient.IndexAsync<T>(log, x => x.Index(defaultIndex));
+            await _elasticContext.ElasticClient.IndexAsync<T>(log, x => x.Index(defaultIndex));
         }
 
         public async Task Delete(T log)
         {
-            await ElasticClient.DeleteAsync<T>(log, x => x.Index(defaultIndex));
+            await _elasticContext.ElasticClient.DeleteAsync<T>(log, x => x.Index(defaultIndex));
         }
 
         public async Task Bulk(IEnumerable<Log> records)
         {
-            //Index name is null for the given type and no default index is set.
-            //Map an index name using ConnectionSettings.DefaultMappingFor<TDocument>() or set a default index using ConnectionSettings.DefaultIndex().
-
-            await ElasticClient.BulkAsync(x => x.IndexMany(records));
+            await _elasticContext.ElasticClient.BulkAsync(x => x.IndexMany(records));
         }
     }
 }

@@ -15,3 +15,16 @@ C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp
 C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.AssemblyInfo.cs
 C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.dll
 C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.deps.json
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.csprojResolveAssemblyReference.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.csproj.CoreCompileInputs.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.AssemblyInfoInputs.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.AssemblyInfo.cs
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\Microsoft.Extensions.Configuration.Abstractions.xml

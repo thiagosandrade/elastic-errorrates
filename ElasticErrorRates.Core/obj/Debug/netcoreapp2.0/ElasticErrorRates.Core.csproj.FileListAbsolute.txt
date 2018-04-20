@@ -14,3 +14,11 @@ C:\dev\git\elastic-errorrates\ElasticErrorRates.Core\obj\Debug\netcoreapp2.0\Ela
 C:\dev\git\elastic-errorrates\ElasticErrorRates.Core\obj\Debug\netcoreapp2.0\ElasticErrorRates.Core.AssemblyInfo.cs
 C:\dev\git\elastic-errorrates\ElasticErrorRates.Core\obj\Debug\netcoreapp2.0\ElasticErrorRates.Core.dll
 C:\dev\git\elastic-errorrates\ElasticErrorRates.Core\obj\Debug\netcoreapp2.0\ElasticErrorRates.Core.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Core\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.deps.json
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Core\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Core\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Core\obj\Debug\netcoreapp2.0\ElasticErrorRates.Core.csproj.CoreCompileInputs.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Core\obj\Debug\netcoreapp2.0\ElasticErrorRates.Core.AssemblyInfoInputs.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Core\obj\Debug\netcoreapp2.0\ElasticErrorRates.Core.AssemblyInfo.cs
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Core\obj\Debug\netcoreapp2.0\ElasticErrorRates.Core.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\ElasticErrorRates.Core\obj\Debug\netcoreapp2.0\ElasticErrorRates.Core.pdb
