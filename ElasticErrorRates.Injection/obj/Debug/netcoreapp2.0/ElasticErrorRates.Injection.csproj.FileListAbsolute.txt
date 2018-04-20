@@ -1,0 +1,15 @@
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\bin\Debug\netcoreapp2.0\ElasticErrorRates.Injection.deps.json
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\bin\Debug\netcoreapp2.0\ElasticErrorRates.Injection.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\bin\Debug\netcoreapp2.0\ElasticErrorRates.Injection.pdb
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\bin\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\bin\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.pdb
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\bin\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.pdb
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\bin\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.pdb
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\obj\Debug\netcoreapp2.0\ElasticErrorRates.Injection.csprojResolveAssemblyReference.cache
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\obj\Debug\netcoreapp2.0\ElasticErrorRates.Injection.csproj.CoreCompileInputs.cache
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\obj\Debug\netcoreapp2.0\ElasticErrorRates.Injection.AssemblyInfoInputs.cache
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\obj\Debug\netcoreapp2.0\ElasticErrorRates.Injection.AssemblyInfo.cs
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\obj\Debug\netcoreapp2.0\ElasticErrorRates.Injection.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Injection\obj\Debug\netcoreapp2.0\ElasticErrorRates.Injection.pdb

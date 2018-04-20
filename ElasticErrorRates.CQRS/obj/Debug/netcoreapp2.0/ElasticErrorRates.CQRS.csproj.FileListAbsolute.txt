@@ -1,0 +1,11 @@
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\bin\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.deps.json
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\bin\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\bin\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.pdb
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.pdb
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\obj\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.csprojResolveAssemblyReference.cache
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\obj\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.csproj.CoreCompileInputs.cache
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\obj\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.AssemblyInfoInputs.cache
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\obj\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.AssemblyInfo.cs
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\obj\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.CQRS\obj\Debug\netcoreapp2.0\ElasticErrorRates.CQRS.pdb

@@ -1,0 +1,22 @@
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.CQRS.deps.json
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.CQRS.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.CQRS.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.Core.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.Core.pdb
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.csprojResolveAssemblyReference.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.csproj.CoreCompileInputs.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.AssemblyInfoInputs.cache
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.AssemblyInfo.cs
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.dll
+C:\Users\133389\Documents\Visual Studio 2017\Projects\HomeApp\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.pdb
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.CQRS.deps.json
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.CQRS.dll
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.CQRS.pdb
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.Core.dll
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\bin\Debug\netcoreapp2.0\ElasticSearch.Core.pdb
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.csprojResolveAssemblyReference.cache
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.csproj.CoreCompileInputs.cache
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.AssemblyInfoInputs.cache
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.AssemblyInfo.cs
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.dll
+C:\dev\git\elastic-errorrates\HomeApp.CQRS\obj\Debug\netcoreapp2.0\ElasticSearch.CQRS.pdb

@@ -1,0 +1,17 @@
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.deps.json
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.pdb
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\ElasticErrorRates.Core.pdb
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.xml
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\Microsoft.EntityFrameworkCore.Relational.xml
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\bin\Debug\netcoreapp2.0\Microsoft.EntityFrameworkCore.SqlServer.xml
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.csprojResolveAssemblyReference.cache
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.csproj.CoreCompileInputs.cache
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.AssemblyInfoInputs.cache
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.AssemblyInfo.cs
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.dll
+C:\dev\git\elastic-errorrates\ElasticErrorRates.Persistence\obj\Debug\netcoreapp2.0\ElasticErrorRates.Persistence.pdb
