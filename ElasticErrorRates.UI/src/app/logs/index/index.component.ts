@@ -15,6 +15,8 @@ export class IndexComponent {
   public term: string;
   public sort: string = "false";
   public match: string = "false";
+  public displayModal = false;
+  public selectedLog;
 
   constructor(private apiService: ApiService) { 
     this.fillGrid();
@@ -48,6 +50,18 @@ export class IndexComponent {
     () => {
       this.isProcessing = false;
     });
+  }
+
+  onSelectLog(logId : string){
+    this.displayModal = true;
+    this.selectedLog = logId;
+  }
+
+  onImport(){
+    this.apiService.importLogs().subscribe(
+      result => this.fillGrid(),
+      error => console.log(error)
+    );
   }
   
 }

@@ -1,0 +1,39 @@
+<div *ngIf="displayModal" class="backdrop" style="display: block" ></div>
+<div *ngIf="displayModal" class="modal" tabindex="-1" role="dialog" style="display:block">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Log Details
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div *ngIf="log != undefined">
+                            <div class="form-group">
+                                <label for="logIdLabel">Log Id</label>
+                                <input type="text" class="form-control" id="logIdLabel" [(ngModel)]="log.id">
+                            </div>
+                            <div class="form-group">
+                                <label for="logLevelLabel">Level</label>
+                                <input type="text" class="form-control" id="logLevelLabel" [(ngModel)]="log.level">
+                            </div>
+                            <div class="form-group">
+                                <label for="logMessageLabel">Message</label>
+                                <textarea type="text" class="form-control" id="logMessageLabel" [(ngModel)]="log.message" wrap="soft" rows="10"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="logSourceLabel">Source</label>
+                                <input type="text" class="form-control" id="logSourceLabel" [(ngModel)]="log.source">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="onCloseModal()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

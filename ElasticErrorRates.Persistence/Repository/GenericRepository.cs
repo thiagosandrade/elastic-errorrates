@@ -46,7 +46,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task<List<T>> GetAllAsync()
         {
-            return await Context.Set<T>().Take(1000).ToListAsync();
+            return await Context.Set<T>().Take(1100).ToListAsync();
         }
 
         public async Task<T> SaveAsync(T entity)

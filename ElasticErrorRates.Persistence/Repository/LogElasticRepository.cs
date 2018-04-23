@@ -21,6 +21,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             _elasticContext.SetupIndex<Log>(defaultIndex);
 
+            _elasticContext.ElasticClient.ClearCache(defaultIndex);
         }
 
         public async Task<ElasticResponse<Log>> Search()
@@ -29,7 +30,7 @@ namespace ElasticErrorRates.Persistence.Repository
                     Index(defaultIndex)
                     .AllTypes()
                     .From(0)
-                    .Size(2000)
+                    .Size(10)
                 );
 
                 var response = MapElasticResults(result);
@@ -158,7 +159,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task Bulk(IEnumerable<Log> records)
         {
-            await _elasticContext.ElasticClient.BulkAsync(x => x.IndexMany(records));
+            await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(records));
         }
     }
 }

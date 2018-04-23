@@ -4,7 +4,7 @@ import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
-import { map } from 'rxjs/operators';
+import 'rxjs/add/operator/catch';
 
 import { IProduct } from './model/product';
 import { IElasticResponse } from './response/api-elasticresponse';
@@ -20,6 +20,14 @@ export class ApiService {
 
     public findProducts(term : string, sort : string, match : string ): Observable<IElasticResponse> {
         return this.http.get<IElasticResponse>(`${environment.apiUrl}/elastic/find/${term}/${sort}/${match}`);
+    }
+
+    public importLogs(): Observable<any>{
+        const headers = new Headers({ 'Content-Type': 'application/json' });
+        const options = new RequestOptions({ headers: headers });
+
+        return this.http.post(`${environment.apiUrl}/log/import`, options)
+            .catch((error: any) => { return Observable.throw(error) });
     }
 
     public getLogs(): Observable<ILogResponse> {

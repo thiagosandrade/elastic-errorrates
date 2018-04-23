@@ -27,7 +27,7 @@ namespace ElasticErrorRates.Persistence.Repository
                     Index(defaultIndex)
                     .AllTypes()
                     .From(0)
-                    .Size(2000)
+                    .Size(10)
                 );
 
                 var response = MapElasticResults(result);

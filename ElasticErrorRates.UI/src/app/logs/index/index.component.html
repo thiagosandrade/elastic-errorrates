@@ -7,6 +7,10 @@
             </div>
 
             <div class="card-body">
+                <a type="button" class="btn btn-link" (click)="onImport(log)" >
+                        Import data to Elastic
+                </a>
+                <hr>
                 <input type="text" (input)="onInputText($event.target.value)" style="height: 40px; width: 100%;font-size: 20px;">
                 <hr>
                 <div *ngIf="isProcessing" class="dimOverlay"></div>
@@ -33,7 +37,11 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let log of logs">
-                                <td>{{ log.id }}</td>
+                                <td>
+                                    <a type="button" class="btn btn-link" (click)="onSelectLog(log)" >
+                                        {{ log.id }}
+                                    </a>
+                                </td>
                                 <td>{{ log.level }}</td>
                                 <td class="ellipsis">{{ log.message }}</td>
                                 <td class="ellipsis">{{ log.source }}</td>
@@ -47,3 +55,4 @@
         </div>
     </div>
 </div>
+<info-modal [displayModal]="displayModal" [log]="selectedLog"></info-modal>
