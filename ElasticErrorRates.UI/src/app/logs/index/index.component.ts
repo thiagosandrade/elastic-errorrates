@@ -11,14 +11,16 @@ import { ILogSummary } from '../../_shared/api/model/logsummary';
   styleUrls: ['./index.component.css']
 })
 export class IndexComponent {
-  public logs: ILogSummary[];
-  public totalRecords: number;
+  public logs: ILogSummary[] = [];
+  public totalRecords = 0;
   public isProcessing: boolean; 
   public term: string;
   public sort: string = "false";
   public match: string = "false";
   public displayModal = false;
   public selectedLog;
+  public currentPage = 0;
+  public pageSize = 25;
 
   constructor(private apiService: ApiService) { 
     this.fillGrid();
@@ -27,9 +29,9 @@ export class IndexComponent {
   fillGrid() {
     this.isProcessing = true;
     
-    this.apiService.getLogsAggregate().subscribe((logs : ILogSummaryResponse) => {
-      this.logs = logs.records;
-      this.totalRecords = logs.totalRecords
+    this.apiService.getLogsAggregate(this.currentPage, this.pageSize).subscribe((logs: ILogSummaryResponse) => {
+      this.logs = this.logs.concat(logs.records);
+      this.totalRecords += logs.totalRecords;
     },
     (err : any) => {
       console.log(err);
@@ -65,5 +67,9 @@ export class IndexComponent {
       error => console.log(error)
     );
   }
-  
+
+  fetchMoreData() {
+    this.currentPage++;
+    this.fillGrid();
+  }
 }

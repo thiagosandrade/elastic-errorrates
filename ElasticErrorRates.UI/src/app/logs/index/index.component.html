@@ -13,7 +13,6 @@
                 <hr>
                 <input type="text" (input)="onInputText($event.target.value)" style="height: 40px; width: 100%;font-size: 20px;">
                 <hr>
-                <div *ngIf="isProcessing" class="dimOverlay"></div>
                 <div>
                     <div>
                         <table class="table-condensed tables menuoptions">
@@ -24,7 +23,11 @@
                             </thead>
                         </table>
                     </div>
-                    <table class="table table-striped tables">
+                    <table class="table table-striped tables"
+                    infiniteScroll  
+                    [infiniteScrollDistance]="1"  
+                    [infiniteScrollThrottle]="50"  
+                    (scrolled)="fetchMoreData()"> 
                         <thead>
                             <tr>
                                 <td>Hits</td>
@@ -38,6 +41,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <img src="../../../assets/Rolling-1s-200px.gif" *ngIf="isProcessing" class="loadingSpinner"/> 
                 </div>
             </div>
         </div>

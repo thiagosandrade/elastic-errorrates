@@ -31,14 +31,14 @@ export class ApiService {
             .catch((error: any) => { return Observable.throw(error) });
     }
 
-    public getLogsAggregate(): Observable<ILogSummaryResponse> {
-        return this.http.get<ILogSummaryResponse>(`${environment.apiUrl}/log/searchaggregate`);
+    public getLogsAggregate(page: number, pageSize: number): Observable<ILogSummaryResponse> {
+        return this.http.get<ILogSummaryResponse>(`${environment.apiUrl}/log/searchaggregate/${page}/${pageSize}`);
     }
 
-    public getLogs(httpUrl : string): Observable<ILogResponse> {
-        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/search?httpUrl=${httpUrl}`);
+    public getLogs(page: number, pageSize: number, httpUrl: string): Observable<ILogResponse> {
+        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/search/${page}/${pageSize}?httpUrl=${httpUrl}`);
     }
-    
+
     public findLogs(term : string, sort : string, match : string ): Observable<ILogResponse> {
         return this.http.get<ILogResponse>(`${environment.apiUrl}/log/find/${term}/${sort}/${match}`);
     }

@@ -26,11 +26,13 @@ namespace ElasticErrorRates.Persistence.Repository
             _elasticContext.ElasticClient.ClearCache(defaultIndex);
         }
 
-        public async Task<ElasticResponse<LogSummary>> SearchAggregate()
+        public async Task<ElasticResponse<LogSummary>> SearchAggregate(int page, int pageSize)
         {
             var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
                 Index(defaultIndex)
                 .AllTypes()
+                .From(page * pageSize)
+                .Size(pageSize)
                 .Aggregations(ag => ag
                     .Terms("group_by_httpUrl", t => t.Field(f => f.HttpUrl.First().Suffix("keyword"))
                     )
@@ -48,13 +50,13 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
-        public async Task<ElasticResponse<Log>> Search(string httpUrl)
+        public async Task<ElasticResponse<Log>> Search(int page, int pageSize, string httpUrl)
         {
                 var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
                     Index(defaultIndex)
                     .AllTypes()
-                    .From(0)
-                    .Size(10)
+                    .From(page * pageSize)
+                    .Size(pageSize)
                     .Query(q => q
                         .Bool(bl =>
                             bl.Filter(

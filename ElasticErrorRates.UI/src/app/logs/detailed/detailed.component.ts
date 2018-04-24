@@ -10,8 +10,8 @@ import { ActivatedRoute, Params } from '@angular/router';
   styleUrls: ['./detailed.component.css']
 })
 export class DetailedComponent implements OnInit {
-  public logs: ILog[];
-  public totalRecords: number;
+  public logs: ILog[] = [];
+  public totalRecords = 0;
   public isProcessing: boolean; 
   public term: string;
   public sort: string = "false";
@@ -19,6 +19,8 @@ export class DetailedComponent implements OnInit {
   public displayModal = false;
   public selectedLog;
   public httpUrl : string;
+  public currentPage = 0;
+  public pageSize = 50;
 
   constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {   }
 
@@ -32,10 +34,10 @@ export class DetailedComponent implements OnInit {
 
   fillGrid() {
     this.isProcessing = true;
-    
-    this.apiService.getLogs(this.httpUrl).subscribe((logs : ILogResponse) => {
-      this.logs = logs.records;
-      this.totalRecords = logs.totalRecords
+
+    this.apiService.getLogs(this.currentPage, this.pageSize, this.httpUrl).subscribe((logs: ILogResponse) => {
+      this.logs = this.logs.concat(logs.records);
+      this.totalRecords += logs.totalRecords;
     },
     (err : any) => {
       console.log(err);
@@ -47,7 +49,7 @@ export class DetailedComponent implements OnInit {
   }
 
   onInputText(term : string){
-    this.term = (term != null && term != undefined && term != "") ? term : "null"
+    this.term = (term != null && term != undefined && term != "") ? term : 'null'
     this.apiService.findLogs(this.term, this.sort, this.match).subscribe((logs : ILogResponse) => {
        this.logs = logs.records;
        this.totalRecords = logs.totalRecords
@@ -71,5 +73,10 @@ export class DetailedComponent implements OnInit {
       error => console.log(error)
     );
   }
-  
+
+  fetchMoreData() {
+    this.currentPage++;
+    this.fillGrid();
+  }
+
 }

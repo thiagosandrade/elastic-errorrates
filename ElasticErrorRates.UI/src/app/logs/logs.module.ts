@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { InfiniteScrollModule} from 'ngx-infinite-scroll';  
 
 import { LogsRoutingModule } from './logs-routing.module';
 import { IndexComponent } from './index/index.component';
@@ -11,7 +12,8 @@ import { DetailedComponent } from './detailed/detailed.component';
   imports: [
     SharedModule,
     CommonModule,
-    LogsRoutingModule
+    LogsRoutingModule,
+    InfiniteScrollModule
   ],
   declarations: [
     IndexComponent,
