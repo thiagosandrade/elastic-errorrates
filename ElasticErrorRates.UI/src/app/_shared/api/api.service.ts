@@ -9,6 +9,7 @@ import 'rxjs/add/operator/catch';
 import { IProduct } from './model/product';
 import { IElasticResponse } from './response/api-elasticresponse';
 import { ILogResponse } from './response/api-logresponse';
+import { ILogSummaryResponse } from './response/api-logsummaryresponse';
 
 @Injectable()
 export class ApiService {
@@ -30,12 +31,15 @@ export class ApiService {
             .catch((error: any) => { return Observable.throw(error) });
     }
 
-    public getLogs(): Observable<ILogResponse> {
-        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/search`);
+    public getLogsAggregate(): Observable<ILogSummaryResponse> {
+        return this.http.get<ILogSummaryResponse>(`${environment.apiUrl}/log/searchaggregate`);
     }
 
+    public getLogs(httpUrl : string): Observable<ILogResponse> {
+        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/search/${httpUrl}`);
+    }
+    
     public findLogs(term : string, sort : string, match : string ): Observable<ILogResponse> {
         return this.http.get<ILogResponse>(`${environment.apiUrl}/log/find/${term}/${sort}/${match}`);
-      }
-
+    }
 }

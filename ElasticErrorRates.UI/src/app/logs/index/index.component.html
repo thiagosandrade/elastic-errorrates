@@ -27,26 +27,14 @@
                     <table class="table table-striped tables">
                         <thead>
                             <tr>
-                                <td>Id</td>
-                                <td>Level</td>
-                                <td>Message</td>
-                                <td>Source</td>
-                                <td>Exception</td>
+                                <td>Hits</td>
                                 <td>HttpUrl</td>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let log of logs">
-                                <td>
-                                    <a type="button" class="btn btn-link" (click)="onSelectLog(log)" >
-                                        {{ log.id }}
-                                    </a>
-                                </td>
-                                <td>{{ log.level }}</td>
-                                <td class="ellipsis">{{ log.message }}</td>
-                                <td class="ellipsis">{{ log.source }}</td>
-                                <td class="ellipsis">{{ log.exception }}</td>
-                                <td class="ellipsis">{{ log.httpUrl }}</td>
+                                <td class="ellipsis">{{ log.httpUrlCount }}</td>
+                                <td class="ellipsis"><a [routerLink]="['/logdetailed']" [queryParams]="{ httpUrl : log.httpUrl }">{{ log.httpUrl }}</a></td>
                             </tr>
                         </tbody>
                     </table>

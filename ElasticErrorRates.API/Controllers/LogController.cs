@@ -51,14 +51,31 @@ namespace ElasticErrorRates.API.Controllers
             }
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> Search()
+        [HttpGet("searchaggregate")]
+        public async Task<IActionResult> SearchAggregate()
         {
             try
             {
                 var elasticQuery = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
 
-                var result = await _queryDispatcher.DispatchAsync(elasticQuery.Search);
+                var result = await _queryDispatcher.DispatchAsync(elasticQuery.SearchAggregate);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [HttpGet("search/{httpUrl?}")]
+        public async Task<IActionResult> Search(string httpUrl)
+        {
+            try
+            {
+                var elasticQuery = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
+
+                var result = await _queryDispatcher.DispatchAsync(elasticQuery.Search, httpUrl);
 
                 return Ok(result);
             }

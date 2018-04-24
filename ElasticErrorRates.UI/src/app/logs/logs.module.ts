@@ -5,6 +5,7 @@ import { LogsRoutingModule } from './logs-routing.module';
 import { IndexComponent } from './index/index.component';
 import { SharedModule } from '../_shared/shared.module';
 import { ApiService } from '../_shared/api/api.service';
+import { DetailedComponent } from './detailed/detailed.component';
 
 @NgModule({
   imports: [
@@ -13,8 +14,9 @@ import { ApiService } from '../_shared/api/api.service';
     LogsRoutingModule
   ],
   declarations: [
-    IndexComponent
-  ],
+    IndexComponent,
+    DetailedComponent
+],
   providers: [
     ApiService
   ]

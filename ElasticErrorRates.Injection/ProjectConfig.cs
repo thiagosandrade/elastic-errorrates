@@ -6,6 +6,7 @@ using ElasticErrorRates.CQRS.Command;
 using ElasticErrorRates.CQRS.Query;
 using ElasticErrorRates.Persistence.Context;
 using ElasticErrorRates.Persistence.Manager;
+using ElasticErrorRates.Persistence.Mappers;
 using ElasticErrorRates.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +40,7 @@ namespace ElasticErrorRates.Injection
             _services.AddScoped(typeof(ILogElasticRepository<>), typeof(LogElasticRepository<>));
             _services.AddScoped(typeof(IElasticRepository<>), typeof(ElasticRepository<>));
             _services.AddScoped(typeof(IElasticContext), typeof(ElasticContext));
+            _services.AddScoped(typeof(ILogElasticMappers), typeof(LogElasticMappers));
         }
 
         public void Autentication()

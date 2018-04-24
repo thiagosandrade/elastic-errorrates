@@ -2,16 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../_shared/api/api.service';
 import { ILog } from '../../_shared/api/model/log';
 import { ILogResponse } from '../../_shared/api/response/api-logresponse';
-import { ILogSummaryResponse } from '../../_shared/api/response/api-logsummaryresponse';
-import { ILogSummary } from '../../_shared/api/model/logsummary';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
-  selector: 'logs-index',
-  templateUrl: './index.component.html',
-  styleUrls: ['./index.component.css']
+  selector: 'logs-detailed',
+  templateUrl: './detailed.component.html',
+  styleUrls: ['./detailed.component.css']
 })
-export class IndexComponent {
-  public logs: ILogSummary[];
+export class DetailedComponent implements OnInit {
+  public logs: ILog[];
   public totalRecords: number;
   public isProcessing: boolean; 
   public term: string;
@@ -19,18 +18,25 @@ export class IndexComponent {
   public match: string = "false";
   public displayModal = false;
   public selectedLog;
+  public httpUrl : string;
 
-  constructor(private apiService: ApiService) { 
+  constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {   }
+
+  ngOnInit(){
+    this.activatedRoute.params.subscribe((params: Params) => {
+      this.httpUrl = params['httpUrl'];
+      console.log(this.httpUrl)
+    });
+
     this.fillGrid();
   }
 
   fillGrid() {
     this.isProcessing = true;
     
-    this.apiService.getLogsAggregate().subscribe((logs : ILogSummaryResponse) => {
+    this.apiService.getLogs(this.httpUrl).subscribe((logs : ILogResponse) => {
       this.logs = logs.records;
       this.totalRecords = logs.totalRecords
-      console.log(logs);
     },
     (err : any) => {
       console.log(err);
@@ -44,8 +50,8 @@ export class IndexComponent {
   onInputText(term : string){
     this.term = (term != null && term != undefined && term != "") ? term : "null"
     this.apiService.findLogs(this.term, this.sort, this.match).subscribe((logs : ILogResponse) => {
-      //  this.logs = logs.records;
-      //  this.totalRecords = logs.totalRecords
+       this.logs = logs.records;
+       this.totalRecords = logs.totalRecords
     },
     (err : any) => {
       console.log(err);

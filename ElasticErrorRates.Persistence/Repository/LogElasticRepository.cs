@@ -13,27 +13,73 @@ namespace ElasticErrorRates.Persistence.Repository
     public class LogElasticRepository<T> : ILogElasticRepository<T> where T : class
     {
         private readonly IElasticContext _elasticContext;
+        private readonly ILogElasticMappers _logElasticMappers;
         private static readonly string defaultIndex = "errorlog";
 
-        public LogElasticRepository(IElasticContext elasticContext)
+        public LogElasticRepository(IElasticContext elasticContext, ILogElasticMappers logElasticMappers)
         {
             _elasticContext = elasticContext;
+            _logElasticMappers = logElasticMappers;
 
             _elasticContext.SetupIndex<Log>(defaultIndex);
 
             _elasticContext.ElasticClient.ClearCache(defaultIndex);
         }
 
-        public async Task<ElasticResponse<Log>> Search()
+        public async Task<ElasticResponse<LogSummary>> SearchAggregate()
+        {
+            var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
+                Index(defaultIndex)
+                .AllTypes()
+                .Aggregations(ag => ag
+                    .Terms("group_by_httpUrl", t => t.Field(f => f.HttpUrl.First().Suffix("keyword"))
+                    )
+                )
+            );
+
+            var response = _logElasticMappers.MapElasticAggregateResults(result);
+
+            if (!result.IsValid)
+            {
+                throw new InvalidOperationException(result.DebugInformation);
+            }
+
+            return response;
+
+        }
+
+        public async Task<ElasticResponse<Log>> Search(string httpUrl)
         {
                 var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
                     Index(defaultIndex)
                     .AllTypes()
                     .From(0)
                     .Size(10)
+                    .Query(q => q
+                        .Bool(bl =>
+                            bl.Filter(
+                                fq =>
+                                {
+                                    QueryContainer query = null;
+
+                                    if (httpUrl != "null")
+                                    {
+                                        query &= fq.QueryString(qs => qs
+                                            .Fields(p => p
+                                                .Field(f => f.HttpUrl)
+                                            )
+                                            .Query(httpUrl)
+                                        );
+                                    }
+
+                                    return query;
+                                }
+                            )
+                        )
+                    )
                 );
 
-                var response = MapElasticResults(result);
+                var response = _logElasticMappers.MapElasticResults(result);
 
                 if (!result.IsValid)
                 {
@@ -107,7 +153,7 @@ namespace ElasticErrorRates.Persistence.Repository
                         )
                     );
 
-                var response = MapElasticResults(result);
+                var response = _logElasticMappers.MapElasticResults(result);
 
                 if (!result.IsValid)
                 {
@@ -116,36 +162,6 @@ namespace ElasticErrorRates.Persistence.Repository
 
                 return response;
         }
-
-        private ElasticResponse<Log> MapElasticResults(ISearchResponse<Log> result)
-        {
-            var records = result.Hits.Select(x =>
-            {
-                var log = new Log
-                {
-                    Id = x.Source.Id,
-                    Level = x.Source.Level,
-                    Message = x.Source.Message,
-                    Source = x.Source.Source,
-                    Exception = x.Source.Exception,
-                    HttpUrl = x.Source.HttpUrl,
-                    Highlight = x.Highlights.Values.FirstOrDefault()?.Highlights.FirstOrDefault()?.ToString(),
-                    DateTimeLogged = x.Source.DateTimeLogged
-                };
-
-                return log;
-
-            }).ToList();
-
-            var totalRecords = result.Hits.Count;
-
-            return new ElasticResponse<Log>
-            {
-                TotalRecords = totalRecords,
-                Records = records
-            };
-        }
-
 
         public async Task Create(T log)
         {

@@ -9,3 +9,5 @@ export class LogResponse implements ILogResponse {
     totalRecords: number;
     records: ILog[]
 }
+
+

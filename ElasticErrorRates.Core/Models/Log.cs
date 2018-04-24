@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using Nest;
 
 namespace ElasticErrorRates.Core.Models
 {
@@ -13,6 +14,7 @@ namespace ElasticErrorRates.Core.Models
         public string Message { get; set; }
         public string Source { get; set; }
         public string Exception { get; set; }
+        [Text(Fielddata = true)]
         public string HttpUrl { get; set; }
         public DateTime DateTimeLogged { get; set; }
 
