@@ -16,9 +16,8 @@ namespace ElasticErrorRates.Persistence.Context
 
         public ElasticContext(IConfiguration configuration)
         {
-            ElasticClient = new ElasticClient();
             ConnSettings = new ConnectionSettings(new Uri(configuration.GetConnectionString("ElasticConnection")));
-
+            ElasticClient = new ElasticClient(ConnSettings);
         }
 
         public void SetupIndex<T>(string defaultIndex) where T : class
