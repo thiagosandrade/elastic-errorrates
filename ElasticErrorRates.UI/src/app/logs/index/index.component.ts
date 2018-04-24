@@ -30,7 +30,6 @@ export class IndexComponent {
     this.apiService.getLogsAggregate().subscribe((logs : ILogSummaryResponse) => {
       this.logs = logs.records;
       this.totalRecords = logs.totalRecords
-      console.log(logs);
     },
     (err : any) => {
       console.log(err);

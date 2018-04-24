@@ -23,9 +23,8 @@ export class DetailedComponent implements OnInit {
   constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {   }
 
   ngOnInit(){
-    this.activatedRoute.params.subscribe((params: Params) => {
+    this.activatedRoute.queryParams.subscribe((params: Params) => {
       this.httpUrl = params['httpUrl'];
-      console.log(this.httpUrl)
     });
 
     this.fillGrid();

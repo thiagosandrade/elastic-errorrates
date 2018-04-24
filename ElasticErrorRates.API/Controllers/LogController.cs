@@ -68,7 +68,7 @@ namespace ElasticErrorRates.API.Controllers
             }
         }
 
-        [HttpGet("search/{httpUrl?}")]
+        [HttpGet("search")]
         public async Task<IActionResult> Search(string httpUrl)
         {
             try

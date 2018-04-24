@@ -36,7 +36,7 @@ export class ApiService {
     }
 
     public getLogs(httpUrl : string): Observable<ILogResponse> {
-        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/search/${httpUrl}`);
+        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/search?httpUrl=${httpUrl}`);
     }
     
     public findLogs(term : string, sort : string, match : string ): Observable<ILogResponse> {
