@@ -20,7 +20,9 @@ namespace ElasticErrorRates.Persistence.Mappers
                         var record = new LogSummary
                         {
                             HttpUrlCount = x.DocCount.Value,
-                            HttpUrl = x.Key
+                            HttpUrl = x.Key,
+                            FirstOccurrence = string.Format("{0:yyyy/MM/dd hh:mm:ss}", Convert.ToDateTime(x.Min("first_occurrence").ValueAsString)),
+                            LastOccurrence = string.Format("{0:yyyy/MM/dd hh:mm:ss}", Convert.ToDateTime(x.Max("last_occurrence").ValueAsString))
                         };
 
                         return record;
@@ -52,7 +54,7 @@ namespace ElasticErrorRates.Persistence.Mappers
                     Exception = x.Source.Exception,
                     HttpUrl = x.Source.HttpUrl,
                     Highlight = x.Highlights.Values.FirstOrDefault()?.Highlights.FirstOrDefault()?.ToString(),
-                    DateTimeLogged = x.Source.DateTimeLogged
+                    DateTimeLogged = string.Format("{0:yyyy/MM/dd hh:mm:ss}", Convert.ToDateTime(x.Source.DateTimeLogged))
                 };
 
                 return log;

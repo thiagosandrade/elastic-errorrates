@@ -31,13 +31,17 @@
                         <thead>
                             <tr>
                                 <td>Hits</td>
-                                <td>HttpUrl</td>
+                                <td>Http Url</td>
+                                <td>First Occurrence</td>
+                                <td>Last Occurrence</td>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let log of logs">
-                                <td class="ellipsis">{{ log.httpUrlCount }}</td>
+                                <td>{{ log.httpUrlCount }}</td>
                                 <td class="ellipsis"><a [routerLink]="['/logdetailed']" [queryParams]="{ httpUrl : log.httpUrl }">{{ log.httpUrl }}</a></td>
+                                <td>{{ log.firstOccurrence }}</td>
+                                <td>{{ log.lastOccurrence }}</td>
                             </tr>
                         </tbody>
                     </table>

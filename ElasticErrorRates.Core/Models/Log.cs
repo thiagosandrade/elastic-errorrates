@@ -16,7 +16,7 @@ namespace ElasticErrorRates.Core.Models
         public string Exception { get; set; }
         [Text(Fielddata = true)]
         public string HttpUrl { get; set; }
-        public DateTime DateTimeLogged { get; set; }
+        public string DateTimeLogged { get; set; }
 
         [NotMapped]
         public string Highlight { get; set; }

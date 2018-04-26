@@ -31,12 +31,20 @@ namespace ElasticErrorRates.Persistence.Repository
             var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
                 Index(defaultIndex)
                 .AllTypes()
+                .Aggregations(ag => ag
+                    .Terms("group_by_httpUrl", 
+                        t => t.Field(f => f.HttpUrl.First().Suffix("keyword"))
+                        .Aggregations( aa => aa
+                            .Min("first_occurrence",
+                                m => m.Field(f => f.DateTimeLogged))
+                            .Max("last_occurrence",
+                                mm => mm.Field(ff => ff.DateTimeLogged))
+                        )
+                    )
+                    
+                )
                 .From(page * pageSize)
                 .Size(pageSize)
-                .Aggregations(ag => ag
-                    .Terms("group_by_httpUrl", t => t.Field(f => f.HttpUrl.First().Suffix("keyword"))
-                    )
-                )
             );
 
             var response = _logElasticMappers.MapElasticAggregateResults(result);
@@ -55,8 +63,6 @@ namespace ElasticErrorRates.Persistence.Repository
                 var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
                     Index(defaultIndex)
                     .AllTypes()
-                    .From(page * pageSize)
-                    .Size(pageSize)
                     .Query(q => q
                         .Bool(bl =>
                             bl.Filter(
@@ -79,6 +85,8 @@ namespace ElasticErrorRates.Persistence.Repository
                             )
                         )
                     )
+                    .From(page * pageSize)
+                    .Size(pageSize)
                 );
 
                 var response = _logElasticMappers.MapElasticResults(result);

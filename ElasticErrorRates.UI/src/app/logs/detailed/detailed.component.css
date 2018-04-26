@@ -26,6 +26,10 @@
     background-color: rgba(0,0,0,0.5);
 }
 
+.smallColumn{
+    width: 5%;
+}
+
 .ellipsis {
     max-width: 50px;
     text-overflow: ellipsis;
