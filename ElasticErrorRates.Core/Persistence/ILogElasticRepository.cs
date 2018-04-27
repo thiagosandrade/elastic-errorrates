@@ -11,7 +11,7 @@ namespace ElasticErrorRates.Core.Persistence
     public interface ILogElasticRepository<T> where T : class
     {
         Task<ElasticResponse<Log>> Search(int page, int pageSize, string httpUrl);
-        Task<ElasticResponse<LogSummary>> SearchAggregate(int page, int pageSize);
+        Task<ElasticResponse<LogSummary>> SearchAggregate();
         Task<ElasticResponse<Log>> Find(string term, bool sort, bool match);
         Task Create(T product);
         Task Delete(T product);

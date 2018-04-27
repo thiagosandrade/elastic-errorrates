@@ -19,8 +19,6 @@ export class IndexComponent {
   public match: string = "false";
   public displayModal = false;
   public selectedLog;
-  public currentPage = 0;
-  public pageSize = 25;
 
   constructor(private apiService: ApiService) { 
     this.fillGrid();
@@ -29,9 +27,9 @@ export class IndexComponent {
   fillGrid() {
     this.isProcessing = true;
     
-    this.apiService.getLogsAggregate(this.currentPage, this.pageSize).subscribe((logs: ILogSummaryResponse) => {
-      this.logs = this.logs.concat(logs.records);
-      this.totalRecords += logs.totalRecords;
+    this.apiService.getLogsAggregate().subscribe((logs: ILogSummaryResponse) => {
+      this.logs = logs.records;
+      this.totalRecords = logs.totalRecords;
     },
     (err : any) => {
       console.log(err);
@@ -66,10 +64,5 @@ export class IndexComponent {
       result => this.fillGrid(),
       error => console.log(error)
     );
-  }
-
-  fetchMoreData() {
-    this.currentPage++;
-    this.fillGrid();
   }
 }

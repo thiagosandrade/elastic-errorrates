@@ -51,8 +51,8 @@ namespace ElasticErrorRates.API.Controllers
             }
         }
 
-        [HttpGet("searchaggregate/{page}/{pageSize}")]
-        public async Task<IActionResult> SearchAggregate(int page, int pageSize)
+        [HttpGet("searchaggregate")]
+        public async Task<IActionResult> SearchAggregate()
         {
             try
             {
@@ -60,7 +60,7 @@ namespace ElasticErrorRates.API.Controllers
 
                 //TODO: Use CQRS
                 //var result = await _queryDispatcher.DispatchAsync(elasticQuery.SearchAggregate);
-                var result = await elasticQuery.SearchAggregate(page, pageSize);
+                var result = await elasticQuery.SearchAggregate();
 
                 return Ok(result);
             }

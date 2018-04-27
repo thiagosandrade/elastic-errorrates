@@ -26,24 +26,24 @@ namespace ElasticErrorRates.Persistence.Repository
             _elasticContext.ElasticClient.ClearCache(defaultIndex);
         }
 
-        public async Task<ElasticResponse<LogSummary>> SearchAggregate(int page, int pageSize)
+        public async Task<ElasticResponse<LogSummary>> SearchAggregate()
         {
             var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
                 Index(defaultIndex)
                 .AllTypes()
-                .From(page * pageSize)
-                .Aggregations(ag => ag
-                    .Terms("group_by_httpUrl",
+                .Aggregations(ag =>
+                {
+                    ag.Terms("group_by_httpUrl",
                         t => t.Field(f => f.HttpUrl.First().Suffix("keyword"))
                             .Aggregations(aa => aa
                                 .Min("first_occurrence",
                                     m => m.Field(f => f.DateTimeLogged))
                                 .Max("last_occurrence",
                                     mm => mm.Field(ff => ff.DateTimeLogged))
-                            ).Size(pageSize)
-                    )
-                )
-                
+                            ).Size(Int32.MaxValue)
+                    );
+                    return ag;
+                })
             );
 
             var response = _logElasticMappers.MapElasticAggregateResults(result);
@@ -59,115 +59,115 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task<ElasticResponse<Log>> Search(int page, int pageSize, string httpUrl)
         {
-                var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
-                    Index(defaultIndex)
-                    .AllTypes()
-                    .Query(q => q
-                        .Bool(bl =>
-                            bl.Filter(
-                                fq =>
+            var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
+                Index(defaultIndex)
+                .AllTypes()
+                .Query(q => q
+                    .Bool(bl =>
+                        bl.Filter(
+                            fq =>
+                            {
+                                QueryContainer query = null;
+
+                                if (httpUrl != "null")
                                 {
-                                    QueryContainer query = null;
-
-                                    if (httpUrl != "null")
-                                    {
-                                        query &= fq.Term(
-                                                t => t.Field(f=> f.HttpUrl.First().Suffix("keyword")
-                                            ).Value(httpUrl)
-                                        );
-                                    }
-
-                                    return query;
+                                    query &= fq.Term(
+                                            t => t.Field(f => f.HttpUrl.First().Suffix("keyword")
+                                        ).Value(httpUrl)
+                                    );
                                 }
-                            )
+
+                                return query;
+                            }
                         )
                     )
-                    .From(page * pageSize)
-                    .Size(pageSize)
-                );
+                )
+                .From(page * pageSize)
+                .Size(pageSize)
+            );
 
-                var response = _logElasticMappers.MapElasticResults(result);
+            var response = _logElasticMappers.MapElasticResults(result);
 
-                if (!result.IsValid)
-                {
-                    throw new InvalidOperationException(result.DebugInformation);
-                }
+            if (!result.IsValid)
+            {
+                throw new InvalidOperationException(result.DebugInformation);
+            }
 
-                return response;
-            
+            return response;
+
         }
 
         public async Task<ElasticResponse<Log>> Find(string term, bool sort, bool match)
         {
-                var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x
-                    .Index(defaultIndex)
-                    .AllTypes()
-                    .Query(q => q
-                        .Bool(bl =>
-                            bl.Filter(
-                                fq =>
+            var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x
+                .Index(defaultIndex)
+                .AllTypes()
+                .Query(q => q
+                    .Bool(bl =>
+                        bl.Filter(
+                            fq =>
+                            {
+                                QueryContainer query = null;
+
+                                if (term != "null")
                                 {
-                                    QueryContainer query = null;
-
-                                    if (term != "null")
+                                    if (!match)
                                     {
-                                        if (!match)
-                                        {
-                                            query &= fq.Prefix(qs => qs
-                                                .Field(f => f.Exception)
-                                                .Value(term)
-                                            );
-
-                                            return query;
-                                        }
-
-                                        query &= fq.QueryString(qs => qs
-                                            .Fields(p => p
-                                                .Field(f => f.Exception)
-                                            )
-                                            .Query(term)
+                                        query &= fq.Prefix(qs => qs
+                                            .Field(f => f.Exception)
+                                            .Value(term)
                                         );
+
+                                        return query;
                                     }
 
-                                    return query;
+                                    query &= fq.QueryString(qs => qs
+                                        .Fields(p => p
+                                            .Field(f => f.Exception)
+                                        )
+                                        .Query(term)
+                                    );
                                 }
-                            )
+
+                                return query;
+                            }
                         )
                     )
-                    .Sort(q =>
-                    {
-                        if (!sort)
-                        {
-                            return q
-                                .Ascending(p => p.Id);
-                        }
-
-                        return q
-                            .Field(p => p
-                                .Field(f => f.DateTimeLogged)
-                                .Order(SortOrder.Descending)
-                            );
-                    }
-                    )
-                    .From(0)
-                    .Size(2000)
-                    .Highlight(z => z
-                        .Fields(y => y
-                            .Field(p => p.Exception)
-                                .PreTags("<b>")
-                                .PostTags("</b>")
-                            )
-                        )
-                    );
-
-                var response = _logElasticMappers.MapElasticResults(result);
-
-                if (!result.IsValid)
+                )
+                .Sort(q =>
                 {
-                    throw new InvalidOperationException(result.DebugInformation);
-                }
+                    if (!sort)
+                    {
+                        return q
+                            .Ascending(p => p.Id);
+                    }
 
-                return response;
+                    return q
+                        .Field(p => p
+                            .Field(f => f.DateTimeLogged)
+                            .Order(SortOrder.Descending)
+                        );
+                }
+                )
+                .From(0)
+                .Size(2000)
+                .Highlight(z => z
+                    .Fields(y => y
+                        .Field(p => p.Exception)
+                            .PreTags("<b>")
+                            .PostTags("</b>")
+                        )
+                    )
+                );
+
+            var response = _logElasticMappers.MapElasticResults(result);
+
+            if (!result.IsValid)
+            {
+                throw new InvalidOperationException(result.DebugInformation);
+            }
+
+            return response;
         }
 
         public async Task Create(T log)

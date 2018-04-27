@@ -31,8 +31,8 @@ export class ApiService {
             .catch((error: any) => { return Observable.throw(error) });
     }
 
-    public getLogsAggregate(page: number, pageSize: number): Observable<ILogSummaryResponse> {
-        return this.http.get<ILogSummaryResponse>(`${environment.apiUrl}/log/searchaggregate/${page}/${pageSize}`);
+    public getLogsAggregate(): Observable<ILogSummaryResponse> {
+        return this.http.get<ILogSummaryResponse>(`${environment.apiUrl}/log/searchaggregate`);
     }
 
     public getLogs(page: number, pageSize: number, httpUrl: string): Observable<ILogResponse> {
