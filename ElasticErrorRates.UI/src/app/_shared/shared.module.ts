@@ -4,6 +4,7 @@ import { ApiService } from './api/api.service';
 import { ModalComponent } from './modal/modal.component';
 import { ModalService } from './modal/modal.service';
 import { FormsModule } from '@angular/forms';
+import { DivFlexibleComponent } from './divFlexible/divFlexible.component';
 
 @NgModule({
   imports: [
@@ -11,10 +12,12 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   declarations: [
-    ModalComponent
+    ModalComponent,
+    DivFlexibleComponent
 ],
   exports: [
-    ModalComponent
+    ModalComponent,
+    DivFlexibleComponent
   ],
   providers: [
     ApiService,

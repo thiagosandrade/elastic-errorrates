@@ -53,4 +53,4 @@
       </div>
   </div>
 </div>
-<info-modal [displayModal]="displayModal" [log]="selectedLog"></info-modal>
+<info-modal [displayModal]="displayModal" [log]="selectedLog" (change)="modalEventChanges($event)"></info-modal>

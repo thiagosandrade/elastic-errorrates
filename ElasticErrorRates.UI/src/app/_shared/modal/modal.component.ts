@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter } from '@angular/core';
 import { ModalService } from "./modal.service";
 import { ILog } from '../../_shared/api/model/log';
+import { Observable } from 'rxjs/Observable';
 
 
 
@@ -12,6 +13,8 @@ import { ILog } from '../../_shared/api/model/log';
 export class ModalComponent implements OnChanges, OnInit {
     @Input() log: ILog;
     @Input() displayModal: boolean;
+
+    @Output() change: EventEmitter<ILog> = new EventEmitter<ILog>();
 
     message: any;
     constructor(private alertService : ModalService) { }
@@ -33,6 +36,6 @@ export class ModalComponent implements OnChanges, OnInit {
     onCloseModal(){
         this.displayModal = false;
         this.log = null;
+        this.change.emit(this.log);
     }
-
 }

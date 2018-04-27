@@ -25,11 +25,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="logMessageLabel">Message</label>
-                                <textarea type="text" class="form-control" id="logMessageLabel" [(ngModel)]="log.message" wrap="soft" rows="10"></textarea>
+                                <div-flexible [textContent]="log.message"></div-flexible>
                             </div>
                             <div class="form-group">
-                                <label for="logExceptionLabel">Exception</label>
-                                <textarea type="text" class="form-control" id="logExceptionLabel" [(ngModel)]="log.exception" wrap="soft" rows="10"></textarea>
+                                <label>Exception</label>
+                                <div-flexible [textContent]="log.exception"></div-flexible>
                             </div>
                             <div class="form-group">
                                 <label for="logDateTimeLabel">Datetime Logged</label>

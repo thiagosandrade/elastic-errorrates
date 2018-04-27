@@ -6,8 +6,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'logs-detailed',
-  templateUrl: './detailed.component.html',
-  styleUrls: ['./detailed.component.css']
+  styleUrls: ['./detailed.component.css'],
+  templateUrl: './detailed.component.html'
 })
 export class DetailedComponent implements OnInit {
   public logs: ILog[] = [];
@@ -28,6 +28,9 @@ export class DetailedComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       this.httpUrl = params['httpUrl'];
     });
+
+
+    
 
     this.fillGrid();
   }
@@ -67,16 +70,13 @@ export class DetailedComponent implements OnInit {
     this.selectedLog = logId;
   }
 
-  onImport(){
-    this.apiService.importLogs().subscribe(
-      result => this.fillGrid(),
-      error => console.log(error)
-    );
-  }
-
   fetchMoreData() {
     this.currentPage++;
     this.fillGrid();
+  }
+
+  modalEventChanges(event){
+    this.selectedLog = event;
   }
 
 }
