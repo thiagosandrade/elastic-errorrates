@@ -54,7 +54,7 @@ namespace ElasticErrorRates.Persistence.Mappers
                     Exception = x.Source.Exception,
                     HttpUrl = x.Source.HttpUrl,
                     Highlight = x.Highlights.Values.FirstOrDefault()?.Highlights.FirstOrDefault()?.ToString(),
-                    DateTimeLogged = string.Format("{0:yyyy/MM/dd hh:mm:ss}", Convert.ToDateTime(x.Source.DateTimeLogged))
+                    DateTimeLogged = x.Source.DateTimeLogged
                 };
 
                 return log;

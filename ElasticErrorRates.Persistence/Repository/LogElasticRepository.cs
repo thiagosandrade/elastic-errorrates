@@ -31,20 +31,19 @@ namespace ElasticErrorRates.Persistence.Repository
             var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
                 Index(defaultIndex)
                 .AllTypes()
-                .Aggregations(ag => ag
-                    .Terms("group_by_httpUrl", 
-                        t => t.Field(f => f.HttpUrl.First().Suffix("keyword"))
-                        .Aggregations( aa => aa
-                            .Min("first_occurrence",
-                                m => m.Field(f => f.DateTimeLogged))
-                            .Max("last_occurrence",
-                                mm => mm.Field(ff => ff.DateTimeLogged))
-                        )
-                    )
-                    
-                )
                 .From(page * pageSize)
-                .Size(pageSize)
+                .Aggregations(ag => ag
+                    .Terms("group_by_httpUrl",
+                        t => t.Field(f => f.HttpUrl.First().Suffix("keyword"))
+                            .Aggregations(aa => aa
+                                .Min("first_occurrence",
+                                    m => m.Field(f => f.DateTimeLogged))
+                                .Max("last_occurrence",
+                                    mm => mm.Field(ff => ff.DateTimeLogged))
+                            ).Size(pageSize)
+                    )
+                )
+                
             );
 
             var response = _logElasticMappers.MapElasticAggregateResults(result);
@@ -72,11 +71,9 @@ namespace ElasticErrorRates.Persistence.Repository
 
                                     if (httpUrl != "null")
                                     {
-                                        query &= fq.QueryString(qs => qs
-                                            .Fields(p => p
-                                                .Field(f => f.HttpUrl)
-                                            )
-                                            .Query(httpUrl)
+                                        query &= fq.Term(
+                                                t => t.Field(f=> f.HttpUrl.First().Suffix("keyword")
+                                            ).Value(httpUrl)
                                         );
                                     }
 
