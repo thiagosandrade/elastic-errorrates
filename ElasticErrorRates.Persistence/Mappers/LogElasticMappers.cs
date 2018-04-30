@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using ElasticErrorRates.Persistence.Repository;

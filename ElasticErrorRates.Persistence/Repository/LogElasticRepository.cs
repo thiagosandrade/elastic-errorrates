@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
-using ElasticErrorRates.Persistence.Context;
 using Nest;
 
 namespace ElasticErrorRates.Persistence.Repository

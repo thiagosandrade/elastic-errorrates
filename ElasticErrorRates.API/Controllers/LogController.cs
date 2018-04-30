@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.CQRS.Query;
@@ -9,7 +6,6 @@ using ElasticErrorRates.Core.Manager;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Nest;
 
 namespace ElasticErrorRates.API.Controllers
 {
@@ -58,9 +54,7 @@ namespace ElasticErrorRates.API.Controllers
             {
                 var elasticQuery = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
 
-                //TODO: Use CQRS
-                //var result = await _queryDispatcher.DispatchAsync(elasticQuery.SearchAggregate);
-                var result = await elasticQuery.SearchAggregate();
+                var result = await _queryDispatcher.DispatchAsync(elasticQuery.SearchAggregate);
 
                 return Ok(result);
             }
@@ -96,8 +90,9 @@ namespace ElasticErrorRates.API.Controllers
             try
             {
                 //With CQRS
-                var query = _unitOfWork.GetInstance<IElasticRepository<Log>>();
+                var query = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
 
+                //TODO: Use CQRS
                 var result = await query.Find(term, sort, match);
 
                 return Ok(result);

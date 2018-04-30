@@ -11,7 +11,6 @@ using ElasticErrorRates.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nest;
 
 namespace ElasticErrorRates.Injection
 {
@@ -38,7 +37,6 @@ namespace ElasticErrorRates.Injection
             _services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             _services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             _services.AddScoped(typeof(ILogElasticRepository<>), typeof(LogElasticRepository<>));
-            _services.AddScoped(typeof(IElasticRepository<>), typeof(ElasticRepository<>));
             _services.AddScoped(typeof(IElasticContext), typeof(ElasticContext));
             _services.AddScoped(typeof(ILogElasticMappers), typeof(LogElasticMappers));
         }

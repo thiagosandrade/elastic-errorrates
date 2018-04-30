@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Nest;
 

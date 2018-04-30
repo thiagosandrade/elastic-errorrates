@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Nest;
+﻿using Nest;
 
 namespace ElasticErrorRates.Core.Persistence
 {

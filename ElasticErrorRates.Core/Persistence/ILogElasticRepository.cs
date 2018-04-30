@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.Models;
-using ElasticErrorRates.Persistence.Repository;
 
 namespace ElasticErrorRates.Core.Persistence
 {

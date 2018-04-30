@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ElasticErrorRates.Persistence.Repository
+﻿namespace ElasticErrorRates.Core.Models
 {
     public class LogSummary
     {

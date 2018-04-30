@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ElasticErrorRates.Core.Models;
-using ElasticErrorRates.Persistence.Repository;
+﻿using ElasticErrorRates.Core.Models;
 using Nest;
 
 namespace ElasticErrorRates.Core.Persistence

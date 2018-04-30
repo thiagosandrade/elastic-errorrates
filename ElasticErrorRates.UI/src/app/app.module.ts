@@ -8,7 +8,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './_shared/shared.module';
-import { ProductsModule } from './products/products.module';
 import { LogsModule } from './logs/logs.module';
 
 @NgModule({
@@ -23,7 +22,6 @@ import { LogsModule } from './logs/logs.module';
     AppRoutingModule,
     NgbModule.forRoot(),
     SharedModule,
-    ProductsModule,
     LogsModule
   ],
   providers: [],
