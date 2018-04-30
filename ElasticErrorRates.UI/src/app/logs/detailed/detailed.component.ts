@@ -12,7 +12,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 export class DetailedComponent implements OnInit {
   public logs: ILog[] = [];
   public totalRecords = 0;
-  public isProcessing: boolean; 
+  public isProcessing: boolean;
   public term: string;
   public sort: string = "false";
   public match: string = "false";
@@ -24,13 +24,10 @@ export class DetailedComponent implements OnInit {
 
   constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       this.httpUrl = params['httpUrl'];
     });
-
-
-    
 
     this.fillGrid();
   }
@@ -40,15 +37,15 @@ export class DetailedComponent implements OnInit {
 
     this.apiService.getLogs(this.currentPage, this.pageSize, this.httpUrl).subscribe((logs: ILogResponse) => {
       this.logs = this.logs.concat(logs.records);
-      this.totalRecords += logs.totalRecords;
+      this.totalRecords = logs.totalRecords;
     },
-    (err : any) => {
+    (err: any) => {
       console.log(err);
     },
     () => {
       this.isProcessing = false;
     });
-    
+
   }
 
   onInputText(term : string){

@@ -60,7 +60,7 @@ namespace ElasticErrorRates.Persistence.Mappers
 
             }).ToList();
 
-            var totalRecords = result.Hits.Count;
+            var totalRecords = result.Total;
 
             return new ElasticResponse<Log>
             {
