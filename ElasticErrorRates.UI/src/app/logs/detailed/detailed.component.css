@@ -2,6 +2,7 @@
     vertical-align: middle;
     text-align: center;
     width: 100%;
+    margin-bottom: 0px;
 }
 
 .tables > thead {
@@ -42,4 +43,17 @@
     margin: 0 auto;
     height: 50px;
     width: 50px;
+}
+
+.fixedHeader, .fixedTableHeader{
+    position: sticky;
+    background-color: white;
+}
+
+.fixedHeader{
+    top: 55px;
+}
+
+.fixedTableHeader{
+    top: 187px;
 }

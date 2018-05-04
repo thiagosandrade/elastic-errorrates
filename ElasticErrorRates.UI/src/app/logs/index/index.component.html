@@ -1,29 +1,26 @@
-
 <div class="row justify-content-md-center">
     <div class="col-8">
         <div class="card">
-            <div class="card-header" style="font-size:large">
+            <div class="card-header fixedHeader" style="font-size:large">
                 Log List
             </div>
 
-            <div class="card-body">
-                <a type="button" class="btn btn-link" (click)="onImport(log)" >
+            <div class="card-body" style="padding-top:0px;">
+                <div class="fixedTableHeader" style="padding-top:20px;">
+                    <a type="button" class="btn btn-link" (click)="onImport(log)">
                         Import data to Elastic
-                </a>
-                <hr>
-                <input type="text" (input)="onInputText($event.target.value)" style="height: 40px; width: 100%;font-size: 20px;">
-                <hr>
-                <div>
-                    <div>
-                        <table class="table-condensed tables menuoptions">
-                            <thead>
-                                <tr>
-                                    <td>Total Records - {{ totalRecords }}</td>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <table class="table table-striped tables"> 
+                    </a>
+                    <hr>
+                    <input type="text" (input)="onInputText($event.target.value)" style="height: 40px; width: 100%;font-size: 20px;">
+                    <hr>
+                    <table class="table-condensed tables menuoptions">
+                        <thead>
+                            <tr>
+                                <td>Total Records - {{ totalRecords }}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table class="table table-striped tables">
                         <thead>
                             <tr>
                                 <td>Hits</td>
@@ -32,16 +29,22 @@
                                 <td>Last Occurrence</td>
                             </tr>
                         </thead>
+                    </table>
+                </div>
+                <div>
+                    <table class="table table-striped tables">
                         <tbody>
                             <tr *ngFor="let log of logs">
                                 <td>{{ log.httpUrlCount }}</td>
-                                <td class="ellipsis"><a [routerLink]="['/logdetailed']" [queryParams]="{ httpUrl : log.httpUrl }">{{ log.httpUrl }}</a></td>
+                                <td class="ellipsis">
+                                    <a [routerLink]="['/logdetailed']" [queryParams]="{ httpUrl : log.httpUrl }">{{ log.httpUrl }}</a>
+                                </td>
                                 <td>{{ log.firstOccurrence }}</td>
                                 <td>{{ log.lastOccurrence }}</td>
                             </tr>
                         </tbody>
                     </table>
-                    <img src="../../../assets/Rolling-1s-200px.gif" *ngIf="isProcessing" class="loadingSpinner"/> 
+                    <img src="../../../assets/Rolling-1s-200px.gif" *ngIf="isProcessing" class="loadingSpinner" />
                 </div>
             </div>
         </div>

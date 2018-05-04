@@ -1,56 +1,57 @@
-
 <div class="row justify-content-md-center">
-  <div class="col-8">
-      <div class="card">
-          <div class="card-header" style="font-size:large">
-            Detailed Logs by Http Url : {{ httpUrl }}
-          </div>
+    <div class="col-8">
+        <div class="card">
+            <div class="fixedHeader">
+                <div class="card-header" style="font-size:large; background: #f4f1f4;">
+                    Detailed Logs by Http Url : {{ httpUrl }}
+                </div>
+                <div class="card-body">
+                    <input type="text" (input)="onInputText($event.target.value)" style="height: 40px; width: 100%;font-size: 20px;">
+                </div>
+            </div>
 
-          <div class="card-body">
-              <input type="text" (input)="onInputText($event.target.value)" style="height: 40px; width: 100%;font-size: 20px;">
-              <hr>
-              <div>
-                  <div>
-                      <table class="table-condensed tables menuoptions">
-                          <thead>
-                              <tr>
-                                  <td>Total Records - {{ totalRecords }}</td>
-                              </tr>
-                          </thead>
-                      </table>
-                  </div>
-                  <table class="table table-striped tables"
-                    infiniteScroll  
-                    [infiniteScrollDistance]="1"  
-                    [infiniteScrollThrottle]="50"  
-                    (scrolled)="fetchMoreData()">
-                      <thead>
-                          <tr>
-                              <td class="smallColumn">Id</td>
-                              <td class="smallColumn">Level</td>
-                              <td>Message</td>
-                              <td>Source</td>
-                              <td>Exception</td>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr *ngFor="let log of logs">
-                              <td>
-                                  <a type="button" class="btn btn-link" (click)="onSelectLog(log)" >
-                                      {{ log.id }}
-                                  </a>
-                              </td>
-                              <td>{{ log.level }}</td>
-                              <td class="ellipsis">{{ log.message }}</td>
-                              <td class="ellipsis">{{ log.source }}</td>
-                              <td class="ellipsis">{{ log.exception }}</td>
-                          </tr>
-                      </tbody>
-                  </table>
-                  <img src="../../../assets/Rolling-1s-200px.gif" *ngIf="isProcessing" class="loadingSpinner"/> 
-              </div>
-          </div>
-      </div>
-  </div>
+            <div class="card-body" style="padding-top:0px;">
+                <div>
+                    <div class="fixedTableHeader">
+                        <table class="table-condensed tables menuoptions">
+                            <thead>
+                                <tr>
+                                    <td>Total Records - {{ totalRecords }}</td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table class="table table-striped tables">
+                            <thead>
+                                <tr>
+                                    <td class="smallColumn">Id</td>
+                                    <td class="smallColumn">Level</td>
+                                    <td>Message</td>
+                                    <td>Source</td>
+                                    <td>Exception</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <table class="table table-striped tables" infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="50" (scrolled)="fetchMoreData()">
+
+                        <tbody>
+                            <tr *ngFor="let log of logs">
+                                <td>
+                                    <a type="button" class="btn btn-link" (click)="onSelectLog(log)">
+                                        {{ log.id }}
+                                    </a>
+                                </td>
+                                <td>{{ log.level }}</td>
+                                <td class="ellipsis">{{ log.message }}</td>
+                                <td class="ellipsis">{{ log.source }}</td>
+                                <td class="ellipsis">{{ log.exception }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <img src="../../../assets/Rolling-1s-200px.gif" *ngIf="isProcessing" class="loadingSpinner" />
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <info-modal [displayModal]="displayModal" [log]="selectedLog" (change)="modalEventChanges($event)"></info-modal>
