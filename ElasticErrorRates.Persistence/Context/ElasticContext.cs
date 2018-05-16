@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ElasticErrorRates.Core.Persistence;
 using Microsoft.Extensions.Configuration;
 using Nest;
@@ -20,19 +21,24 @@ namespace ElasticErrorRates.Persistence.Context
         {
             if (!ElasticClient.IndexExists(defaultIndex).Exists)
             {
-                var settings = new IndexState()
+                var settings = new CreateIndexRequest(defaultIndex)
                 {
                     Settings = new IndexSettings()
                     {
                         NumberOfReplicas = 1,
                         NumberOfShards = 5,
+                        Analysis = new Analysis()
+                        {
+                            Analyzers = new Analyzers(),
+                            Tokenizers = new Tokenizers()
+                        }
                     }
                 };
 
                 ElasticClient.CreateIndex(defaultIndex, i => i
                     .Mappings(m => m
-                        .Map<T>(ms => ms.AutoMap())
-                    ).InitializeUsing(settings)
+                        .Map<T>(ms => ms.AutoMap()))
+                    .InitializeUsing(settings)
                 );
             }
 

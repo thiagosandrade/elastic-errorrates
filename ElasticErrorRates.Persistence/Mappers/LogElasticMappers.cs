@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ElasticErrorRates.Core.Models;
@@ -40,7 +41,7 @@ namespace ElasticErrorRates.Persistence.Mappers
             };
         }
 
-        public ElasticResponse<Log> MapElasticResults(ISearchResponse<Log> result)
+        public ElasticResponse<Log> MapElasticResults(ISearchResponse<Log> result, string highlightTerm = "")
         {
             var records = result.Hits.Select(x =>
             {
@@ -52,7 +53,7 @@ namespace ElasticErrorRates.Persistence.Mappers
                     Source = x.Source.Source,
                     Exception = x.Source.Exception,
                     HttpUrl = x.Source.HttpUrl,
-                    Highlight = x.Highlights.Values.FirstOrDefault()?.Highlights.FirstOrDefault()?.ToString(),
+                    Highlight = x.Highlights.SelectMany(y => y.Value.Highlights.ToList()).ToList().AsReadOnly(),
                     DateTimeLogged = x.Source.DateTimeLogged
                 };
 
@@ -62,6 +63,18 @@ namespace ElasticErrorRates.Persistence.Mappers
 
             var totalRecords = result.Total;
 
+            foreach (Log log in records)
+            {
+                string highlight = log.Highlight.FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(highlight))
+                {
+                    log.Exception = log.Exception.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3, 
+                        highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 4 + 4));
+                }
+                
+            }
+
             return new ElasticResponse<Log>
             {
                 TotalRecords = totalRecords,
@@ -69,4 +82,6 @@ namespace ElasticErrorRates.Persistence.Mappers
             };
         }
     }
+
+
 }

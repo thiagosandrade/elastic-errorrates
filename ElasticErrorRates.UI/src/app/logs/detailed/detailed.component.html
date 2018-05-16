@@ -32,26 +32,24 @@
                             </thead>
                         </table>
                     </div>
-                    <table class="table table-striped tables" infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="50" (scrolled)="fetchMoreData()">
-
-                        <tbody>
-                            <tr *ngFor="let log of logs">
-                                <td>
-                                    <a type="button" class="btn btn-link" (click)="onSelectLog(log)">
-                                        {{ log.id }}
-                                    </a>
-                                </td>
-                                <td>{{ log.level }}</td>
-                                <td class="ellipsis">{{ log.message }}</td>
-                                <td class="ellipsis">{{ log.source }}</td>
-                                <td class="ellipsis">{{ log.exception }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <img src="../../../assets/Rolling-1s-200px.gif" *ngIf="isProcessing" class="loadingSpinner" />
                 </div>
-            </div>
-        </div>
+                <table class="table table-striped tables" infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="50" (scrolled)="fetchMoreData()">
+                    <tbody>
+                        <tr *ngFor="let log of logs">
+                            <td class="smallColumn">
+                                <a type="button" class="btn btn-link" (click)="onSelectLog(log)">
+                                    {{ log.id }}
+                                </a>
+                            </td>
+                            <td class="smallColumn">{{ log.level }}</td>
+                            <td class="ellipsis">{{ log.message }}</td>
+                            <td class="ellipsis">{{ log.source }}</td>
+                            <td class="ellipsis" [innerHTML]="log.exception | keepHtml"></td>
+                        </tr>
+                    </tbody>
+                </table>
+          </div>
+      </div>
     </div>
 </div>
 <info-modal [displayModal]="displayModal" [log]="selectedLog" (change)="modalEventChanges($event)"></info-modal>

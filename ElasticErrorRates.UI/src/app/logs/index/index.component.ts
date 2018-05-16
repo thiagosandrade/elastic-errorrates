@@ -42,7 +42,7 @@ export class IndexComponent {
 
   onInputText(term : string){
     this.term = (term != null && term != undefined && term != "") ? term : "null"
-    this.apiService.findLogs(this.term, this.sort, this.match).subscribe((logs : ILogResponse) => {
+    this.apiService.findLogs("null",this.term).subscribe((logs : ILogResponse) => {
       //  this.logs = logs.records;
       //  this.totalRecords = logs.totalRecords
     },

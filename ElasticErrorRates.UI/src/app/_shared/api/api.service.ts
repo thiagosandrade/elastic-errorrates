@@ -29,7 +29,7 @@ export class ApiService {
         return this.http.get<ILogResponse>(`${environment.apiUrl}/log/search/${page}/${pageSize}?httpUrl=${httpUrl}`);
     }
 
-    public findLogs(term : string, sort : string, match : string ): Observable<ILogResponse> {
-        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/find/${term}/${sort}/${match}`);
+    public findLogs(httpUrl: string, term : string): Observable<ILogResponse> {
+        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/find/?httpUrl=${httpUrl}&term=${term}`);
     }
 }

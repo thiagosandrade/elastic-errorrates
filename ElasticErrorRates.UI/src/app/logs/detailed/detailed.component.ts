@@ -3,6 +3,8 @@ import { ApiService } from '../../_shared/api/api.service';
 import { ILog } from '../../_shared/api/model/log';
 import { ILogResponse } from '../../_shared/api/response/api-logresponse';
 import { ActivatedRoute, Params } from '@angular/router';
+import { KeepHtmlPipe } from '../../_shared/keepHtmlPipe/keep-html.pipe';
+
 
 @Component({
   selector: 'logs-detailed',
@@ -49,17 +51,12 @@ export class DetailedComponent implements OnInit {
   }
 
   onInputText(term : string){
-    this.term = (term != null && term != undefined && term != "") ? term : 'null'
-    this.apiService.findLogs(this.term, this.sort, this.match).subscribe((logs : ILogResponse) => {
-       this.logs = logs.records;
-       this.totalRecords = logs.totalRecords
-    },
-    (err : any) => {
-      console.log(err);
-    },
-    () => {
-      this.isProcessing = false;
-    });
+    if(term.length > 3){
+      this.searchByText(term);
+    }
+    else{
+      this.fillGrid();
+    }
   }
 
   onSelectLog(logId : string){
@@ -76,4 +73,19 @@ export class DetailedComponent implements OnInit {
     this.selectedLog = event;
   }
 
+  searchByText(term : string){
+    this.term = (term != null && term != undefined && term != "") ? term : 'null'
+      this.apiService.findLogs(this.httpUrl,this.term).subscribe((logs : ILogResponse) => {
+        this.logs = logs.records;
+        this.totalRecords = logs.totalRecords
+
+        console.log(logs);
+      },
+      (err : any) => {
+        console.log(err);
+      },
+      () => {
+        this.isProcessing = false;
+      });  
+  }
 }

@@ -84,8 +84,8 @@ namespace ElasticErrorRates.API.Controllers
             }
         }
 
-        [HttpGet("find/{term}/{sort}/{match}")]
-        public async Task<IActionResult> Find(string term, bool sort, bool match)
+        [HttpGet("find")]
+        public async Task<IActionResult> Find(string httpUrl, string term)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace ElasticErrorRates.API.Controllers
                 var query = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
 
                 //TODO: Use CQRS
-                var result = await query.Find(term, sort, match);
+                var result = await query.Find(httpUrl, term);
 
                 return Ok(result);
             }

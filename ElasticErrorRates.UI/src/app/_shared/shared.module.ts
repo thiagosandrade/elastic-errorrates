@@ -5,6 +5,7 @@ import { ModalComponent } from './modal/modal.component';
 import { ModalService } from './modal/modal.service';
 import { FormsModule } from '@angular/forms';
 import { DivFlexibleComponent } from './divFlexible/divFlexible.component';
+import { KeepHtmlPipe } from './keepHtmlPipe/keep-html.pipe';
 
 @NgModule({
   imports: [
@@ -13,11 +14,13 @@ import { DivFlexibleComponent } from './divFlexible/divFlexible.component';
   ],
   declarations: [
     ModalComponent,
-    DivFlexibleComponent
+    DivFlexibleComponent,
+    KeepHtmlPipe
 ],
   exports: [
     ModalComponent,
-    DivFlexibleComponent
+    DivFlexibleComponent,
+    KeepHtmlPipe
   ],
   providers: [
     ApiService,

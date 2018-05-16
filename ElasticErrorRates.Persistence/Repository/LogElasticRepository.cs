@@ -95,7 +95,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
-        public async Task<ElasticResponse<Log>> Find(string term, bool sort, bool match)
+        public async Task<ElasticResponse<Log>> Find(string httpUrl, string term)
         {
             var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x
                 .Index(defaultIndex)
@@ -109,21 +109,20 @@ namespace ElasticErrorRates.Persistence.Repository
 
                                 if (term != "null")
                                 {
-                                    if (!match)
-                                    {
-                                        query &= fq.Prefix(qs => qs
-                                            .Field(f => f.Exception)
-                                            .Value(term)
-                                        );
-
-                                        return query;
-                                    }
-
-                                    query &= fq.QueryString(qs => qs
-                                        .Fields(p => p
-                                            .Field(f => f.Exception)
-                                        )
+                                    query &= fq.Match(qs => qs
+                                        .Field(ff => ff.Exception)
                                         .Query(term)
+                                        .MinimumShouldMatch("80%")
+                                    );
+
+                                    
+                                }
+
+                                if (httpUrl != "null")
+                                {
+                                    query &= fq.Term(
+                                        t => t.Field(f => f.HttpUrl.First().Suffix("keyword")
+                                        ).Value(httpUrl)
                                     );
                                 }
 
@@ -134,12 +133,6 @@ namespace ElasticErrorRates.Persistence.Repository
                 )
                 .Sort(q =>
                 {
-                    if (!sort)
-                    {
-                        return q
-                            .Ascending(p => p.Id);
-                    }
-
                     return q
                         .Field(p => p
                             .Field(f => f.DateTimeLogged)
@@ -148,17 +141,20 @@ namespace ElasticErrorRates.Persistence.Repository
                 }
                 )
                 .From(0)
-                .Size(2000)
+                .Size(10)
                 .Highlight(z => z
                     .Fields(y => y
                         .Field(p => p.Exception)
                             .PreTags("<b>")
                             .PostTags("</b>")
                         )
+                        .NumberOfFragments(10)
+                        .FragmentSize(1)
+                        .Order(HighlighterOrder.Score)
                     )
                 );
 
-            var response = _logElasticMappers.MapElasticResults(result);
+            var response = _logElasticMappers.MapElasticResults(result, term);
 
             if (!result.IsValid)
             {
