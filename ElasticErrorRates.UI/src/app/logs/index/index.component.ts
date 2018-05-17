@@ -13,7 +13,8 @@ import { ILogSummary } from '../../_shared/api/model/logsummary';
 export class IndexComponent {
   public logs: ILogSummary[] = [];
   public totalRecords = 0;
-  public isProcessing: boolean; 
+  public isProcessing: boolean;
+  public isImporting: boolean;
   public term: string;
   public sort: string = "false";
   public match: string = "false";
@@ -59,10 +60,12 @@ export class IndexComponent {
     this.selectedLog = logId;
   }
 
-  onImport(){
+  onImport() {
+    this.isImporting = true;
     this.apiService.importLogs().subscribe(
       result => this.fillGrid(),
-      error => console.log(error)
+      error => console.log(error),
+      () => this.isImporting = false
     );
   }
 }

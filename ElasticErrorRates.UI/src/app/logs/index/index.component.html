@@ -7,9 +7,12 @@
 
             <div class="card-body" style="padding-top:0px;">
                 <div class="fixedTableHeader" style="padding-top:20px;">
-                    <a type="button" class="btn btn-link" (click)="onImport(log)">
-                        Import data to Elastic
-                    </a>
+                    <div style="display:flex;">
+                        <button type="button" class="btn btn" (click)="onImport(log)"  [disabled]="isImporting">
+                            Import data to Elastic
+                        </button>
+                        <img src="../../../assets/Rolling-1s-200px.gif" *ngIf="isImporting" style="margin: 0; height: 37px; width:37px;" />
+                    </div>
                     <hr>
                     <input type="text" (input)="onInputText($event.target.value)" style="height: 40px; width: 100%;font-size: 20px;">
                     <hr>
