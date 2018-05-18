@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.CQRS.Query;
+using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.Manager;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
@@ -71,10 +72,7 @@ namespace ElasticErrorRates.API.Controllers
             {
                 var elasticQuery = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
 
-                //TODO: Use CQRS
-                //var result = await _queryDispatcher.DispatchAsync(elasticQuery.Search, httpUrl);
-                var result = await elasticQuery.Search(page, pageSize, httpUrl);
-
+                var result = await _queryDispatcher.DispatchAsync(elasticQuery.Search, new SearchCriteria{HttpUrl = httpUrl, Page = page, PageSize = pageSize});
 
                 return Ok(result);
             }
@@ -89,16 +87,15 @@ namespace ElasticErrorRates.API.Controllers
         {
             try
             {
-                //TODO: Use CQRS
                 switch (columnField)
                 {
                     case "exception":
                         var queryLog = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
-                        return Ok(await queryLog.Find(columnField, httpUrl, term));
+                        return Ok(await _queryDispatcher.DispatchAsync(queryLog.Find, new FindCriteria{ColumnField = columnField, HttpUrl = httpUrl, Term = term}));
 
                     case "httpUrl":
                         var queryLogSummary = _unitOfWork.GetInstance<ILogElasticRepository<LogSummary>>();
-                        return Ok(await queryLogSummary.Find(columnField, httpUrl, term));
+                        return Ok(await _queryDispatcher.DispatchAsync(queryLogSummary.Find, new FindCriteria { ColumnField = columnField, HttpUrl = httpUrl, Term = term }));
                 }
 
                 return BadRequest();

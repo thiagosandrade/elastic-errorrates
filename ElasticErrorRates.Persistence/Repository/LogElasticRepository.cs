@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using Elasticsearch.Net;
@@ -60,7 +61,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
-        public async Task<ElasticResponse<T>> Search(int page, int pageSize, string httpUrl)
+        public async Task<ElasticResponse<T>> Search(SearchCriteria criteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
@@ -70,10 +71,10 @@ namespace ElasticErrorRates.Persistence.Repository
                             {
                                 QueryContainer query = null;
 
-                                if (httpUrl != "null")
+                                if (criteria.HttpUrl != "null")
                                 {
                                     query &= fq.Term(
-                                            t => t.Field("httpUrl.keyword").Value(httpUrl)
+                                            t => t.Field("httpUrl.keyword").Value(criteria.HttpUrl)
                                     );
                                 }
 
@@ -82,8 +83,8 @@ namespace ElasticErrorRates.Persistence.Repository
                         )
                     )
                 )
-                .From(page * pageSize)
-                .Size(pageSize);
+                .From(criteria.Page * criteria.PageSize)
+                .Size(criteria.PageSize);
 
             var result = await BasicQuery(queryCommand);
 
@@ -98,15 +99,15 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
-        public async Task<ElasticResponse<T>> Find(string columnField, string httpUrl, string term)
+        public async Task<ElasticResponse<T>> Find(FindCriteria criteria)
         {
-            var result = await FindLog(columnField, httpUrl, term);
+            var result = await FindLog(criteria.ColumnField, criteria.HttpUrl, criteria.Term);
 
-            switch (columnField)
+            switch (criteria.ColumnField)
             {
                 case "exception":
                     
-                    return _logElasticMappers.MapElasticResults(result, columnField, term);
+                    return _logElasticMappers.MapElasticResults(result, criteria.ColumnField, criteria.Term);
 
                 case "httpUrl":
 
