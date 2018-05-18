@@ -16,8 +16,6 @@ export class DetailedComponent implements OnInit {
   public totalRecords = 0;
   public isProcessing: boolean;
   public term: string;
-  public sort: string = "false";
-  public match: string = "false";
   public displayModal = false;
   public selectedLog;
   public httpUrl : string;

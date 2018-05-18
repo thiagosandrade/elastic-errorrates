@@ -49,7 +49,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             var result = await BasicQuery(queryCommand);
 
-            var response = _logElasticMappers.MapElasticAggregateResults(result);
+            var response = _logElasticMappers.MapElasticResults(result);
 
             if (!result.IsValid)
             {
@@ -87,7 +87,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             var result = await BasicQuery(queryCommand);
 
-            var response = _logElasticMappers.MapElasticResults("exception", result);
+            var response = _logElasticMappers.MapElasticResults(result, "exception");
 
             if (!result.IsValid)
             {
@@ -100,19 +100,17 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task<ElasticResponse<T>> Find(string columnField, string httpUrl, string term)
         {
-            ISearchResponse<T> result = new SearchResponse<T>();
+            var result = await FindLog(columnField, httpUrl, term);
 
             switch (columnField)
             {
                 case "exception":
-
-                    result = await FindLog(columnField, httpUrl, term);
-                    return _logElasticMappers.MapElasticResults(columnField, result, term);
+                    
+                    return _logElasticMappers.MapElasticResults(result, columnField, term);
 
                 case "httpUrl":
 
-                    result = await FindLog(columnField, httpUrl, term);
-                    return _logElasticMappers.MapElasticAggregateResults(result);
+                    return _logElasticMappers.MapElasticResults(result);
             }
 
             if (!result.IsValid)
@@ -158,7 +156,7 @@ namespace ElasticErrorRates.Persistence.Repository
                         {
                             AggregationContainerDescriptor<T> query = null;
 
-                            if (columnField.Equals("httpUrl") && !string.IsNullOrWhiteSpace(term))
+                            if (columnField.Equals("httpUrl"))
                             {
                                 query &= ag.Terms("group_by_httpUrl",
                                         t => t.Field("httpUrl.keyword")

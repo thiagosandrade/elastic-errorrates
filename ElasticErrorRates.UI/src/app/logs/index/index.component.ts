@@ -16,8 +16,6 @@ export class IndexComponent {
   public isProcessing: boolean;
   public isImporting: boolean;
   public term: string;
-  public sort: string = "false";
-  public match: string = "false";
   public displayModal = false;
   public selectedLog;
   public columnField = "httpUrl";
@@ -47,7 +45,6 @@ export class IndexComponent {
     this.apiService.findLogsSummary(this.columnField,"null",this.term).subscribe((logs : ILogSummaryResponse) => {
         this.logs = logs.records;
         this.totalRecords = logs.totalRecords
-        console.log(this.logs);  
     },
     (err : any) => {
       console.log(err);

@@ -4,16 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
-using ElasticErrorRates.Persistence.Repository;
 using Nest;
 
 namespace ElasticErrorRates.Persistence.Mappers
 {
     public class LogElasticMappers<T> : ILogElasticMappers<T> where T : class
     {
-        public ElasticResponse<T> MapElasticAggregateResults(ISearchResponse<T> result)
+        public ElasticResponse<T> MapElasticResults(ISearchResponse<T> result)
         {
-            IEnumerable<LogSummary> aggregatedResults = result.Aggregations.Terms("group_by_httpUrl").Buckets.Select(x =>
+            IEnumerable<T> aggregatedResults = result.Aggregations.Terms("group_by_httpUrl").Buckets.Select(x =>
                 {
                     if (x.DocCount != null)
                     {
@@ -30,22 +29,22 @@ namespace ElasticErrorRates.Persistence.Mappers
 
                     return null;
                 }
-            ).ToList();
+            ).Cast<T>().ToList();
 
             var totalRecords = aggregatedResults.Count();
 
             return new ElasticResponse<T>
             {
                 TotalRecords = totalRecords,
-                Records = aggregatedResults.Cast<T>()
+                Records = aggregatedResults
             };
         }
 
-        public ElasticResponse<T> MapElasticResults(string columnField, ISearchResponse<T> result, string highlightTerm = "")
+        public ElasticResponse<T> MapElasticResults(ISearchResponse<T> result, string columnField, string highlightTerm = "")
         {
             ISearchResponse<Log> convertedResult = (ISearchResponse<Log>) result;
 
-            IEnumerable<Log> records = convertedResult.Hits.Select(x =>
+            IEnumerable<T> records = convertedResult.Hits.Select(x =>
             {
                 var log = new Log
                 {
@@ -61,37 +60,23 @@ namespace ElasticErrorRates.Persistence.Mappers
 
                 return log;
 
-            }).ToList();
+            }).Cast<T>().ToList();
 
-            var totalRecords = result.Total;
-
-            foreach (Log log in records)
+            foreach (var log in records.OfType<Log>())
             {
                 string highlight = log.Highlight.FirstOrDefault();
 
                 if (!string.IsNullOrEmpty(highlight))
                 {
-                    switch (columnField)
-                    {
-                        case "httpUrl":
-                            log.HttpUrl = log.HttpUrl.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3,
-                                highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 4 + 4));
-                            break;
-                        case "exception":
-                            log.Exception = log.Exception.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3,
-                                highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 4 + 4));
-                            break;
-                            
-                    }
-                    
+                    log.Exception = log.Exception.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3,
+                        highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 8));
                 }
-                
             }
 
             return new ElasticResponse<T>
             {
-                TotalRecords = totalRecords,
-                Records = records.Cast<T>()
+                TotalRecords = result.Total,
+                Records = records
             };
         }
     }

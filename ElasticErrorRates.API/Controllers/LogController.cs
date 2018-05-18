@@ -89,17 +89,14 @@ namespace ElasticErrorRates.API.Controllers
         {
             try
             {
-
                 //TODO: Use CQRS
                 switch (columnField)
                 {
                     case "exception":
-                        //With CQRS
                         var queryLog = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
                         return Ok(await queryLog.Find(columnField, httpUrl, term));
 
                     case "httpUrl":
-                        //With CQRS
                         var queryLogSummary = _unitOfWork.GetInstance<ILogElasticRepository<LogSummary>>();
                         return Ok(await queryLogSummary.Find(columnField, httpUrl, term));
                 }
