@@ -29,7 +29,11 @@ export class ApiService {
         return this.http.get<ILogResponse>(`${environment.apiUrl}/log/search/${page}/${pageSize}?httpUrl=${httpUrl}`);
     }
 
-    public findLogs(httpUrl: string, term : string): Observable<ILogResponse> {
-        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/find/?httpUrl=${httpUrl}&term=${term}`);
+    public findLogs(columnField: string, httpUrl: string, term : string): Observable<ILogResponse> {
+        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/find/?columnField=${columnField}&httpUrl=${httpUrl}&term=${term}`);
+    }
+
+    public findLogsSummary(columnField: string, httpUrl: string, term : string): Observable<ILogSummaryResponse> {
+        return this.http.get<ILogSummaryResponse>(`${environment.apiUrl}/log/find/?columnField=${columnField}&httpUrl=${httpUrl}&term=${term}`);
     }
 }

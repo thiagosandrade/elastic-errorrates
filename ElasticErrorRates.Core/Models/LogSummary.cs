@@ -1,4 +1,7 @@
-﻿namespace ElasticErrorRates.Core.Models
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ElasticErrorRates.Core.Models
 {
     public class LogSummary
     {

@@ -23,6 +23,7 @@ export class DetailedComponent implements OnInit {
   public httpUrl : string;
   public currentPage = 0;
   public pageSize = 50;
+  public columnField = "exception";
 
   constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {   }
 
@@ -75,7 +76,7 @@ export class DetailedComponent implements OnInit {
 
   searchByText(term : string){
     this.term = (term != null && term != undefined && term != "") ? term : 'null'
-      this.apiService.findLogs(this.httpUrl,this.term).subscribe((logs : ILogResponse) => {
+      this.apiService.findLogs(this.columnField, this.httpUrl,this.term).subscribe((logs : ILogResponse) => {
         this.logs = logs.records;
         this.totalRecords = logs.totalRecords
 

@@ -52,7 +52,7 @@ namespace ElasticErrorRates.API.Controllers
         {
             try
             {
-                var elasticQuery = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
+                var elasticQuery = _unitOfWork.GetInstance<ILogElasticRepository<LogSummary>>();
 
                 var result = await _queryDispatcher.DispatchAsync(elasticQuery.SearchAggregate);
 
@@ -85,17 +85,27 @@ namespace ElasticErrorRates.API.Controllers
         }
 
         [HttpGet("find")]
-        public async Task<IActionResult> Find(string httpUrl, string term)
+        public async Task<IActionResult> Find(string columnField, string httpUrl, string term)
         {
             try
             {
-                //With CQRS
-                var query = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
 
                 //TODO: Use CQRS
-                var result = await query.Find(httpUrl, term);
+                switch (columnField)
+                {
+                    case "exception":
+                        //With CQRS
+                        var queryLog = _unitOfWork.GetInstance<ILogElasticRepository<Log>>();
+                        return Ok(await queryLog.Find(columnField, httpUrl, term));
 
-                return Ok(result);
+                    case "httpUrl":
+                        //With CQRS
+                        var queryLogSummary = _unitOfWork.GetInstance<ILogElasticRepository<LogSummary>>();
+                        return Ok(await queryLogSummary.Find(columnField, httpUrl, term));
+                }
+
+                return BadRequest();
+
             }
             catch (Exception ex)
             {

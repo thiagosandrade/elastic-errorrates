@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
+using Elasticsearch.Net;
 using Nest;
 
 namespace ElasticErrorRates.Persistence.Repository
@@ -11,10 +12,10 @@ namespace ElasticErrorRates.Persistence.Repository
     public class LogElasticRepository<T> : ILogElasticRepository<T> where T : class
     {
         private readonly IElasticContext _elasticContext;
-        private readonly ILogElasticMappers _logElasticMappers;
+        private readonly ILogElasticMappers<T> _logElasticMappers;
         private static readonly string defaultIndex = "errorlog";
 
-        public LogElasticRepository(IElasticContext elasticContext, ILogElasticMappers logElasticMappers)
+        public LogElasticRepository(IElasticContext elasticContext, ILogElasticMappers<T> logElasticMappers)
         {
             _elasticContext = elasticContext;
             _logElasticMappers = logElasticMappers;
@@ -24,25 +25,29 @@ namespace ElasticErrorRates.Persistence.Repository
             _elasticContext.ElasticClient.ClearCache(defaultIndex);
         }
 
-        public async Task<ElasticResponse<LogSummary>> SearchAggregate()
+        private async Task<ISearchResponse<T>> BasicQuery(SearchDescriptor<T> queryCommand)
         {
-            var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
-                Index(defaultIndex)
-                .AllTypes()
-                .Aggregations(ag =>
-                {
-                    ag.Terms("group_by_httpUrl",
-                        t => t.Field(f => f.HttpUrl.First().Suffix("keyword"))
+            return await _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex).AllTypes());
+        }
+
+        public async Task<ElasticResponse<T>> SearchAggregate()
+        {
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
+                .Aggregations(ag => ag
+                    .Terms("group_by_httpUrl",
+                        t => t.Field("httpUrl.keyword")
                             .Aggregations(aa => aa
                                 .Min("first_occurrence",
-                                    m => m.Field(f => f.DateTimeLogged))
+                                    m => m.Field("dateTimeLogged"))
                                 .Max("last_occurrence",
-                                    mm => mm.Field(ff => ff.DateTimeLogged))
-                            ).Size(Int32.MaxValue)
-                    );
-                    return ag;
-                })
-            );
+                                    mm => mm.Field("dateTimeLogged"))
+                            )
+                            .Size(int.MaxValue)
+                        )
+                );
+
+
+            var result = await BasicQuery(queryCommand);
 
             var response = _logElasticMappers.MapElasticAggregateResults(result);
 
@@ -55,11 +60,9 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
-        public async Task<ElasticResponse<Log>> Search(int page, int pageSize, string httpUrl)
+        public async Task<ElasticResponse<T>> Search(int page, int pageSize, string httpUrl)
         {
-            var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x.
-                Index(defaultIndex)
-                .AllTypes()
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
                     .Bool(bl =>
                         bl.Filter(
@@ -70,8 +73,7 @@ namespace ElasticErrorRates.Persistence.Repository
                                 if (httpUrl != "null")
                                 {
                                     query &= fq.Term(
-                                            t => t.Field(f => f.HttpUrl.First().Suffix("keyword")
-                                        ).Value(httpUrl)
+                                            t => t.Field("httpUrl.keyword").Value(httpUrl)
                                     );
                                 }
 
@@ -81,10 +83,11 @@ namespace ElasticErrorRates.Persistence.Repository
                     )
                 )
                 .From(page * pageSize)
-                .Size(pageSize)
-            );
+                .Size(pageSize);
 
-            var response = _logElasticMappers.MapElasticResults(result);
+            var result = await BasicQuery(queryCommand);
+
+            var response = _logElasticMappers.MapElasticResults("exception", result);
 
             if (!result.IsValid)
             {
@@ -95,73 +98,106 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
-        public async Task<ElasticResponse<Log>> Find(string httpUrl, string term)
+        public async Task<ElasticResponse<T>> Find(string columnField, string httpUrl, string term)
         {
-            var result = await _elasticContext.ElasticClient.SearchAsync<Log>(x => x
-                .Index(defaultIndex)
-                .AllTypes()
-                .Query(q => q
-                    .Bool(bl =>
-                        bl.Filter(
-                            fq =>
-                            {
-                                QueryContainer query = null;
+            ISearchResponse<T> result = new SearchResponse<T>();
 
-                                if (term != "null")
-                                {
-                                    query &= fq.Match(qs => qs
-                                        .Field(ff => ff.Exception)
-                                        .Query(term)
-                                        .MinimumShouldMatch("80%")
-                                    );
+            switch (columnField)
+            {
+                case "exception":
 
-                                    
-                                }
+                    result = await FindLog(columnField, httpUrl, term);
+                    return _logElasticMappers.MapElasticResults(columnField, result, term);
 
-                                if (httpUrl != "null")
-                                {
-                                    query &= fq.Term(
-                                        t => t.Field(f => f.HttpUrl.First().Suffix("keyword")
-                                        ).Value(httpUrl)
-                                    );
-                                }
+                case "httpUrl":
 
-                                return query;
-                            }
-                        )
-                    )
-                )
-                .Sort(q =>
-                {
-                    return q
-                        .Field(p => p
-                            .Field(f => f.DateTimeLogged)
-                            .Order(SortOrder.Descending)
-                        );
-                }
-                )
-                .From(0)
-                .Size(10)
-                .Highlight(z => z
-                    .Fields(y => y
-                        .Field(p => p.Exception)
-                            .PreTags("<b>")
-                            .PostTags("</b>")
-                        )
-                        .NumberOfFragments(10)
-                        .FragmentSize(1)
-                        .Order(HighlighterOrder.Score)
-                    )
-                );
-
-            var response = _logElasticMappers.MapElasticResults(result, term);
+                    result = await FindLog(columnField, httpUrl, term);
+                    return _logElasticMappers.MapElasticAggregateResults(result);
+            }
 
             if (!result.IsValid)
             {
                 throw new InvalidOperationException(result.DebugInformation);
             }
 
-            return response;
+            return null;
+        }
+
+        private async Task<ISearchResponse<T>> FindLog(string columnField, string httpUrl, string term)
+        {
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
+                    .Query(q => q
+                        .Bool(bl =>
+                            bl.Filter(
+                                fq =>
+                                {
+                                    QueryContainer query = null;
+
+                                    if (term != "null")
+                                    {
+                                        query &= fq.Match(qs => qs
+                                            .Field(columnField)
+                                            .Query(term)
+                                            .MinimumShouldMatch("80%")
+                                        );
+                                    }
+
+                                    if (httpUrl != "null")
+                                    {
+                                        query &= fq.Term(t => t
+                                            .Field("httpUrl.keyword").Value(httpUrl)
+                                        );
+                                    }
+
+                                    return query;
+                                }
+                            )
+                        )
+                    )
+                    .Aggregations(ag =>
+                        {
+                            AggregationContainerDescriptor<T> query = null;
+
+                            if (columnField.Equals("httpUrl") && !string.IsNullOrWhiteSpace(term))
+                            {
+                                query &= ag.Terms("group_by_httpUrl",
+                                        t => t.Field("httpUrl.keyword")
+                                            .Aggregations(aa => aa
+                                                .Min("first_occurrence",
+                                                    m => m.Field("dateTimeLogged"))
+                                                .Max("last_occurrence",
+                                                    mm => mm.Field("dateTimeLogged"))
+                                            )
+                                            .Size(int.MaxValue)
+                                    );
+                            }
+
+                            return query;
+                        }
+                    )
+                    .Sort(q =>
+                        {
+                            return q
+                                .Field(p => p
+                                    .Field("dateTimeLogged")
+                                    .Order(SortOrder.Descending)
+                                );
+                        }
+                    )
+                    .From(0)
+                    .Size(10)
+                    .Highlight(z => z
+                        .Fields(y => y
+                            .Field(columnField)
+                            .PreTags("<b>")
+                            .PostTags("</b>")
+                        )
+                        .NumberOfFragments(10)
+                        .FragmentSize(1)
+                        .Order(HighlighterOrder.Score)
+                    );
+
+            return await BasicQuery(queryCommand);
         }
 
         public async Task Create(T log)

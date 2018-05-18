@@ -38,7 +38,7 @@ namespace ElasticErrorRates.Injection
             _services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             _services.AddScoped(typeof(ILogElasticRepository<>), typeof(LogElasticRepository<>));
             _services.AddScoped(typeof(IElasticContext), typeof(ElasticContext));
-            _services.AddScoped(typeof(ILogElasticMappers), typeof(LogElasticMappers));
+            _services.AddScoped(typeof(ILogElasticMappers<>), typeof(LogElasticMappers<>));
         }
 
         public void Autentication()

@@ -3,9 +3,9 @@ using Nest;
 
 namespace ElasticErrorRates.Core.Persistence
 {
-    public interface ILogElasticMappers
+    public interface ILogElasticMappers<T> where T : class
     {
-        ElasticResponse<LogSummary> MapElasticAggregateResults(ISearchResponse<Log> result);
-        ElasticResponse<Log> MapElasticResults(ISearchResponse<Log> result, string highlightTerm = "");
+        ElasticResponse<T> MapElasticAggregateResults(ISearchResponse<T> result);
+        ElasticResponse<T> MapElasticResults(string columnField, ISearchResponse<T> result, string highlightTerm = "");
     }
 }

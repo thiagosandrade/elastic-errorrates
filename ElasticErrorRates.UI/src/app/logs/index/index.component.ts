@@ -20,6 +20,7 @@ export class IndexComponent {
   public match: string = "false";
   public displayModal = false;
   public selectedLog;
+  public columnField = "httpUrl";
 
   constructor(private apiService: ApiService) { 
     this.fillGrid();
@@ -43,9 +44,10 @@ export class IndexComponent {
 
   onInputText(term : string){
     this.term = (term != null && term != undefined && term != "") ? term : "null"
-    this.apiService.findLogs("null",this.term).subscribe((logs : ILogResponse) => {
-      //  this.logs = logs.records;
-      //  this.totalRecords = logs.totalRecords
+    this.apiService.findLogsSummary(this.columnField,"null",this.term).subscribe((logs : ILogSummaryResponse) => {
+        this.logs = logs.records;
+        this.totalRecords = logs.totalRecords
+        console.log(this.logs);  
     },
     (err : any) => {
       console.log(err);

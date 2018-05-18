@@ -9,9 +9,9 @@ using Nest;
 
 namespace ElasticErrorRates.Persistence.Mappers
 {
-    public class LogElasticMappers : ILogElasticMappers
+    public class LogElasticMappers<T> : ILogElasticMappers<T> where T : class
     {
-        public ElasticResponse<LogSummary> MapElasticAggregateResults(ISearchResponse<Log> result)
+        public ElasticResponse<T> MapElasticAggregateResults(ISearchResponse<T> result)
         {
             IEnumerable<LogSummary> aggregatedResults = result.Aggregations.Terms("group_by_httpUrl").Buckets.Select(x =>
                 {
@@ -34,16 +34,18 @@ namespace ElasticErrorRates.Persistence.Mappers
 
             var totalRecords = aggregatedResults.Count();
 
-            return new ElasticResponse<LogSummary>
+            return new ElasticResponse<T>
             {
                 TotalRecords = totalRecords,
-                Records = aggregatedResults
+                Records = aggregatedResults.Cast<T>()
             };
         }
 
-        public ElasticResponse<Log> MapElasticResults(ISearchResponse<Log> result, string highlightTerm = "")
+        public ElasticResponse<T> MapElasticResults(string columnField, ISearchResponse<T> result, string highlightTerm = "")
         {
-            var records = result.Hits.Select(x =>
+            ISearchResponse<Log> convertedResult = (ISearchResponse<Log>) result;
+
+            IEnumerable<Log> records = convertedResult.Hits.Select(x =>
             {
                 var log = new Log
                 {
@@ -69,16 +71,27 @@ namespace ElasticErrorRates.Persistence.Mappers
 
                 if (!string.IsNullOrEmpty(highlight))
                 {
-                    log.Exception = log.Exception.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3, 
-                        highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 4 + 4));
+                    switch (columnField)
+                    {
+                        case "httpUrl":
+                            log.HttpUrl = log.HttpUrl.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3,
+                                highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 4 + 4));
+                            break;
+                        case "exception":
+                            log.Exception = log.Exception.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3,
+                                highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 4 + 4));
+                            break;
+                            
+                    }
+                    
                 }
                 
             }
 
-            return new ElasticResponse<Log>
+            return new ElasticResponse<T>
             {
                 TotalRecords = totalRecords,
-                Records = records
+                Records = records.Cast<T>()
             };
         }
     }
