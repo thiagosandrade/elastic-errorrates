@@ -40,7 +40,7 @@
                             <tr *ngFor="let log of logs">
                                 <td class="smallColumn">{{ log.httpUrlCount }}</td>
                                 <td class="bigColumn ellipsis">
-                                    <a [routerLink]="['/logdetailed']" [queryParams]="{ httpUrl : log.httpUrl }">{{ log.httpUrl }}</a>
+                                    <a [routerLink]="['/logs/detailed']" [queryParams]="{ httpUrl : log.httpUrl }">{{ log.httpUrl }}</a>
                                 </td>
                                 <td class="midColumn">{{ log.firstOccurrence }}</td>
                                 <td class="midColumn">{{ log.lastOccurrence }}</td>

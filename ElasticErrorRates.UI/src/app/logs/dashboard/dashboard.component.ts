@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
+import { UkDailyRateComponent } from '../dashboard/components/uk-dailyrate/uk-dailyrate.component'
 
 @Component({
   selector: 'app-dashboard',

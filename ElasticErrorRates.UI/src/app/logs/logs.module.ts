@@ -16,6 +16,7 @@ import { SharedModule } from '../_shared/shared.module';
 import { ApiService } from '../_shared/api/api.service';
 import { DetailedComponent } from './detailed/detailed.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { UkDailyRateComponent } from './dashboard/components/uk-dailyrate/uk-dailyrate.component';
 
 @NgModule({
   imports: [
@@ -32,8 +33,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   declarations: [
     IndexComponent,
     DetailedComponent,
-    DashboardComponent
+    DashboardComponent,
+    UkDailyRateComponent
 ],
+ exports: [
+    UkDailyRateComponent
+ ],
   providers: [
     ApiService
   ]
