@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElasticErrorRates.Core.Criteria;
 using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
@@ -209,7 +210,7 @@ namespace ElasticErrorRates.Persistence.Repository
             await _elasticContext.ElasticClient.DeleteAsync<T>(log, x => x.Index(defaultIndex));
         }
 
-        public async Task Bulk(IEnumerable<Log> records)
+        public async Task Bulk(IEnumerable<T> records)
         {
             await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(records));
         }

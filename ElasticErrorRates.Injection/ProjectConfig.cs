@@ -27,7 +27,12 @@ namespace ElasticErrorRates.Injection
 
         public void Setup()
         {
+            //TODO
+            //2 connection strings??
             _services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+            _services.AddDbContext<DashboardContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DailyRatesConnection")));
+
+
 
             _services.AddScoped(typeof(IQueryDispatcher), typeof(QueryDispatcher));
             _services.AddScoped(typeof(ICommandDispatcher), typeof(CommandDispatcher));
@@ -37,8 +42,10 @@ namespace ElasticErrorRates.Injection
             _services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             _services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             _services.AddScoped(typeof(ILogElasticRepository<>), typeof(LogElasticRepository<>));
+            _services.AddScoped(typeof(IDashboardElasticRepository<>), typeof(DashboardElasticRepository<>));
             _services.AddScoped(typeof(IElasticContext), typeof(ElasticContext));
             _services.AddScoped(typeof(ILogElasticMappers<>), typeof(LogElasticMappers<>));
+            _services.AddScoped(typeof(IDashboardElasticMappers<>), typeof(DashboardElasticMappers<>));
         }
 
         public void Autentication()

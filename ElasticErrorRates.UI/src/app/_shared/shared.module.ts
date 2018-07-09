@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService } from './api/api.service';
+import { ApiDashboardService } from './api/dashboard/api.service';
+import { ApiLogService } from './api/log/api.service';
 import { ModalComponent } from './modal/modal.component';
 import { ModalService } from './modal/modal.service';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +24,8 @@ import { KeepHtmlPipe } from './keepHtmlPipe/keep-html.pipe';
     KeepHtmlPipe
   ],
   providers: [
-    ApiService,
+    ApiLogService,
+    ApiDashboardService,
     ModalService
   ]
 })

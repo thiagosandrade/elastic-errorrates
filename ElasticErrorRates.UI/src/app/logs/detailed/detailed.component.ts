@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../_shared/api/api.service';
-import { ILog } from '../../_shared/api/model/log';
-import { ILogResponse } from '../../_shared/api/response/api-logresponse';
+import { ApiLogService } from '../../_shared/api/log/api.service';
+import { ILog } from '../../_shared/api/log/model/log';
+import { ILogResponse } from '../../_shared/api/log/response/api-logresponse';
 import { ActivatedRoute, Params } from '@angular/router';
 import { KeepHtmlPipe } from '../../_shared/keepHtmlPipe/keep-html.pipe';
 
@@ -23,7 +23,7 @@ export class DetailedComponent implements OnInit {
   public pageSize = 50;
   public columnField = "exception";
 
-  constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {   }
+  constructor(private apiService: ApiLogService, private activatedRoute: ActivatedRoute) {   }
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: Params) => {

@@ -13,10 +13,11 @@ import {
 import { LogsRoutingModule } from './logs-routing.module';
 import { IndexComponent } from './index/index.component';
 import { SharedModule } from '../_shared/shared.module';
-import { ApiService } from '../_shared/api/api.service';
+import { ApiLogService } from '../_shared/api/log/api.service';
 import { DetailedComponent } from './detailed/detailed.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UkDailyRateComponent } from './dashboard/components/uk-dailyrate/uk-dailyrate.component';
+import { ApiDashboardService } from '../_shared/api/dashboard/api.service';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { UkDailyRateComponent } from './dashboard/components/uk-dailyrate/uk-dai
     UkDailyRateComponent
  ],
   providers: [
-    ApiService
+    ApiLogService,
+    ApiDashboardService
   ]
 })
 export class LogsModule { }

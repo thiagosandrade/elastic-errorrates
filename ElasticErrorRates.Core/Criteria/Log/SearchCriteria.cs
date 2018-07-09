@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ElasticErrorRates.Core.Criteria.Log
 {
-    public class SearchCriteria
+    public class SearchCriteria : ISearchCriteria
     {
         public int Page { get; set; }
         public int PageSize { get; set; }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../_shared/api/api.service';
-import { ILog } from '../../_shared/api/model/log';
-import { ILogResponse } from '../../_shared/api/response/api-logresponse';
-import { ILogSummaryResponse } from '../../_shared/api/response/api-logsummaryresponse';
-import { ILogSummary } from '../../_shared/api/model/logsummary';
+import { ApiLogService } from '../../_shared/api/log/api.service';
+import { ILog } from '../../_shared/api/log/model/log';
+import { ILogResponse } from '../../_shared/api/log/response/api-logresponse';
+import { ILogSummaryResponse } from '../../_shared/api/log/response/api-logsummaryresponse';
+import { ILogSummary } from '../../_shared/api/log/model/logsummary';
 
 @Component({
   selector: 'logs-index',
@@ -20,7 +20,7 @@ export class IndexComponent {
   public selectedLog;
   public columnField = "httpUrl";
 
-  constructor(private apiService: ApiService) { 
+  constructor(private apiService: ApiLogService) { 
     this.fillGrid();
   }
 

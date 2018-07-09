@@ -2,6 +2,5 @@
 {
     public interface IApplicationDbContext
     {
-        //DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity;
     }
 }

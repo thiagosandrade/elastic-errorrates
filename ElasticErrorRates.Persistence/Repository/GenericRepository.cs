@@ -11,9 +11,9 @@ namespace ElasticErrorRates.Persistence.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected ApplicationDbContext Context;
+        protected DbContext Context;
 
-        public GenericRepository(ApplicationDbContext context)
+        public GenericRepository(DbContext context)
         {
             Context = context;
         }
@@ -46,7 +46,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task<List<T>> GetAllAsync()
         {
-            return await Context.Set<T>().Take(1100).ToListAsync();
+            return await Context.Set<T>().Take(3500).ToListAsync();
         }
 
         public async Task<T> SaveAsync(T entity)

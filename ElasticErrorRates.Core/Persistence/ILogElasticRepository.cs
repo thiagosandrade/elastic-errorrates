@@ -12,7 +12,8 @@ namespace ElasticErrorRates.Core.Persistence
         Task<ElasticResponse<T>> Find(FindCriteria criteria);
         Task Create(T product);
         Task Delete(T product);
-        Task Bulk(IEnumerable<Log> records);
+        Task Bulk(IEnumerable<T> records);
+
 
         
     }
