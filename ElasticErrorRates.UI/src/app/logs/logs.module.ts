@@ -16,8 +16,12 @@ import { SharedModule } from '../_shared/shared.module';
 import { ApiLogService } from '../_shared/api/log/api.service';
 import { DetailedComponent } from './detailed/detailed.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { UkDailyRateComponent } from './dashboard/components/uk-dailyrate/uk-dailyrate.component';
 import { ApiDashboardService } from '../_shared/api/dashboard/api.service';
+
+import { UkDailyRateComponent } from './dashboard/components/uk-dailyrate/uk-dailyrate.component';
+import { UkYesterdayRateComponent } from './dashboard/components/uk-yesterdayrate/uk-yesterdayrate.component';
+import { ROIDailyRateComponent } from './dashboard/components/roi-dailyrate/roi-dailyrate.component';
+import { ROIYesterdayRateComponent } from './dashboard/components/roi-yesterdayrate/roi-yesterdayrate.component';
 
 @NgModule({
   imports: [
@@ -35,10 +39,16 @@ import { ApiDashboardService } from '../_shared/api/dashboard/api.service';
     IndexComponent,
     DetailedComponent,
     DashboardComponent,
-    UkDailyRateComponent
+    UkDailyRateComponent,
+    UkYesterdayRateComponent,
+    ROIDailyRateComponent,
+    ROIYesterdayRateComponent
 ],
  exports: [
-    UkDailyRateComponent
+    UkDailyRateComponent,
+    UkYesterdayRateComponent,
+    ROIDailyRateComponent,
+    ROIYesterdayRateComponent
  ],
   providers: [
     ApiLogService,

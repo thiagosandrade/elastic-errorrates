@@ -3,8 +3,6 @@ import { ModalService } from "./modal.service";
 import { ILog } from '../../_shared/api/log/model/log';
 import { Observable } from 'rxjs/Observable';
 
-
-
 @Component({
    selector: 'info-modal',
    templateUrl: './modal.component.html',

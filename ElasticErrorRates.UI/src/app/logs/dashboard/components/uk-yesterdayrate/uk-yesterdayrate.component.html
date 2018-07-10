@@ -3,9 +3,9 @@
         <div class="card-icon">
             <i class="material-icons">swap_vert</i>
         </div>
-        <p class="card-category">Latest UK Daily Rate ( {{this.titleDate.toLocaleDateString()}} )</p>
+        <p class="card-category">Previous UK Yesterday Rate ( {{this.titleDate.toLocaleDateString()}} )</p>
         <div *ngIf="!isProcessing">
-            <h3 class="card-title">{{ ukDailyRate.errorPercentage }}
+            <h3 class="card-title">{{ ukYesterdayRate.errorPercentage }}
                 <small>%</small>
             </h3>
         </div>
@@ -14,7 +14,7 @@
     <div class="card-footer">
         <div class="stats">
             <i class="material-icons text-danger">warning</i>
-            Error-Count: {{ ukDailyRate.errorCount }}
+            Error-Count: {{ ukYesterdayRate.errorCount }}
         </div>
     </div>
 </div>

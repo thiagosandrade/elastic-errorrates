@@ -25,6 +25,10 @@ export class ApiDashboardService {
         var url: string =  `${environment.apiUrl}/dashboard/search/${countryId}`;
 
         if(startDate !== null && enddate !== null){
+            startDate.setHours(7,0,0,0);
+            enddate.setHours(7,0,0,0);
+            
+
             url = url.concat(`?startdate=${startDate.toISOString()}&enddate=${enddate.toISOString()}`);
         }
         

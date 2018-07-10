@@ -7,6 +7,7 @@ import { ModalService } from './modal/modal.service';
 import { FormsModule } from '@angular/forms';
 import { DivFlexibleComponent } from './divFlexible/divFlexible.component';
 import { KeepHtmlPipe } from './keepHtmlPipe/keep-html.pipe';
+import { LoadingSpinnerComponent } from './LoadingSpinner/loadingSpinner.component';
 
 @NgModule({
   imports: [
@@ -16,12 +17,14 @@ import { KeepHtmlPipe } from './keepHtmlPipe/keep-html.pipe';
   declarations: [
     ModalComponent,
     DivFlexibleComponent,
-    KeepHtmlPipe
+    KeepHtmlPipe,
+    LoadingSpinnerComponent
 ],
   exports: [
     ModalComponent,
     DivFlexibleComponent,
-    KeepHtmlPipe
+    KeepHtmlPipe,
+    LoadingSpinnerComponent
   ],
   providers: [
     ApiLogService,
