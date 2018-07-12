@@ -3,7 +3,7 @@
         <div class="card-icon">
             <i class="material-icons">swap_vert</i>
         </div>
-        <p class="card-category">Latest UK Daily Rate ( {{this.titleDate.toLocaleDateString()}} )</p>
+        <p class="card-category">Latest UK Daily Rate ( {{this.titleDate | date: 'dd/MM/yyyy'}} )</p>
         <div *ngIf="!isProcessing">
             <h3 class="card-title">{{ ukDailyRate.errorPercentage }}
                 <small>%</small>
@@ -12,9 +12,13 @@
         <loading-spinner [isProcessing]="isProcessing" ></loading-spinner>
     </div>
     <div class="card-footer">
+            <div class="stats">
+                <i class="material-icons text-success">attach_money</i>
+                Order-Count: {{ ukDailyRate.orderCount | number  }}
+            </div>
         <div class="stats">
             <i class="material-icons text-danger">warning</i>
-            Error-Count: {{ ukDailyRate.errorCount }}
+            Error-Count: {{ ukDailyRate.errorCount | number  }}
         </div>
     </div>
 </div>

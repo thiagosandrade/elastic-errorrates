@@ -3,7 +3,7 @@
         <div class="card-icon">
             <i class="material-icons">swap_vert</i>
         </div>
-        <p class="card-category">Latest ROI Daily Rate ( {{this.titleDate.toLocaleDateString()}} )</p>
+        <p class="card-category">Latest ROI Daily Rate ( {{this.titleDate | date: 'dd/MM/yyyy'}} )</p>
         <div *ngIf="!isProcessing">
             <h3 class="card-title">{{ roiDailyRate.errorPercentage }}
                 <small>%</small>
@@ -13,8 +13,12 @@
     </div>
     <div class="card-footer">
         <div class="stats">
+            <i class="material-icons text-success">attach_money</i>
+            Order-Count: {{ roiDailyRate.orderCount | number }}
+        </div>
+        <div class="stats">
             <i class="material-icons text-danger">warning</i>
-            Error-Count: {{ roiDailyRate.errorCount }}
+            Error-Count: {{ roiDailyRate.errorCount | number }}
         </div>
     </div>
 </div>
