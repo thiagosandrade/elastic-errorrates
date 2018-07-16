@@ -1,4 +1,4 @@
-import { IDailyRate } from "./../model/dailyrate";
+import { IDailyRate } from "../model/dailyrate";
 
 export interface IDailyRateResponse {
     totalRecords: number;

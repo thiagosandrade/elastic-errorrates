@@ -23,6 +23,9 @@ import { UkYesterdayRateComponent } from './dashboard/components/uk-yesterdayrat
 import { ROIDailyRateComponent } from './dashboard/components/roi-dailyrate/roi-dailyrate.component';
 import { ROIYesterdayRateComponent } from './dashboard/components/roi-yesterdayrate/roi-yesterdayrate.component';
 
+import { UkWeekrateGraphComponent } from './dashboard/components/uk-weekrate-graph/uk-weekrate-graph.component';
+
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -42,13 +45,15 @@ import { ROIYesterdayRateComponent } from './dashboard/components/roi-yesterdayr
     UkDailyRateComponent,
     UkYesterdayRateComponent,
     ROIDailyRateComponent,
-    ROIYesterdayRateComponent
+    ROIYesterdayRateComponent,
+    UkWeekrateGraphComponent
 ],
  exports: [
     UkDailyRateComponent,
     UkYesterdayRateComponent,
     ROIDailyRateComponent,
-    ROIYesterdayRateComponent
+    ROIYesterdayRateComponent,
+    UkWeekrateGraphComponent
  ],
   providers: [
     ApiLogService,

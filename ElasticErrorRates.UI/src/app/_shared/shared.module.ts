@@ -8,29 +8,32 @@ import { FormsModule } from '@angular/forms';
 import { DivFlexibleComponent } from './divFlexible/divFlexible.component';
 import { KeepHtmlPipe } from './keepHtmlPipe/keep-html.pipe';
 import { LoadingSpinnerComponent } from './LoadingSpinner/loadingSpinner.component';
+import { ChartGeneratorComponent } from './chartGenerator/chartgenerator.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    ModalComponent,
-    DivFlexibleComponent,
-    KeepHtmlPipe,
-    LoadingSpinnerComponent
-],
-  exports: [
-    ModalComponent,
-    DivFlexibleComponent,
-    KeepHtmlPipe,
-    LoadingSpinnerComponent
-  ],
-  providers: [
-    ApiLogService,
-    ApiDashboardService,
-    ModalService
-  ]
+   imports: [
+      CommonModule,
+      FormsModule
+   ],
+   declarations: [
+      ModalComponent,
+      DivFlexibleComponent,
+      KeepHtmlPipe,
+      LoadingSpinnerComponent,
+      ChartGeneratorComponent
+   ],
+   exports: [
+      ModalComponent,
+      DivFlexibleComponent,
+      KeepHtmlPipe,
+      LoadingSpinnerComponent,
+      ChartGeneratorComponent
+   ],
+   providers: [
+      ApiLogService,
+      ApiDashboardService,
+      ModalService
+   ]
 })
 export class SharedModule { 
   
