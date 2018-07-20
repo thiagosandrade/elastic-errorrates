@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import * as Chartist from 'chartist';
+import { ChartModel } from '../helpers/ChartModel';
 
 @Component({
   selector: 'chart-generator',
@@ -8,7 +9,7 @@ import * as Chartist from 'chartist';
 })
 export class ChartGeneratorComponent implements OnInit, AfterViewInit {
   
-  @Input() chartData: any;
+  @Input() chartData: ChartModel;
   @Input() chartName: string;
 
   public optionsDailySalesChart: any;
@@ -23,7 +24,7 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
                 tension: 0
             }),
             low: 0,
-            high: 20, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+            high: Math.max.apply(null, this.chartData.series[0]) + 20, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
             chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
         }
 
