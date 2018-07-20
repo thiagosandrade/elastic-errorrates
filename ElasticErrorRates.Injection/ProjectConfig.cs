@@ -14,44 +14,27 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ElasticErrorRates.Injection
 {
-    public class ProjectConfig
+    public static class ProjectConfig
     {
-        private readonly IServiceCollection _services;
-        private readonly IConfiguration _configuration;
-
-        public ProjectConfig(IServiceCollection services, IConfiguration configuration)
-        {
-            _services = services;
-            _configuration = configuration;
-        }
-
-        public void Setup()
+        public static void AddElasticErroRatesInjections(this IServiceCollection services, IConfiguration configuration)
         {
             //TODO
             //2 connection strings??
-            _services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-            _services.AddDbContext<DashboardContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DailyRatesConnection")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DashboardContext>(options => options.UseSqlServer(configuration.GetConnectionString("DailyRatesConnection")));
 
+            services.AddScoped(typeof(IQueryDispatcher), typeof(QueryDispatcher));
+            services.AddScoped(typeof(ICommandDispatcher), typeof(CommandDispatcher));
+            services.AddScoped(typeof(IQueryHandler), typeof(QueryHandler));
+            services.AddScoped(typeof(ICommandHandler), typeof(CommandHandler));
 
-
-            _services.AddScoped(typeof(IQueryDispatcher), typeof(QueryDispatcher));
-            _services.AddScoped(typeof(ICommandDispatcher), typeof(CommandDispatcher));
-            _services.AddScoped(typeof(IQueryHandler), typeof(QueryHandler));
-            _services.AddScoped(typeof(ICommandHandler), typeof(CommandHandler));
-
-            _services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
-            _services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            _services.AddScoped(typeof(ILogElasticRepository<>), typeof(LogElasticRepository<>));
-            _services.AddScoped(typeof(IDashboardElasticRepository<>), typeof(DashboardElasticRepository<>));
-            _services.AddScoped(typeof(IElasticContext), typeof(ElasticContext));
-            _services.AddScoped(typeof(ILogElasticMappers<>), typeof(LogElasticMappers<>));
-            _services.AddScoped(typeof(IDashboardElasticMappers<>), typeof(DashboardElasticMappers<>));
-        }
-
-        public void Autentication()
-        {
-            
-           
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(ILogElasticRepository<>), typeof(LogElasticRepository<>));
+            services.AddScoped(typeof(IDashboardElasticRepository<>), typeof(DashboardElasticRepository<>));
+            services.AddScoped(typeof(IElasticContext), typeof(ElasticContext));
+            services.AddScoped(typeof(ILogElasticMappers<>), typeof(LogElasticMappers<>));
+            services.AddScoped(typeof(IDashboardElasticMappers<>), typeof(DashboardElasticMappers<>));
         }
     }
 }

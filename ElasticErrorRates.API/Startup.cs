@@ -1,4 +1,6 @@
-﻿using ElasticErrorRates.Injection;
+﻿using ElasticErrorRates.Hangfire.Extensions;
+using ElasticErrorRates.Injection;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +12,7 @@ namespace ElasticErrorRates.API
     {
         public Startup(IConfiguration configuration)
         {
-           Configuration = configuration;
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -24,15 +26,16 @@ namespace ElasticErrorRates.API
                     builder =>
                     {
                         builder
-                        .AllowAnyOrigin() 
+                        .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
                     });
             });
 
-            new ProjectConfig(services, Configuration).Autentication();
-            new ProjectConfig(services, Configuration).Setup();
+            services.AddElasticErroRatesInjections(Configuration);
+
+            services.AddHangfireInMemory();
 
             services.AddMvc();
         }
@@ -45,11 +48,12 @@ namespace ElasticErrorRates.API
                 app.UseDeveloperExceptionPage();
             }
 
-            // app.UseDefaultFiles();
-            // app.useStaticFiles();
+            app.UseHangfireServer()
+                .UseElasticErrorsRatesJobs(Configuration);
+
             app.UseCors("AllowAll");
             app.UseMvc(
-                //routes => { routes.MapRoute("elastic", "api/{controller=Elastic}/{action=Find}/{term?}/{sort?}/{match?}"); }
+            //routes => { routes.MapRoute("elastic", "api/{controller=Elastic}/{action=Find}/{term?}/{sort?}/{match?}"); }
             );
         }
     }

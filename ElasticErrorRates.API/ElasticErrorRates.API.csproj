@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ElasticErrorRates.Core\ElasticErrorRates.Core.csproj" />
+    <ProjectReference Include="..\ElasticErrorRates.Hangfire\ElasticErrorRates.Hangfire.csproj" />
     <ProjectReference Include="..\ElasticErrorRates.Injection\ElasticErrorRates.Injection.csproj" />
   </ItemGroup>
 
