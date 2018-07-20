@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import 'rxjs/add/operator/catch';
 
 import { IDailyRateResponse } from './response/api-dailyrateresponse';
+import { IGraphRequestResponse } from './response/api-graphrequestresponse';
 
 @Injectable()
 export class ApiDashboardService {
@@ -33,6 +34,15 @@ export class ApiDashboardService {
         }
         
         return this.http.get<IDailyRateResponse>(url);
+    }
+
+    public getGraphValues(frequencyType: string, numberOfResults: string): Observable<IGraphRequestResponse> {
+
+        var url: string =  `${environment.apiUrl}/dashboard/searchaggregate`;
+
+        url = url.concat(`?typeAggregation=${frequencyType}&numberOfResults=${numberOfResults}`);
+        
+        return this.http.get<IGraphRequestResponse>(url);
     }
 
 }

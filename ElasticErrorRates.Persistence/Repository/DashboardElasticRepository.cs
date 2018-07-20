@@ -80,6 +80,54 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
+        public async Task<ElasticResponse<T>> SearchAggregate(GraphCriteria criteria)
+        {
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
+                    .Aggregations(ag =>
+                       {
+                           AggregationContainerDescriptor<T> query = null;
+
+                           query &= ag.DateHistogram("my_date_histogram", h => h
+                               .Field("startDate")
+                               .Interval((DateInterval)Int32.Parse(criteria.TypeAggregation))
+                               .Order(HistogramOrder.KeyDescending)
+                               .Aggregations( aa => aa
+                                   .Sum("order-count",
+                                       m => m.Field("orderCount"))
+                                   .Sum("order-value",
+                                       mm => mm.Field("orderValue"))
+                                   .Sum("error-count",
+                                       mm => mm.Field("errorCount"))
+                                )
+                           );
+
+                           return query;
+                       }
+                   )
+                   .Sort(q =>
+                       {
+                           return q
+                               .Field(p => p
+                                   .Field("startDate")
+                                   .Order(SortOrder.Ascending)
+                               );
+                       }
+                   )
+                   .From(0)
+                   .Size(10);
+
+            var result = await BasicQuery(queryCommand);
+
+            var response = _dashboardElasticMappers.MapElasticAggregateResults(result, criteria.NumberOfResults);
+
+            if (!result.IsValid)
+            {
+                throw new InvalidOperationException(result.DebugInformation);
+            }
+
+            return response;
+        }
+
         public async Task Create(T log)
         {
             await _elasticContext.ElasticClient.IndexAsync<T>(log, x => x.Index(defaultIndex));

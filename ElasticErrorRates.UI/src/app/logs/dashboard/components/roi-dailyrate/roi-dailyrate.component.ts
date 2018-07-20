@@ -19,10 +19,10 @@ export class ROIDailyRateComponent implements OnInit {
 
     this.roiDailyRate.CountryId = 2;
     this.roiDailyRate.StartDate = new Date();
-    this.roiDailyRate.StartDate.setDate(this.roiDailyRate.StartDate.getDate() - 2);
+    this.roiDailyRate.StartDate.setDate(this.roiDailyRate.StartDate.getDate() - 1);
 
     this.roiDailyRate.EndDate = new Date();
-    this.roiDailyRate.EndDate.setDate(this.roiDailyRate.EndDate.getDate() - 1);
+    this.roiDailyRate.EndDate.setDate(this.roiDailyRate.EndDate.getDate());
 
     this.titleDate = this.roiDailyRate.EndDate;
 

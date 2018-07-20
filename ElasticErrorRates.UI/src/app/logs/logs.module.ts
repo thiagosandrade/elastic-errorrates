@@ -23,7 +23,11 @@ import { UkYesterdayRateComponent } from './dashboard/components/uk-yesterdayrat
 import { ROIDailyRateComponent } from './dashboard/components/roi-dailyrate/roi-dailyrate.component';
 import { ROIYesterdayRateComponent } from './dashboard/components/roi-yesterdayrate/roi-yesterdayrate.component';
 
-import { UkWeekrateGraphComponent } from './dashboard/components/uk-weekrate-graph/uk-weekrate-graph.component';
+import { UkWeekRateGraphComponent } from './dashboard/components/uk-weekrate-graph/uk-weekrate-graph.component';
+import { ROIWeekrateGraphComponent } from './dashboard/components/roi-weekrate-graph/roi-weekrate-graph.component';
+
+import { UkMonthRateGraphComponent } from './dashboard/components/uk-monthrate-graph/uk-monthrate-graph.component';
+import { ROIMonthRateGraphComponent } from './dashboard/components/roi-monthrate-graph/roi-monthrate-graph.component';
 
 
 @NgModule({
@@ -46,14 +50,20 @@ import { UkWeekrateGraphComponent } from './dashboard/components/uk-weekrate-gra
     UkYesterdayRateComponent,
     ROIDailyRateComponent,
     ROIYesterdayRateComponent,
-    UkWeekrateGraphComponent
+    UkWeekRateGraphComponent,
+    ROIWeekrateGraphComponent,
+    UkMonthRateGraphComponent,
+    ROIMonthRateGraphComponent
 ],
  exports: [
     UkDailyRateComponent,
     UkYesterdayRateComponent,
     ROIDailyRateComponent,
     ROIYesterdayRateComponent,
-    UkWeekrateGraphComponent
+    UkWeekRateGraphComponent,
+    ROIWeekrateGraphComponent,
+    UkMonthRateGraphComponent,
+    ROIMonthRateGraphComponent
  ],
   providers: [
     ApiLogService,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
@@ -36,6 +37,42 @@ namespace ElasticErrorRates.Persistence.Mappers
             {
                 TotalRecords = result.Total,
                 Records = records
+            };
+        }
+
+        public ElasticResponse<T> MapElasticAggregateResults(ISearchResponse<T> result, int numberOfResults)
+        {
+            IEnumerable<T> aggregatedResults = result.Aggregations.DateHistogram("my_date_histogram").Buckets.Select(x =>
+                {
+                    if (x.DocCount != null)
+                    {
+                        var orderCount = ((ValueAggregate) x.Values.Skip(0).Take(1).FirstOrDefault())?.Value;
+                        var errorCount = ((ValueAggregate) x.Values.Skip(1).Take(1).FirstOrDefault())?.Value;
+                        var orderValue = ((ValueAggregate) x.Values.Skip(2).Take(1).FirstOrDefault())?.Value;
+
+                        var record = new ErrorRate
+                        {
+                            Date = string.Format("{0:yyyy/MM/dd}", DateTime.Parse(x.KeyAsString)),
+                            OrderCount = orderCount.ToString(),
+                            ErrorCount = errorCount.ToString(),
+                            OrderValue = orderValue.ToString(),
+                            ErrorPercentage = Math.Round((double) (errorCount / orderCount * 100),2).ToString(CultureInfo.InvariantCulture)
+                        };
+
+                        return record;
+                    }
+
+                    return null;
+                }
+            ).Cast<T>().ToList();
+
+
+            var totalRecords = aggregatedResults.Count();
+
+            return new ElasticResponse<T>
+            {
+                TotalRecords = totalRecords,
+                Records = aggregatedResults.Take(numberOfResults)
             };
         }
     }

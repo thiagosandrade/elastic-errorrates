@@ -18,10 +18,10 @@ export class UkDailyRateComponent implements OnInit {
 
     this.ukDailyRate.CountryId = 1;
     this.ukDailyRate.StartDate = new Date();
-    this.ukDailyRate.StartDate.setDate(this.ukDailyRate.StartDate.getDate() - 2);
+    this.ukDailyRate.StartDate.setDate(this.ukDailyRate.StartDate.getDate() - 1);
 
     this.ukDailyRate.EndDate = new Date();
-    this.ukDailyRate.EndDate.setDate(this.ukDailyRate.EndDate.getDate() - 1);
+    this.ukDailyRate.EndDate.setDate(this.ukDailyRate.EndDate.getDate());
 
     this.titleDate = this.ukDailyRate.EndDate;
 

@@ -64,5 +64,25 @@ namespace ElasticErrorRates.API.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        [HttpGet("searchaggregate")]
+        public async Task<IActionResult> SearchAggregate(string typeAggregation, string numberOfResults)
+        {
+            try
+            {
+
+                var result = await _queryDispatcher.DispatchAsync(
+                    _unitOfWork.DashboardElasticRepository<ErrorRate>().SearchAggregate, 
+                    new GraphCriteria { TypeAggregation = typeAggregation, NumberOfResults = Int32.Parse(numberOfResults)});
+                
+                
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
     }
 }

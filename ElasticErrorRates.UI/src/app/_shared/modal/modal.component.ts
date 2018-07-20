@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter } from '@angular/core';
 import { ModalService } from "./modal.service";
-import { ILog } from '../../_shared/api/log/model/log';
+import { ILog } from '../api/log/model/log';
 import { Observable } from 'rxjs/Observable';
 
 @Component({

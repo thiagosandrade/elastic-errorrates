@@ -18,10 +18,10 @@ export class UkYesterdayRateComponent implements OnInit {
 
     this.ukYesterdayRate.CountryId = 1;
     this.ukYesterdayRate.StartDate = new Date();
-    this.ukYesterdayRate.StartDate.setDate(this.ukYesterdayRate.StartDate.getDate() - 3);
+    this.ukYesterdayRate.StartDate.setDate(this.ukYesterdayRate.StartDate.getDate() - 2);
 
     this.ukYesterdayRate.EndDate = new Date();
-    this.ukYesterdayRate.EndDate.setDate(this.ukYesterdayRate.EndDate.getDate() - 2);
+    this.ukYesterdayRate.EndDate.setDate(this.ukYesterdayRate.EndDate.getDate() - 1);
 
     this.titleDate = this.ukYesterdayRate.EndDate;
 
