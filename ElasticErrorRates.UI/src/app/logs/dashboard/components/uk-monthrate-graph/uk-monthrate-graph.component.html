@@ -1,6 +1,9 @@
 <div class="card card-chart">
     <div class="card-header card-header-info">
-        <chart-generator [chartData]="datawebsiteViewsChart" [chartName]="chartName"></chart-generator>
+        <div *ngIf="!isProcessing">
+            <chart-generator [chartData]="datawebsiteViewsChart" [chartName]="chartName"></chart-generator>
+        </div>     
+        <loading-spinner [isProcessing]="isProcessing" ></loading-spinner>
     </div>
     <div class="card-body">
         <h4 class="card-title">UK Month Rate</h4>

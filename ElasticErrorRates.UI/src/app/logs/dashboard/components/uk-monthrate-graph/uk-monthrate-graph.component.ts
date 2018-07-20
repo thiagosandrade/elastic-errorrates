@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
+import { ChartModel } from '../../../../_shared/helpers/ChartModel';
+import { GraphTypeAggregation } from '../../../../_shared/helpers/GraphTypeAggregation.enum';
+import { IGraphRequestResponse } from '../../../../_shared/api/dashboard/response/api-graphrequestresponse';
+import { Months } from '../../../../_shared/helpers/Months.enum';
 
 @Component({
   selector: 'uk-monthrate-graph',
@@ -7,8 +12,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UkMonthRateGraphComponent implements OnInit {
 
-  public datawebsiteViewsChart: { labels: string[]; series: number[][]; };
+  public datawebsiteViewsChart: ChartModel;
   public chartName : string;
+  public isProcessing: boolean;
+
+  constructor(private apiService: ApiDashboardService) { }
 
   ngOnInit() {
 
@@ -18,11 +26,26 @@ export class UkMonthRateGraphComponent implements OnInit {
     this.datawebsiteViewsChart = {
       labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
       series: [
-        [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
-
       ]
     };
 
-    //http://localhost:30539/api/dashboard/searchaggregate?typeAggregation=5&numberOfResults=monthActual
+    this.isProcessing = true;
+    this.fillRate();
+  }
+
+  fillRate(){
+    
+    this.apiService.getGraphValues(GraphTypeAggregation.Month, `${((new Date()).getMonth() +1)}`).subscribe((response: IGraphRequestResponse) => {
+     var self = this;
+     var seriesArray: number[] = [];
+      
+      response.records.forEach(function(element){
+        seriesArray.push(Number(element.errorPercentage))
+      });
+
+      self.datawebsiteViewsChart.series.push(seriesArray.reverse());
+
+      this.isProcessing = false;
+    });
   }
 }
