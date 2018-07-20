@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
 import { IGraphRequestResponse } from '../../../../_shared/api/dashboard/response/api-graphrequestresponse';
+import { WeekDays } from '../../../../_shared/helpers/WeekDays.enum';
+import { ChartModel } from '../../../../_shared/helpers/ChartModel';
+import { GraphTypeAggregation } from '../../../../_shared/helpers/GraphTypeAggregation.enum';
 
 @Component({
   selector: 'uk-weekrate-graph',
@@ -9,7 +12,7 @@ import { IGraphRequestResponse } from '../../../../_shared/api/dashboard/respons
 })
 export class UkWeekRateGraphComponent implements OnInit {
 
-  public dataDailySalesChart: { labels: string[]; series: number[][]; };
+  public dataDailySalesChart: ChartModel;
   public chartName : string;
   public isProcessing: boolean;
 
@@ -28,25 +31,14 @@ export class UkWeekRateGraphComponent implements OnInit {
 
   fillRate(){
     
-    var weekdays = new Array(7);
-      weekdays[0] = "M";
-      weekdays[1] = "T";
-      weekdays[2] = "W";
-      weekdays[3] = "T";
-      weekdays[4] = "F";
-      weekdays[5] = "S";
-      weekdays[6] = "S";
-
-
-    this.apiService.getGraphValues("3","7").subscribe((response: IGraphRequestResponse) => {
+    this.apiService.getGraphValues(GraphTypeAggregation.Day,"7").subscribe((response: IGraphRequestResponse) => {
      var self = this;
      var labelArray: string[] = [];
      var seriesArray: number[] = [];
-
       
       response.records.forEach(function(element){
         seriesArray.push(Number(element.errorPercentage))
-        labelArray.push(weekdays[(new Date(element.date)).getDay()])
+        labelArray.push(WeekDays[(new Date(element.date)).getDay()])
       });
 
       self.dataDailySalesChart.series.push(seriesArray.reverse());
