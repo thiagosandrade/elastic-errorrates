@@ -83,6 +83,21 @@ namespace ElasticErrorRates.Persistence.Repository
         public async Task<ElasticResponse<T>> SearchAggregate(GraphCriteria criteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
+                    .Query(q => q
+                        .Bool(bl =>
+                                bl.Filter(fq => 
+                                {
+                                    QueryContainer query = null;
+
+                                    query &= fq.Term(
+                                        t => t.Field("countryId").Value(criteria.CountryId)
+                                    );
+
+                                    return query;
+                                }
+                            )
+                        )
+                    )
                     .Aggregations(ag =>
                        {
                            AggregationContainerDescriptor<T> query = null;

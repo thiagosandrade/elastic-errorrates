@@ -4,6 +4,7 @@ import { IGraphRequestResponse } from '../../../../_shared/api/dashboard/respons
 import { WeekDays } from '../../../../_shared/helpers/WeekDays.enum';
 import { ChartModel } from '../../../../_shared/helpers/ChartModel';
 import { GraphTypeAggregation } from '../../../../_shared/helpers/GraphTypeAggregation.enum';
+import { Countries } from '../../../../_shared/helpers/Country.enum';
 
 @Component({
   selector: 'uk-weekrate-graph',
@@ -26,12 +27,11 @@ export class UkWeekRateGraphComponent implements OnInit {
     this.dataDailySalesChart = { labels: [], series: []}
     this.isProcessing = true;
     this.fillRate();
-
   }
 
   fillRate(){
     
-    this.apiService.getGraphValues(GraphTypeAggregation.Day,"7").subscribe((response: IGraphRequestResponse) => {
+    this.apiService.getGraphValues(Countries.UK, GraphTypeAggregation.Day,"7").subscribe((response: IGraphRequestResponse) => {
      var self = this;
      var labelArray: string[] = [];
      var seriesArray: number[] = [];

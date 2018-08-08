@@ -3,7 +3,7 @@ import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.servi
 import { ChartModel } from '../../../../_shared/helpers/ChartModel';
 import { GraphTypeAggregation } from '../../../../_shared/helpers/GraphTypeAggregation.enum';
 import { IGraphRequestResponse } from '../../../../_shared/api/dashboard/response/api-graphrequestresponse';
-import { Months } from '../../../../_shared/helpers/Months.enum';
+import { Countries } from '../../../../_shared/helpers/Country.enum';
 
 @Component({
   selector: 'uk-monthrate-graph',
@@ -35,7 +35,7 @@ export class UkMonthRateGraphComponent implements OnInit {
 
   fillRate(){
     
-    this.apiService.getGraphValues(GraphTypeAggregation.Month, `${((new Date()).getMonth() +1)}`).subscribe((response: IGraphRequestResponse) => {
+    this.apiService.getGraphValues(Countries.UK, GraphTypeAggregation.Month, `${((new Date()).getMonth() +1)}`).subscribe((response: IGraphRequestResponse) => {
      var self = this;
      var seriesArray: number[] = [];
       

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
 import { IDailyRate, DailyRate } from '../../../../_shared/api/dashboard/model/dailyrate';
 import { IDailyRateResponse } from '../../../../_shared/api/dashboard/response/api-dailyrateresponse';
+import { Countries } from '../../../../_shared/helpers/Country.enum';
 
 @Component({
   selector: 'uk-dailyrate',
@@ -16,7 +17,7 @@ export class UkDailyRateComponent implements OnInit {
 
   ngOnInit() {
 
-    this.ukDailyRate.CountryId = 1;
+    this.ukDailyRate.CountryId = Countries.UK;
     this.ukDailyRate.StartDate = new Date();
     this.ukDailyRate.StartDate.setDate(this.ukDailyRate.StartDate.getDate() - 1);
 

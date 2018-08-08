@@ -49,7 +49,8 @@ namespace ElasticErrorRates.API
             }
 
             app.UseHangfireServer()
-                .UseElasticErrorsRatesJobs(Configuration);
+                .UseElasticErrorsRatesJobs(Configuration)
+                .UseHangfireDashboard();
 
             app.UseCors("AllowAll");
             app.UseMvc(

@@ -69,20 +69,20 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
 
     if(this.chartName === 'UKWeekGraphTasksChart'){
-      var dailySalesChart = new Chartist.Line(`#${this.chartName}`, this.chartData, this.optionsDailySalesChart);
-      this.startAnimationForLineChart(dailySalesChart);
+      var ukWeekGraphTasksChart = new Chartist.Line(`#${this.chartName}`, this.chartData, this.optionsDailySalesChart);
+      this.startAnimationForLineChart(ukWeekGraphTasksChart);
     }
     else if(this.chartName === 'ROIWeekGraphTasksChart'){
-      var completedTasksChart = new Chartist.Line(`#${this.chartName}`, this.chartData, this.optionsCompletedTasksChart);
-      this.startAnimationForLineChart(completedTasksChart);
+      var roiWeekGraphTasksChart = new Chartist.Line(`#${this.chartName}`, this.chartData, this.optionsDailySalesChart);
+      this.startAnimationForLineChart(roiWeekGraphTasksChart);
     }
     else if(this.chartName === 'UKMonthRateChart'){
-      var websiteViewsChart = new Chartist.Bar(`#${this.chartName}`, this.chartData, this.optionswebsiteViewsChart, this.responsiveOptions);
-      this.startAnimationForBarChart(websiteViewsChart);
+      var ukMonthRateChart = new Chartist.Bar(`#${this.chartName}`, this.chartData, this.optionswebsiteViewsChart, this.responsiveOptions);
+      this.startAnimationForBarChart(ukMonthRateChart);
     }
     else if(this.chartName === 'ROIMonthRateChart'){
-      var websiteViewsChart = new Chartist.Bar(`#${this.chartName}`, this.chartData, this.optionswebsiteViewsChart, this.responsiveOptions);
-      this.startAnimationForBarChart(websiteViewsChart);
+      var roiMonthRateChart = new Chartist.Bar(`#${this.chartName}`, this.chartData, this.optionswebsiteViewsChart, this.responsiveOptions);
+      this.startAnimationForBarChart(roiMonthRateChart);
     }
     
 

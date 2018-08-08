@@ -36,11 +36,11 @@ export class ApiDashboardService {
         return this.http.get<IDailyRateResponse>(url);
     }
 
-    public getGraphValues(frequencyType: string, numberOfResults: string): Observable<IGraphRequestResponse> {
+    public getGraphValues(countryId: number, frequencyType: string, numberOfResults: string): Observable<IGraphRequestResponse> {
 
         var url: string =  `${environment.apiUrl}/dashboard/searchaggregate`;
 
-        url = url.concat(`?typeAggregation=${frequencyType}&numberOfResults=${numberOfResults}`);
+        url = url.concat(`?countryId=${countryId}&typeAggregation=${frequencyType}&numberOfResults=${numberOfResults}`);
         
         return this.http.get<IGraphRequestResponse>(url);
     }
