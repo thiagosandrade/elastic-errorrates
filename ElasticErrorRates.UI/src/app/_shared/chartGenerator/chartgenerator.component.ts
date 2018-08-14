@@ -22,12 +22,18 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
 
   ngOnInit(){
 
+      //var highValue =  Math.max.apply(null, this.chartData.series[0]) + 5;
+
       this.optionsDailySalesChart = {
             lineSmooth: Chartist.Interpolation.cardinal({
                 tension: 1
             }),
             low: 0,
-            high: Math.max.apply(null, this.chartData.series[0]) + 5, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+            //high: highValue, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+            axisY: {
+              onlyInteger: false
+            },
+            showArea: true,
             plugins: [
               Chartist.plugins.tooltip({
                 anchorToPoint: true
@@ -37,7 +43,7 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
 
       this.optionswebsiteViewsChart = {
           low: 0,
-          high: Math.max.apply(null, this.chartData.series[0]) + 5,
+          //high: highValue,
           plugins: [
             Chartist.plugins.tooltip({
               anchorToPoint: true
