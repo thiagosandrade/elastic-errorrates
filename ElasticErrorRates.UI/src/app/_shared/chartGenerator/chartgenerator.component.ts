@@ -2,6 +2,8 @@ import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import * as Chartist from 'chartist';
 import { ChartModel } from '../helpers/ChartModel';
 import 'chartist-plugin-pointlabels';
+import 'chartist-plugin-axistitle';
+import 'chartist-plugin-threshold';
 
 @Component({
   selector: 'chart-generator',
@@ -9,12 +11,11 @@ import 'chartist-plugin-pointlabels';
   templateUrl: './chartgenerator.component.html'
 })
 export class ChartGeneratorComponent implements OnInit, AfterViewInit {
-  
+
   @Input() chartData: ChartModel;
   @Input() chartName: string;
 
   public optionsDailySalesChart: any;
-  public optionsCompletedTasksChart: any;
   public optionswebsiteViewsChart: any;
   public responsiveOptions: any;
 
@@ -25,37 +26,51 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
                 tension: 1
             }),
             low: 0,
-            high: Math.max.apply(null, this.chartData.series[0]) + 20, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-            chartPadding: { top: 0, right: 0, bottom: 0, left: 0}
-            // plugins: [
-            //   Chartist.plugins.ctPointLabels({
-            //     textAnchor: 'middle',
-                
-            //   })
-            // ]
+            high: Math.max.apply(null, this.chartData.series[0]) + 5, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+            plugins: [
+              // Chartist.plugins.ctAxisTitle({
+              //   axisX: {
+              //     axisTitle: 'Coffe Cups',
+              //     axisClass: 'ct-axis-title',
+              //     offset: {
+              //       x: 0,
+              //       y: 0
+              //     },
+              //     textAnchor: 'middle',
+              //     flipTitle: true
+              //   },
+              //   axisY: {
+              //     axisTitle: 'Performance',
+              //     axisClass: 'ct-axis-title',
+              //     offset: {
+              //       x: 0,
+              //       y: 0
+              //     },
+              //     textAnchor: 'middle',
+              //     flipTitle: false
+              //   }
+              // }),
+              // Chartist.plugins.ctPointLabels({
+              //   textAnchor: 'middle'
+              // }),
+              //  Chartist.plugins.ctThreshold()
+            ]
         }
 
-      this.optionsCompletedTasksChart = {
-          lineSmooth: Chartist.Interpolation.cardinal({
-              tension: 1
-          }),
-          low: 0,
-          high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: { top: 0, right: 0, bottom: 0, left: 0}
-      }
-
       this.optionswebsiteViewsChart = {
-          axisX: {
-              showGrid: true
-          },
           low: 0,
-          high: Math.max.apply(null, this.chartData.series[0]) + 5,
-          chartPadding: { top: 0, right: 5, bottom: 0, left: 0}
+          high: Math.max.apply(null, this.chartData.series[0]) + 5
       };
-      
+
       this.responsiveOptions = [
+        ['screen and (min-width: 641px) and (max-width: 1024px)', {
+          axisX: {
+            labelInterpolationFnc: function (value) {
+              return value;
+            }
+          }
+        }],
         ['screen and (max-width: 640px)', {
-          seriesBarDistance: 5,
           axisX: {
             labelInterpolationFnc: function (value) {
               return value[0];
@@ -63,13 +78,16 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
           }
         }]
       ];
-      
+
   }
 
   ngAfterViewInit(): void {
 
     if(this.chartName === 'UKWeekGraphTasksChart'){
       var ukWeekGraphTasksChart = new Chartist.Line(`#${this.chartName}`, this.chartData, this.optionsDailySalesChart);
+      console.log(null, this.chartData.series[0]);
+      console.log(Math.max.apply(null, this.chartData.series[0]));
+      console.log(Math.max.apply(null, this.chartData.series[0])+5);
       this.startAnimationForLineChart(ukWeekGraphTasksChart);
     }
     else if(this.chartName === 'ROIWeekGraphTasksChart'){
@@ -84,7 +102,7 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
       var roiMonthRateChart = new Chartist.Bar(`#${this.chartName}`, this.chartData, this.optionswebsiteViewsChart, this.responsiveOptions);
       this.startAnimationForBarChart(roiMonthRateChart);
     }
-    
+
 
   }
 
