@@ -4,6 +4,7 @@ import { ChartModel } from '../helpers/ChartModel';
 import 'chartist-plugin-pointlabels';
 import 'chartist-plugin-axistitle';
 import 'chartist-plugin-threshold';
+import 'chartist-plugin-tooltip'
 
 @Component({
   selector: 'chart-generator',
@@ -28,38 +29,20 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
             low: 0,
             high: Math.max.apply(null, this.chartData.series[0]) + 5, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
             plugins: [
-              // Chartist.plugins.ctAxisTitle({
-              //   axisX: {
-              //     axisTitle: 'Coffe Cups',
-              //     axisClass: 'ct-axis-title',
-              //     offset: {
-              //       x: 0,
-              //       y: 0
-              //     },
-              //     textAnchor: 'middle',
-              //     flipTitle: true
-              //   },
-              //   axisY: {
-              //     axisTitle: 'Performance',
-              //     axisClass: 'ct-axis-title',
-              //     offset: {
-              //       x: 0,
-              //       y: 0
-              //     },
-              //     textAnchor: 'middle',
-              //     flipTitle: false
-              //   }
-              // }),
-              // Chartist.plugins.ctPointLabels({
-              //   textAnchor: 'middle'
-              // }),
-              //  Chartist.plugins.ctThreshold()
+              Chartist.plugins.tooltip({
+                anchorToPoint: true
+              })
             ]
-        }
+        };
 
       this.optionswebsiteViewsChart = {
           low: 0,
-          high: Math.max.apply(null, this.chartData.series[0]) + 5
+          high: Math.max.apply(null, this.chartData.series[0]) + 5,
+          plugins: [
+            Chartist.plugins.tooltip({
+              anchorToPoint: true
+            })
+          ]
       };
 
       this.responsiveOptions = [
@@ -85,9 +68,6 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
 
     if(this.chartName === 'UKWeekGraphTasksChart'){
       var ukWeekGraphTasksChart = new Chartist.Line(`#${this.chartName}`, this.chartData, this.optionsDailySalesChart);
-      console.log(null, this.chartData.series[0]);
-      console.log(Math.max.apply(null, this.chartData.series[0]));
-      console.log(Math.max.apply(null, this.chartData.series[0])+5);
       this.startAnimationForLineChart(ukWeekGraphTasksChart);
     }
     else if(this.chartName === 'ROIWeekGraphTasksChart'){

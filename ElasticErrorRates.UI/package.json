@@ -31,6 +31,7 @@
     "chartist-plugin-axistitle": "0.0.4",
     "chartist-plugin-pointlabels": "0.0.6",
     "chartist-plugin-threshold": "0.0.2",
+    "chartist-plugin-tooltip": "0.0.11",
     "core-js": "^2.5.5",
     "jquery": "3.2.1",
     "ngx-infinite-scroll": "^0.8.4",
