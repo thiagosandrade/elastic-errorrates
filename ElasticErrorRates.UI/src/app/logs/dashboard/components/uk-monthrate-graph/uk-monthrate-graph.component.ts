@@ -46,7 +46,6 @@ export class UkMonthRateGraphComponent implements OnInit {
 
       self.datawebsiteViewsChart.series.push(seriesArray.slice().reverse());
       
-      console.log(seriesArray);
       this.comparison.value = (seriesArray[0] / seriesArray[1] * 100) - 100;  
       this.comparison.valueAbsolute = Math.abs(this.comparison.value);
 

@@ -3,29 +3,39 @@
 
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
-    position: relative;
-    min-height: 100%;
-}
+
+html,
 body {
-    /* Margin bottom by footer height */
-    margin-bottom: 40px;
-    background: #E5E5E5;
-    font-family: 'Century Gothic', Arial, Tahoma;
+   margin:0;
+   padding:0;
+   height:100%;
+   background: #E5E5E5;
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 40px;
-    line-height: 40px; /* Vertically center the text there */
-    background-color: #000000;
-    font-size: 0.8em;
-    color:#FFFFFF;
+#container {
+   min-height:100%;
+   position:relative;
 }
 
-#main {
-    margin-top:70px;
+#header {
+   background:#ff0;
+}
+
+#body {
+   padding-top:70px;
+}
+#footer {
+   position:fixed;
+   bottom:0;
+   width:100%;
+   background:#000000;
+   
+
+   .footer{
+    padding: 0px !important;
+   }
+}
+
+.card{
+    margin-bottom: 15px !important;
 }
