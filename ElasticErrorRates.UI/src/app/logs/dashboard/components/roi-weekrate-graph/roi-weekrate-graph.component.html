@@ -7,12 +7,13 @@
     </div>
     <div class="card-body">
         <h4 class="card-title">ROI Week Rate</h4>
-        <p class="card-category">
-            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
     </div>
     <div class="card-footer">
-        <div class="stats">
-            <i class="material-icons">access_time</i> campaign sent 2 days ago
-        </div>
+        <p class="card-category" *ngIf="comparison.value != null">
+            <span class="text-success">
+                <i class="fa fa-long-arrow-up"></i> {{comparison.valueAbsolute | number: '1.2-2' }}  
+            </span> 
+            {{comparison.value > 0 ? 'increase' : 'decrease' }} comparing last and previous values.
+        </p>
     </div>
 </div>

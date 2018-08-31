@@ -15,7 +15,8 @@ export class ROIMonthRateGraphComponent implements OnInit {
   public datawebsiteViewsChart: ChartModel;
   public chartName : string;
   public isProcessing: boolean;
-
+  public comparison: any = {  };
+  
   constructor(private apiService: ApiDashboardService) { }
 
   ngOnInit() {
@@ -43,7 +44,11 @@ export class ROIMonthRateGraphComponent implements OnInit {
         seriesArray.push(Number(element.errorPercentage))
       });
 
-      self.datawebsiteViewsChart.series.push(seriesArray.reverse());
+      self.datawebsiteViewsChart.series.push(seriesArray.slice().reverse());
+
+      console.log(seriesArray);
+      this.comparison.value = (seriesArray[0] / seriesArray[1] * 100) - 100;  
+      this.comparison.valueAbsolute = Math.abs(this.comparison.value);
 
       this.isProcessing = false;
     });

@@ -16,6 +16,7 @@ export class UkWeekRateGraphComponent implements OnInit {
   public dataDailySalesChart: ChartModel;
   public chartName : string;
   public isProcessing: boolean;
+  public comparison: any = {  };
 
   constructor(private apiService: ApiDashboardService) { }
 
@@ -41,8 +42,12 @@ export class UkWeekRateGraphComponent implements OnInit {
         labelArray.push(WeekDays[(new Date(element.date)).getDay()])
       });
 
-      self.dataDailySalesChart.series.push(seriesArray.reverse());
+      self.dataDailySalesChart.series.push(seriesArray.slice().reverse());
       self.dataDailySalesChart.labels = labelArray.reverse();
+      
+     
+      this.comparison.value = (seriesArray[0] / seriesArray[1] * 100) - 100;  
+      this.comparison.valueAbsolute = Math.abs(this.comparison.value);
 
       this.isProcessing = false;
     });
