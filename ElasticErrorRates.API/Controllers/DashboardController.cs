@@ -72,22 +72,22 @@ namespace ElasticErrorRates.API.Controllers
         }
 
         [HttpGet("searchaggregate")]
-        public async Task<IActionResult> SearchAggregate(string countryId, string typeAggregation, string numberOfResults)
+        public async Task<IActionResult> SearchAggregate(int countryId, string typeAggregation, string numberOfResults)
         {
             try
             {
                 int.TryParse(numberOfResults, out var numberOfResult);
 
                 var result = await _queryDispatcher.DispatchAsync(
-                    _unitOfWork.DashboardElasticRepository<ErrorRate>().SearchAggregate, 
+                    _unitOfWork.DashboardElasticRepository<ErrorRate>().SearchAggregate,
                     new GraphCriteria
                     {
-                        CountryId = Int32.Parse(countryId),
-                        TypeAggregation = typeAggregation, 
-                        NumberOfResults = Int32.Parse(numberOfResults)
+                        CountryId = (Country)countryId,
+                        TypeAggregation = typeAggregation,
+                        NumberOfResults = numberOfResult
                     });
-                
-                
+
+
                 return Ok(result);
 
             }
