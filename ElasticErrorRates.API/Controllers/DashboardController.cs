@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.CQRS.Query;
 using ElasticErrorRates.Core.Criteria.Dashboard;
+using ElasticErrorRates.Core.Enums;
 using ElasticErrorRates.Core.Manager;
 using ElasticErrorRates.Core.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -53,7 +54,12 @@ namespace ElasticErrorRates.API.Controllers
 
                 var result = await _queryDispatcher.DispatchAsync(
                     _unitOfWork.DashboardElasticRepository<DailyRate>().Search,
-                    new SearchCriteria {CountryId = countryId, StartDate = startdate.Value, EndDate = enddate.Value});
+                    new SearchCriteria
+                    {
+                        CountryId = (Country)countryId,
+                        StartDate = startdate.Value,
+                        EndDate = enddate.Value
+                    });
                 
                 
                 return Ok(result);
@@ -70,6 +76,7 @@ namespace ElasticErrorRates.API.Controllers
         {
             try
             {
+                int.TryParse(numberOfResults, out var numberOfResult);
 
                 var result = await _queryDispatcher.DispatchAsync(
                     _unitOfWork.DashboardElasticRepository<ErrorRate>().SearchAggregate, 

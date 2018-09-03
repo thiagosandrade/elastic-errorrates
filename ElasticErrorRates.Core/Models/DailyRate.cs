@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using ElasticErrorRates.Core.Enums;
 using Nest;
 
 namespace ElasticErrorRates.Core.Models
@@ -11,7 +11,7 @@ namespace ElasticErrorRates.Core.Models
         [Number]
         public int Id { get; set; }
         [Number]
-        public int CountryId { get; set; }
+        public Country CountryId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int ErrorCount { get; set; }

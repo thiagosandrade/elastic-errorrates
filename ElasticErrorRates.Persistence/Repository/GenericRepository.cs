@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.Persistence;
-using ElasticErrorRates.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElasticErrorRates.Persistence.Repository
@@ -46,8 +45,10 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task<List<T>> GetAllAsync()
         {
-            return await Context.Set<T>().Take(3500).ToListAsync();
+            return await Context.Set<T>().Take(3500)
+                .ToListAsync();
         }
+
 
         public async Task<T> SaveAsync(T entity)
         {
@@ -58,7 +59,7 @@ namespace ElasticErrorRates.Persistence.Repository
                 {
                     Context.Set<T>().AddAsync(entity);
                     Context.Entry(entity).State = EntityState.Added;
-                    
+
                 }
                 else
                 {
@@ -72,12 +73,24 @@ namespace ElasticErrorRates.Persistence.Repository
         public async Task RemoveAsync(int id)
         {
             var entity = await FindAsync(id);
-            await Task.Factory.StartNew(() => 
+            await Task.Factory.StartNew(() =>
             {
                 Context.Set<T>().Attach(entity);
                 Context.Set<T>().Remove(entity);
             });
-            
+
+        }
+
+        public virtual async Task<IQueryable<T>> FindBy(Expression<Func<T, bool>> wherePredicate)
+        {
+            return await Task.Factory.StartNew(() =>
+            {
+                var query = Context.Set<T>().AsNoTracking<T>();
+
+                query = (wherePredicate == null) ? query : query.Where(wherePredicate);
+
+                return query;
+            });
         }
     }
 }

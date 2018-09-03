@@ -10,6 +10,7 @@ namespace ElasticErrorRates.Core.Persistence
     {
         Task<T> FindAsync(int id);
         Task<IQueryable<T>> FindBy(Expression<Func<T, bool>> wherePredicate, params string[] includePredicate);
+        Task<IQueryable<T>> FindBy(Expression<Func<T, bool>> wherePredicate);
         Task<List<T>> GetAllAsync();
         Task<T> SaveAsync(T entity);
         Task RemoveAsync(int id);

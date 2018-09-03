@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.Criteria;
-using ElasticErrorRates.Core.Criteria.Dashboard;
+﻿using ElasticErrorRates.Core.Criteria.Dashboard;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
-using Elasticsearch.Net;
 using Nest;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ElasticErrorRates.Persistence.Repository
 {
