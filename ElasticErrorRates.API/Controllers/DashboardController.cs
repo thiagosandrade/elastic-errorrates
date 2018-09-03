@@ -98,7 +98,7 @@ namespace ElasticErrorRates.API.Controllers
         }
 
         [HttpGet("errorsrank/{countryId}")]
-        public async Task<IActionResult> ErrorsRank(string countryId)
+        public async Task<IActionResult> ErrorsRank(int countryId)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace ElasticErrorRates.API.Controllers
                     _unitOfWork.LogElasticRepository<LogSummary>().SearchAggregateByCountryId, 
                     new SearchCriteria()
                     {
-                        CountryId = Int32.Parse(countryId)
+                        CountryId = (Country)countryId
                     });
                 
                 
