@@ -96,5 +96,28 @@ namespace ElasticErrorRates.API.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        [HttpGet("errorsrank/{countryId}")]
+        public async Task<IActionResult> ErrorsRank(string countryId)
+        {
+            try
+            {
+
+                var result = await _queryDispatcher.DispatchAsync(
+                    _unitOfWork.LogElasticRepository<LogSummary>().SearchAggregateByCountryId, 
+                    new SearchCriteria()
+                    {
+                        CountryId = Int32.Parse(countryId)
+                    });
+                
+                
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
     }
 }

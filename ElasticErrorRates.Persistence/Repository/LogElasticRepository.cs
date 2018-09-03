@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ElasticErrorRates.Core.Criteria;
 using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using Elasticsearch.Net;
 using Nest;
+using DashboardSearchCriteria = ElasticErrorRates.Core.Criteria.Dashboard.SearchCriteria;
 
 namespace ElasticErrorRates.Persistence.Repository
 {
@@ -24,7 +24,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             _elasticContext.SetupIndex<Log>(defaultIndex);
 
-            _elasticContext.ElasticClient.ClearCache(defaultIndex);
+            //_elasticContext.ElasticClient.ClearCache(defaultIndex);
         }
 
         private async Task<ISearchResponse<T>> BasicQuery(SearchDescriptor<T> queryCommand)
@@ -32,22 +32,31 @@ namespace ElasticErrorRates.Persistence.Repository
             return await _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex).AllTypes());
         }
 
+        public async Task<Func<AggregationContainerDescriptor<T>, IAggregationContainer>> AggregateCommand()
+        {
+            return await Task.Run(() =>
+             {
+                 return new Func<AggregationContainerDescriptor<T>, IAggregationContainer>
+                     (ag => ag
+                         .Terms("group_by_httpUrl",
+                             t => t.Field("httpUrl.keyword")
+                                 .Aggregations(aa => aa
+                                     .Min("first_occurrence",
+                                         m => m.Field("dateTimeLogged"))
+                                     .Max("last_occurrence",
+                                         mm => mm.Field("dateTimeLogged"))
+                                 )
+                                 .Size(int.MaxValue)
+                         )
+                     );
+             });
+        } 
+
         public async Task<ElasticResponse<T>> SearchAggregate()
         {
-            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
-                .Aggregations(ag => ag
-                    .Terms("group_by_httpUrl",
-                        t => t.Field("httpUrl.keyword")
-                            .Aggregations(aa => aa
-                                .Min("first_occurrence",
-                                    m => m.Field("dateTimeLogged"))
-                                .Max("last_occurrence",
-                                    mm => mm.Field("dateTimeLogged"))
-                            )
-                            .Size(int.MaxValue)
-                        )
-                );
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>();
 
+            queryCommand.Aggregations(AggregateCommand().Result);
 
             var result = await BasicQuery(queryCommand);
 
@@ -60,6 +69,39 @@ namespace ElasticErrorRates.Persistence.Repository
 
             return response;
 
+        }
+
+        public async Task<ElasticResponse<T>> SearchAggregateByCountryId(DashboardSearchCriteria searchCriteria)
+        {
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
+                .Query(q => q
+                    .Bool(bl =>
+                        bl.Filter(
+                            fq =>
+                            {
+                                QueryContainer query = null;
+
+                                query &= fq.Term(t => t
+                                    .Field("countryId").Value(searchCriteria.CountryId)
+                                );
+                                return query;
+                            }
+                        )
+                    )
+                );
+
+            queryCommand.Aggregations(AggregateCommand().Result);
+
+            var result = await BasicQuery(queryCommand);
+
+            var response = _logElasticMappers.MapElasticResults(result);
+
+            if (!result.IsValid)
+            {
+                throw new InvalidOperationException(result.DebugInformation);
+            }
+
+            return response;
         }
 
         public async Task<ElasticResponse<T>> Search(SearchCriteria criteria)

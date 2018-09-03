@@ -21,7 +21,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             _elasticContext.SetupIndex<DailyRate>(defaultIndex);
 
-            _elasticContext.ElasticClient.ClearCache(defaultIndex);
+            //_elasticContext.ElasticClient.ClearCache(defaultIndex);
         }
 
         private async Task<ISearchResponse<T>> BasicQuery(SearchDescriptor<T> queryCommand)
