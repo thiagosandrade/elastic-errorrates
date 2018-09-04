@@ -8,6 +8,7 @@ import 'rxjs/add/operator/catch';
 
 import { IDailyRateResponse } from './response/api-dailyrateresponse';
 import { IGraphRequestResponse } from './response/api-graphrequestresponse';
+import { IErrorsRankResponse } from './response/api-errorsrankresponse';
 
 @Injectable()
 export class ApiDashboardService {
@@ -43,6 +44,10 @@ export class ApiDashboardService {
         url = url.concat(`?countryId=${countryId}&typeAggregation=${frequencyType}&numberOfResults=${numberOfResults}`);
         
         return await this.http.get<IGraphRequestResponse>(url).toPromise();
+    }
+
+    public async getErrorRank(countryId: number): Promise<IErrorsRankResponse> {
+        return await this.http.get<IErrorsRankResponse>(`${environment.apiUrl}/dashboard/errorsrank/${countryId}`).toPromise();
     }
 
 }

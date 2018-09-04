@@ -12,7 +12,7 @@
               <th>Ocurrences</th>
           </thead>
           <tbody>
-              <tr>
+              <tr *ngFor="let error of errors">
                   <td>
                       <div class="form-check">
                           <label class="form-check-label">
@@ -23,54 +23,9 @@
                           </label>
                       </div>
                   </td>
-                  <td>Error description</td>
-                  <td>2017/11/13 03:21:43</td>
-                  <td>36.738</td>
-              </tr>
-              <tr>
-                  <td>
-                      <div class="form-check">
-                          <label class="form-check-label">
-                              <input class="form-check-input" type="checkbox" value="" checked>
-                              <span class="form-check-sign">
-                                  <span class="check"></span>
-                              </span>
-                          </label>
-                      </div>
-                  </td>
-                  <td>Error description</td>
-                  <td>2017/11/13 03:21:43</td>
-                  <td>36.738</td>
-              </tr>
-              <tr>
-                  <td>
-                      <div class="form-check">
-                          <label class="form-check-label">
-                              <input class="form-check-input" type="checkbox" value="" checked>
-                              <span class="form-check-sign">
-                                  <span class="check"></span>
-                              </span>
-                          </label>
-                      </div>
-                  </td>
-                  <td>Error description</td>
-                  <td>2017/11/13 03:21:43</td>
-                  <td>36.738</td>
-              </tr>
-              <tr>
-                  <td>
-                      <div class="form-check">
-                          <label class="form-check-label">
-                              <input class="form-check-input" type="checkbox" value="" checked>
-                              <span class="form-check-sign">
-                                  <span class="check"></span>
-                              </span>
-                          </label>
-                      </div>
-                  </td>
-                  <td>Error description</td>
-                  <td>2017/11/13 03:21:43</td>
-                  <td>36.738</td>
+                  <td>{{error.httpUrl}}</td>
+                  <td>{{error.lastOccurence}}</td>
+                  <td>{{error.httpUrlCount}}</td>
               </tr>
           </tbody>
       </table>
