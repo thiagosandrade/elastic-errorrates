@@ -66,7 +66,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             var result = await BasicQuery(queryCommand);
 
-            var response = _dashboardElasticMappers.MapElasticResults(result);
+            var response = await _dashboardElasticMappers.MapElasticResults(result);
 
             if (!result.IsValid)
             {
@@ -130,7 +130,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             var result = await BasicQuery(queryCommand);
 
-            var response = _dashboardElasticMappers.MapElasticAggregateResults(result, criteria.NumberOfResults);
+            var response = await _dashboardElasticMappers.MapElasticAggregateResults(result, criteria.NumberOfResults);
 
             if (!result.IsValid)
             {

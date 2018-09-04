@@ -32,9 +32,11 @@ export class ROIYesterdayRateComponent implements OnInit {
   }
 
   fillUKDailyRate(){
-    this.apiService.getDailyRate(this.roiYesterdayRate.CountryId, this.roiYesterdayRate.StartDate, this.roiYesterdayRate.EndDate).subscribe((response: IDailyRateResponse) => {
-      this.roiYesterdayRate = response.records[0];
-      this.isProcessing = false;
-    });
+    this.apiService.getDailyRate(this.roiYesterdayRate.CountryId, this.roiYesterdayRate.StartDate, this.roiYesterdayRate.EndDate)
+      .then(async (response: IDailyRateResponse) => {
+        this.roiYesterdayRate = response.records[0];
+        this.isProcessing = false;
+      }
+    );
   }
 }

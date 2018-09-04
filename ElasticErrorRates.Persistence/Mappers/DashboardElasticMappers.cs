@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using Nest;
@@ -11,7 +12,7 @@ namespace ElasticErrorRates.Persistence.Mappers
 {
     public class DashboardElasticMappers<T> : IDashboardElasticMappers<T> where T : class
     {
-        public ElasticResponse<T> MapElasticResults(ISearchResponse<T> result)
+        public async Task<ElasticResponse<T>> MapElasticResults(ISearchResponse<T> result)
         {
             ISearchResponse<DailyRate> convertedResult = (ISearchResponse<DailyRate>)result;
 
@@ -26,21 +27,23 @@ namespace ElasticErrorRates.Persistence.Mappers
                     ErrorCount = x.Source.ErrorCount,
                     OrderCount = x.Source.OrderCount,
                     OrderValue = x.Source.OrderValue,
-                    ErrorPercentage = Math.Round((((float)x.Source.ErrorCount / x.Source.OrderCount) * 100),2)
+                    ErrorPercentage = Math.Round((float)x.Source.ErrorCount / x.Source.OrderCount * 100,2)
                 };
 
                 return log;
 
             }).Cast<T>().ToList();
 
-            return new ElasticResponse<T>
-            {
-                TotalRecords = result.Total,
-                Records = records
-            };
+            return await Task.Run(() =>
+                new ElasticResponse<T>
+                {
+                    TotalRecords = result.Total,
+                    Records = records
+                }
+            );
         }
 
-        public ElasticResponse<T> MapElasticAggregateResults(ISearchResponse<T> result, int numberOfResults)
+        public async Task<ElasticResponse<T>> MapElasticAggregateResults(ISearchResponse<T> result, int numberOfResults)
         {
             IEnumerable<T> aggregatedResults = result.Aggregations.DateHistogram("my_date_histogram").Buckets.Select(x =>
                 {
@@ -56,7 +59,10 @@ namespace ElasticErrorRates.Persistence.Mappers
                             OrderCount = orderCount.ToString(),
                             ErrorCount = errorCount.ToString(),
                             OrderValue = orderValue.ToString(),
-                            ErrorPercentage = Math.Round((double) (errorCount / orderCount * 100),2).ToString(CultureInfo.InvariantCulture)
+                            ErrorPercentage = 
+                                    Math.Round(errorCount != null && orderCount != null ? 
+                                        (double) (errorCount / orderCount * 100) : 0 
+                                    ,2).ToString(CultureInfo.InvariantCulture)
                         };
 
                         return record;
@@ -66,14 +72,13 @@ namespace ElasticErrorRates.Persistence.Mappers
                 }
             ).Cast<T>().ToList();
 
-
-            var totalRecords = aggregatedResults.Count();
-
-            return new ElasticResponse<T>
-            {
-                TotalRecords = totalRecords,
-                Records = aggregatedResults.Take(numberOfResults)
-            };
+            return await Task.Run(() => 
+                new ElasticResponse<T>
+                {
+                    TotalRecords = aggregatedResults.Count(),
+                    Records = aggregatedResults.Take(numberOfResults)
+                }
+            );
         }
     }
 

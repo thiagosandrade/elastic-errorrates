@@ -36,20 +36,22 @@ export class UkMonthRateGraphComponent implements OnInit {
 
   fillRate(){
     
-    this.apiService.getGraphValues(Countries.UK, GraphTypeAggregation.Month, `${((new Date()).getMonth() +1)}`).subscribe((response: IGraphRequestResponse) => {
-     var self = this;
-     var seriesArray: number[] = [];
-      
-      response.records.forEach(function(element){
-        seriesArray.push(Number(element.errorPercentage))
-      });
+    this.apiService.getGraphValues(Countries.UK, GraphTypeAggregation.Month, `${((new Date()).getMonth() +1)}`)
+      .then(async (response: IGraphRequestResponse) => {
+        var self = this;
+        var seriesArray: number[] = [];
+          
+        response.records.forEach(function(element){
+          seriesArray.push(Number(element.errorPercentage))
+        });
 
-      self.datawebsiteViewsChart.series.push(seriesArray.slice().reverse());
-      
-      this.comparison.value = (seriesArray[0] / seriesArray[1] * 100) - 100;  
-      this.comparison.valueAbsolute = Math.abs(this.comparison.value);
+        self.datawebsiteViewsChart.series.push(seriesArray.slice().reverse());
+        
+        this.comparison.value = (seriesArray[0] / seriesArray[1] * 100) - 100;  
+        this.comparison.valueAbsolute = Math.abs(this.comparison.value);
 
-      this.isProcessing = false;
-    });
+        this.isProcessing = false;
+      }
+    );
   }
 }

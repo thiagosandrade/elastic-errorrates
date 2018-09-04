@@ -21,7 +21,7 @@ export class ApiDashboardService {
             .catch((error: any) => { return Observable.throw(error) });
     }
 
-    public getDailyRate(countryId: number, startDate: Date = null, enddate: Date = null): Observable<IDailyRateResponse> {
+    public async getDailyRate(countryId: number, startDate: Date = null, enddate: Date = null): Promise<IDailyRateResponse> {
 
         var url: string =  `${environment.apiUrl}/dashboard/search/${countryId}`;
 
@@ -33,16 +33,16 @@ export class ApiDashboardService {
             url = url.concat(`?startdate=${startDate.toISOString()}&enddate=${enddate.toISOString()}`);
         }
         
-        return this.http.get<IDailyRateResponse>(url);
+        return await this.http.get<IDailyRateResponse>(url).toPromise();
     }
 
-    public getGraphValues(countryId: number, frequencyType: string, numberOfResults: string): Observable<IGraphRequestResponse> {
+    public async getGraphValues(countryId: number, frequencyType: string, numberOfResults: string): Promise<IGraphRequestResponse> {
 
         var url: string =  `${environment.apiUrl}/dashboard/searchaggregate`;
 
         url = url.concat(`?countryId=${countryId}&typeAggregation=${frequencyType}&numberOfResults=${numberOfResults}`);
         
-        return this.http.get<IGraphRequestResponse>(url);
+        return await this.http.get<IGraphRequestResponse>(url).toPromise();
     }
 
 }

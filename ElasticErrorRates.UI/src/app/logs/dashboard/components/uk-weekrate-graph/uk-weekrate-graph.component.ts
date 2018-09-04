@@ -32,24 +32,26 @@ export class UkWeekRateGraphComponent implements OnInit {
 
   fillRate(){
     
-    this.apiService.getGraphValues(Countries.UK, GraphTypeAggregation.Day,"7").subscribe((response: IGraphRequestResponse) => {
-     var self = this;
-     var labelArray: string[] = [];
-     var seriesArray: number[] = [];
-      
-      response.records.forEach(function(element){
-        seriesArray.push(Number(element.errorPercentage))
-        labelArray.push(WeekDays[(new Date(element.date)).getDay()])
-      });
+    this.apiService.getGraphValues(Countries.UK, GraphTypeAggregation.Day,"7")
+      .then(async (response: IGraphRequestResponse) => {
+        var self = this;
+        var labelArray: string[] = [];
+        var seriesArray: number[] = [];
+          
+        await response.records.forEach(function(element){
+          seriesArray.push(Number(element.errorPercentage))
+          labelArray.push(WeekDays[(new Date(element.date)).getDay()])
+        });
 
-      self.dataDailySalesChart.series.push(seriesArray.slice().reverse());
-      self.dataDailySalesChart.labels = labelArray.reverse();
+        self.dataDailySalesChart.series.push(seriesArray.slice().reverse());
+        self.dataDailySalesChart.labels = labelArray.reverse();
+        
       
-     
-      this.comparison.value = (seriesArray[0] / seriesArray[1] * 100) - 100;  
-      this.comparison.valueAbsolute = Math.abs(this.comparison.value);
+        this.comparison.value = (seriesArray[0] / seriesArray[1] * 100) - 100;  
+        this.comparison.valueAbsolute = Math.abs(this.comparison.value);
 
-      this.isProcessing = false;
-    });
+        this.isProcessing = false;
+      }
+    );
   }
 }
