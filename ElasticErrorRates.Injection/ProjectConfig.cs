@@ -18,8 +18,6 @@ namespace ElasticErrorRates.Injection
     {
         public static void AddElasticErroRatesInjections(this IServiceCollection services, IConfiguration configuration)
         {
-            //TODO
-            //2 connection strings??
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<DashboardContext>(options => options.UseSqlServer(configuration.GetConnectionString("DailyRatesConnection")));
 
