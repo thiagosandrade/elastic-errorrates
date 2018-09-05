@@ -20,7 +20,9 @@
       "prefix": "app",
       "styles": [
         "styles.scss",
-        "./assets/scss/material-dashboard.scss"
+		"./assets/scss/material-dashboard.scss",
+		"./assets/scss/chartist.scss"
+        
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.js",
