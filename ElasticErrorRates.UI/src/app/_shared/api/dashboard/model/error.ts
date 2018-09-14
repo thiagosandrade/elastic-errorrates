@@ -3,6 +3,8 @@ export interface IError {
     httpUrl: string;
     firstOccurrence: string;
     lastOccurrence: Date;
+    StartDate: Date;
+    EndDate: Date;
 }
 
 export class Error implements IError {
@@ -10,4 +12,6 @@ export class Error implements IError {
     httpUrl: string;
     firstOccurrence: string;
     lastOccurrence: Date;
+    StartDate: Date;
+    EndDate: Date;
 }

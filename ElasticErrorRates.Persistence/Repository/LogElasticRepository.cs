@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
+using ElasticErrorRates.Persistence.Utils;
 using Elasticsearch.Net;
 using Nest;
 using DashboardSearchCriteria = ElasticErrorRates.Core.Criteria.Dashboard.SearchCriteria;
@@ -75,8 +76,8 @@ namespace ElasticErrorRates.Persistence.Repository
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
-                    .Bool(bl =>
-                        bl.Filter(
+                    .Bool(bl => bl
+                        .Must(
                             fq =>
                             {
                                 QueryContainer query = null;
@@ -84,9 +85,21 @@ namespace ElasticErrorRates.Persistence.Repository
                                 query &= fq.Term(t => t
                                     .Field("countryId").Value(searchCriteria.CountryId)
                                 );
+
+                                query &= fq.Term(t => t
+                                    .Field("level").Value("error")
+                                );
+
                                 return query;
                             }
                         )
+                        .Filter(
+                            ft => new DateRangeQuery
+                            {
+                                Field = "dateTimeLogged",
+                                GreaterThanOrEqualTo = searchCriteria.StartDate,
+                                LessThanOrEqualTo = searchCriteria.EndDate
+                            })
                     )
                 );
 
@@ -254,7 +267,12 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task Bulk(IEnumerable<T> records)
         {
-            await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(records));
+            var chunckedRecords = records.Chunk(1000);
+            foreach (var chunckedRecord in chunckedRecords)
+            {
+                await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(chunckedRecord));       
+            }
+         
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.CQRS.Query;
@@ -98,19 +99,25 @@ namespace ElasticErrorRates.API.Controllers
         }
 
         [HttpGet("errorsrank/{countryId}")]
-        public async Task<IActionResult> ErrorsRank(int countryId)
+        public async Task<IActionResult> ErrorsRank(int countryId, DateTime? startdate = null, DateTime? enddate = null)
         {
             try
             {
+                startdate = startdate ?? DateTime.MinValue;
+                enddate = enddate ?? DateTime.MinValue;
 
                 var result = await _queryDispatcher.DispatchAsync(
                     _unitOfWork.LogElasticRepository<LogSummary>().SearchAggregateByCountryId, 
                     new SearchCriteria()
                     {
-                        CountryId = (Country)countryId
+                        CountryId = (Country)countryId,
+                        StartDate = startdate.Value,
+                        EndDate = enddate.Value
                     });
-                
-                
+
+
+                result.Records = result.Records.Take(5);
+
                 return Ok(result);
 
             }

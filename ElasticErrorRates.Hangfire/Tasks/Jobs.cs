@@ -34,8 +34,9 @@ namespace ElasticErrorRates.Hangfire.Tasks
                yesterdayDate.Month, yesterdayDate.Day, 23, 59, 59);
 
             //Expression to determinate the specific range of date to query on database 
-            Expression<Func<Log, bool>> predicate =
-                srv => srv.DateTimeLogged >= startDate && srv.DateTimeLogged <= endDate;
+            //Expression<Func<Log, bool>> predicate = null;
+
+            Expression<Func<Log, bool>> predicate = srv => srv.DateTimeLogged >= startDate && srv.DateTimeLogged <= endDate;
 
             //Get Logs data from database
             var logs = (await queryDispatcher.DispatchAsync(unitOfWork.GenericRepository<Log>()
@@ -58,14 +59,15 @@ namespace ElasticErrorRates.Hangfire.Tasks
             var yesterdayDate = DateTime.Now.AddDays(-1);
 
             var startDate = new DateTime(yesterdayDate.Year,
-                yesterdayDate.Month, yesterdayDate.Day, 0, 0, 0);
+                yesterdayDate.Month, yesterdayDate.Day, 6, 0, 0);
 
             var endDate = new DateTime(yesterdayDate.Year,
-                yesterdayDate.Month, yesterdayDate.Day, 23, 59, 59);
+                yesterdayDate.Month, yesterdayDate.Day + 1, 6, 0, 0);
 
             //Expression to determinate the specific range of date to query on database 
-            Expression<Func<DailyRate, bool>> predicate =
-                srv => srv.StartDate >= startDate && srv.EndDate <= endDate;
+            Expression<Func<DailyRate, bool>> predicate = null;
+            
+            //Expression<Func<DailyRate, bool>> predicate = srv => srv.StartDate >= startDate && srv.EndDate <= endDate;
 
             //Get Logs data from database
             var dailyRates = (await queryDispatcher.DispatchAsync(unitOfWork.GenericRepository<DailyRate>()

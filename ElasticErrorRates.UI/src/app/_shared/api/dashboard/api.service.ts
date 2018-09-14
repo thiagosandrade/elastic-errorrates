@@ -46,8 +46,19 @@ export class ApiDashboardService {
         return await this.http.get<IGraphRequestResponse>(url).toPromise();
     }
 
-    public async getErrorRank(countryId: number): Promise<IErrorsRankResponse> {
-        return await this.http.get<IErrorsRankResponse>(`${environment.apiUrl}/dashboard/errorsrank/${countryId}`).toPromise();
+    public async getErrorRank(countryId: number, startDate: Date = null, enddate: Date = null): Promise<IErrorsRankResponse> {
+
+        var url: string =  `${environment.apiUrl}/dashboard/errorsrank/${countryId}`;
+
+        if(startDate !== null && enddate !== null){
+            startDate.setHours(0,0,0,0);
+            enddate.setHours(23,59,59,59);
+            
+
+            url = url.concat(`?startdate=${startDate.toISOString()}&enddate=${enddate.toISOString()}`);
+        }
+        
+        return await this.http.get<IErrorsRankResponse>(url).toPromise();
     }
 
 }

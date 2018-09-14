@@ -30,6 +30,7 @@ import { UkMonthRateGraphComponent } from './dashboard/components/uk-monthrate-g
 import { ROIMonthRateGraphComponent } from './dashboard/components/roi-monthrate-graph/roi-monthrate-graph.component';
 
 import { UkErrorsRankComponent } from './dashboard/components/uk-errors-rank/uk-errors-rank.component';
+import { ROIErrorsRankComponent } from './dashboard/components/roi-errors-rank/roi-errors-rank.component';
 
 @NgModule({
   imports: [
@@ -55,7 +56,8 @@ import { UkErrorsRankComponent } from './dashboard/components/uk-errors-rank/uk-
     ROIWeekrateGraphComponent,
     UkMonthRateGraphComponent,
     ROIMonthRateGraphComponent,
-    UkErrorsRankComponent
+    UkErrorsRankComponent,
+    ROIErrorsRankComponent
 ],
  exports: [
     UkDailyRateComponent,
@@ -66,7 +68,8 @@ import { UkErrorsRankComponent } from './dashboard/components/uk-errors-rank/uk-
     ROIWeekrateGraphComponent,
     UkMonthRateGraphComponent,
     ROIMonthRateGraphComponent,
-    UkErrorsRankComponent
+    UkErrorsRankComponent,
+    ROIErrorsRankComponent
  ],
   providers: [
     ApiLogService,

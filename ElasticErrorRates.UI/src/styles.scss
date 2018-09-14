@@ -10,15 +10,15 @@ body {
    padding:0;
    height:100%;
    background: #E5E5E5;
+
+   .navbar.fixed-top {
+        background-color: lightgray !important;
+    }
 }
 
 #container {
    min-height:100%;
    position:relative;
-}
-
-#header {
-   background:#ff0;
 }
 
 #body {
@@ -36,6 +36,3 @@ body {
    }
 }
 
-.card{
-    margin-bottom: 15px !important;
-}
