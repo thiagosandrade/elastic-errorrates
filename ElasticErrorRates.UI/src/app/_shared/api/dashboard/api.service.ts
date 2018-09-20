@@ -1,18 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Headers, Http, Response, RequestOptions } from '@angular/http';
+import { Injectable, Input } from '@angular/core';
+import { Headers, RequestOptions } from '@angular/http';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../../environments/environment';
+
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators';
 
 import { IDailyRateResponse } from './response/api-dailyrateresponse';
 import { IGraphRequestResponse } from './response/api-graphrequestresponse';
 import { IErrorsRankResponse } from './response/api-errorsrankresponse';
+import { DatePipe } from '@angular/common';
 
 @Injectable()
 export class ApiDashboardService {
-    constructor(private http: HttpClient) { }
+    
+    constructor(private http: HttpClient, public datepipe: DatePipe) { }
 
     public importLogs(): Observable<any>{
         const headers = new Headers({ 'Content-Type': 'application/json' });
@@ -27,23 +32,39 @@ export class ApiDashboardService {
         var url: string =  `${environment.apiUrl}/dashboard/search/${countryId}`;
 
         if(startDate !== null && enddate !== null){
-            startDate.setHours(7,0,0,0);
-            enddate.setHours(7,0,0,0);
+            startDate.setHours(6,0,0,0);
+            enddate.setHours(6,0,0,0);
             
 
-            url = url.concat(`?startdate=${startDate.toISOString()}&enddate=${enddate.toISOString()}`);
+            url = url.concat(`?startdate=${this.datepipe.transform(startDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}&enddate=${this.datepipe.transform(enddate, 'yyyy-MM-ddTHH:mm:ss.SSS')}`);
         }
         
-        return await this.http.get<IDailyRateResponse>(url).toPromise();
+        return await this.http.get<IDailyRateResponse>(url)
+            .pipe(
+                map( response => {
+                    response.records.forEach(x => {
+                        x.startDate = new Date(x.startDate);
+                        x.endDate = new Date(x.endDate)
+                        return x;
+                    })
+                    return response;
+                })
+            )
+            .toPromise();
     }
 
-    public async getGraphValues(countryId: number, frequencyType: string, numberOfResults: string): Promise<IGraphRequestResponse> {
+    public async getGraphValues(countryId: number, frequencyType: string, numberOfResults: string, enddate: Date = null): Promise<IGraphRequestResponse> {
 
-        var url: string =  `${environment.apiUrl}/dashboard/searchaggregate`;
+        var url: string =  `${environment.apiUrl}/dashboard/searchaggregate?countryId=${countryId}&typeAggregation=${frequencyType}&numberOfResults=${numberOfResults}`;
 
-        url = url.concat(`?countryId=${countryId}&typeAggregation=${frequencyType}&numberOfResults=${numberOfResults}`);
-        
-        return await this.http.get<IGraphRequestResponse>(url).toPromise();
+        if(enddate !== null){
+            enddate.setHours(6,0,0,0);
+
+            url = url.concat(`&enddate=${this.datepipe.transform(enddate, 'yyyy-MM-ddTHH:mm:ss.SSS')}`);
+        }
+        return await this.http.get<IGraphRequestResponse>(url)
+            .map( response => response as IGraphRequestResponse)    
+            .toPromise();
     }
 
     public async getErrorRank(countryId: number, startDate: Date = null, enddate: Date = null): Promise<IErrorsRankResponse> {
@@ -51,14 +72,15 @@ export class ApiDashboardService {
         var url: string =  `${environment.apiUrl}/dashboard/errorsrank/${countryId}`;
 
         if(startDate !== null && enddate !== null){
-            startDate.setHours(0,0,0,0);
-            enddate.setHours(23,59,59,59);
+            startDate.setHours(6,0,0,0);
+            enddate.setHours(6,0,0,0);
             
-
-            url = url.concat(`?startdate=${startDate.toISOString()}&enddate=${enddate.toISOString()}`);
+            url = url.concat(`?startdate=${this.datepipe.transform(startDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}&enddate=${this.datepipe.transform(enddate, 'yyyy-MM-ddTHH:mm:ss.SSS')}`);
         }
         
-        return await this.http.get<IErrorsRankResponse>(url).toPromise();
+        return await this.http.get<IErrorsRankResponse>(url)
+            .map( response => response as IErrorsRankResponse)
+            .toPromise();
     }
 
 }

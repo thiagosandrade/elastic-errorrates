@@ -10,6 +10,16 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './_shared/shared.module';
 import { LogsModule } from './logs/logs.module';
 
+import {
+  MatButtonModule,
+  MatInputModule,
+  MatRippleModule,
+  MatTooltipModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatFormFieldModule
+} from '@angular/material';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -22,7 +32,15 @@ import { LogsModule } from './logs/logs.module';
     AppRoutingModule,
     NgbModule.forRoot(),
     SharedModule,
-    LogsModule
+    LogsModule,
+
+    MatButtonModule,
+    MatRippleModule,
+    MatInputModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]

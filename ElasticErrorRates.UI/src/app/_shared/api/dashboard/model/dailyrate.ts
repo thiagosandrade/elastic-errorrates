@@ -1,21 +1,26 @@
 export interface IDailyRate {
-    Id: number;
-    CountryId: number;
-    StartDate: Date;
-    EndDate: Date;
-    ErrorCount: number;
-    OrderCount: number;
-    OrderValue: number;
-    ErrorPercentage: number;
+    id: number;
+    countryId: number;
+    startDate: Date;
+    endDate: Date;
+    errorCount: number;
+    orderCount: number;
+    orderValue: number;
+    errorPercentage: number;
 }
 
 export class DailyRate implements IDailyRate {
-    Id: number;
-    CountryId: number;
-    StartDate: Date;
-    EndDate: Date;
-    ErrorCount: number;
-    OrderCount: number;
-    OrderValue: number;
-    ErrorPercentage: number;
+    id: number;
+    countryId: number;
+    startDate: Date;
+    endDate: Date;
+    errorCount: number;
+    orderCount: number;
+    orderValue: number;
+    errorPercentage: number;
+
+    constructor(){
+        this.startDate = new Date();
+        this.endDate = new Date();
+    }
 }

@@ -13,6 +13,7 @@ body {
 
    .navbar.fixed-top {
         background-color: lightgray !important;
+        z-index: 1000;
     }
 }
 
@@ -22,7 +23,7 @@ body {
 }
 
 #body {
-   padding-top:70px;
+   padding-top:90px;
 }
 #footer {
    position:fixed;

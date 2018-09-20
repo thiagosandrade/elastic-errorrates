@@ -10,5 +10,7 @@ namespace ElasticErrorRates.Core.Criteria.Dashboard
         public Country CountryId { get; set; }
         public string TypeAggregation { get; set; }
         public int NumberOfResults { get; set; }
+        public DateTime EndDate { get; set; }
+        public DateTime StartDate { get; set; }
     }
 }

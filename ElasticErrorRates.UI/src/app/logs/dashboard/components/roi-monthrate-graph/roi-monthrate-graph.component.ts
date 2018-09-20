@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, SimpleChange } from '@angular/core';
 import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
 import { ChartModel } from '../../../../_shared/helpers/ChartModel';
 import { GraphTypeAggregation } from '../../../../_shared/helpers/GraphTypeAggregation.enum';
@@ -10,18 +10,29 @@ import { Countries } from '../../../../_shared/helpers/Country.enum';
   templateUrl: './roi-monthrate-graph.component.html',
   styleUrls: ['./roi-monthrate-graph.component.css']
 })
-export class ROIMonthRateGraphComponent implements OnInit {
+export class ROIMonthRateGraphComponent {
 
   public datawebsiteViewsChart: ChartModel;
   public chartName : string;
   public isProcessing: boolean;
   public comparison: any = {  };
   
+  @Input() datePickerChanged: Date;
+  
   constructor(private apiService: ApiDashboardService) { }
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
+    const datePickerChanged: SimpleChange = changes.datePickerChanged;
+    
+    if((datePickerChanged.previousValue != datePickerChanged.currentValue) && datePickerChanged.currentValue != undefined ){
+      this.fillRate(datePickerChanged.currentValue)
+    }
+    
+  }
 
-     /* ----------==========     ROIMonthRateChart Chart initialization    ==========---------- */
+  fillRate(newDate : Date){
+    
+    /* ----------==========     ROIMonthRateChart Chart initialization    ==========---------- */
     this.chartName = 'ROIMonthRateChart';
 
     this.datawebsiteViewsChart = {
@@ -31,12 +42,8 @@ export class ROIMonthRateGraphComponent implements OnInit {
     };
 
     this.isProcessing = true;
-    this.fillRate();
-  }
 
-  fillRate(){
-    
-    this.apiService.getGraphValues(Countries.ROI, GraphTypeAggregation.Month, `${((new Date()).getMonth() +1)}`)
+    this.apiService.getGraphValues(Countries.ROI, GraphTypeAggregation.Month, `${(newDate.getMonth() +1)}`, newDate)
       .then(async (response: IGraphRequestResponse) => {
         var self = this;
         var seriesArray: number[] = [];

@@ -3,13 +3,6 @@ import { CommonModule } from '@angular/common';
 import { InfiniteScrollModule} from 'ngx-infinite-scroll';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {
-  MatButtonModule,
-  MatInputModule,
-  MatRippleModule,
-  MatTooltipModule,
-} from '@angular/material';
-
 import { LogsRoutingModule } from './logs-routing.module';
 import { IndexComponent } from './index/index.component';
 import { SharedModule } from '../_shared/shared.module';
@@ -31,16 +24,13 @@ import { ROIMonthRateGraphComponent } from './dashboard/components/roi-monthrate
 
 import { UkErrorsRankComponent } from './dashboard/components/uk-errors-rank/uk-errors-rank.component';
 import { ROIErrorsRankComponent } from './dashboard/components/roi-errors-rank/roi-errors-rank.component';
+import { DatePickerService } from '../_shared/datepicker-material/datePicker.service';
 
 @NgModule({
   imports: [
     BrowserAnimationsModule,
     SharedModule,
     CommonModule, 
-    MatButtonModule,
-    MatRippleModule,
-    MatInputModule,
-    MatTooltipModule,
     LogsRoutingModule,
     InfiniteScrollModule
   ],
@@ -73,7 +63,8 @@ import { ROIErrorsRankComponent } from './dashboard/components/roi-errors-rank/r
  ],
   providers: [
     ApiLogService,
-    ApiDashboardService
+    ApiDashboardService,
+    DatePickerService
   ]
 })
 export class LogsModule { }

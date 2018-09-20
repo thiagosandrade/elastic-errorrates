@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, SimpleChange } from '@angular/core';
 import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
 import { IDailyRate, DailyRate } from '../../../../_shared/api/dashboard/model/dailyrate';
 import { IDailyRateResponse } from '../../../../_shared/api/dashboard/response/api-dailyrateresponse';
@@ -9,30 +9,41 @@ import { Countries } from '../../../../_shared/helpers/Country.enum';
   templateUrl: './uk-yesterdayrate.component.html',
   styleUrls: ['./uk-yesterdayrate.component.css']
 })
-export class UkYesterdayRateComponent implements OnInit {
-  titleDate: any;
+export class UkYesterdayRateComponent {
   public ukYesterdayRate: IDailyRate = new DailyRate();
   public isProcessing: boolean;
+  public titleDate: Date;
+
+  @Input() datePickerChanged: Date;
+
   constructor(private apiService: ApiDashboardService) { }
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
+    const datePickerChanged: SimpleChange = changes.datePickerChanged;
+    
+    if((datePickerChanged.previousValue != datePickerChanged.currentValue) && datePickerChanged.currentValue != undefined ){
+      this.setDates(datePickerChanged.currentValue)
+    }
+    
+  }
 
-    this.ukYesterdayRate.CountryId = Countries.UK;
-    this.ukYesterdayRate.StartDate = new Date();
-    this.ukYesterdayRate.StartDate.setDate(this.ukYesterdayRate.StartDate.getDate() - 2);
+  setDates(newDate : Date){
 
-    this.ukYesterdayRate.EndDate = new Date();
-    this.ukYesterdayRate.EndDate.setDate(this.ukYesterdayRate.EndDate.getDate() - 1);
+    this.ukYesterdayRate.startDate.setDate(newDate.getDate() - 2);
+    this.ukYesterdayRate.endDate.setDate(newDate.getDate() - 1);
 
-    this.titleDate = this.ukYesterdayRate.EndDate;
+    this.titleDate = this.ukYesterdayRate.endDate;
 
-    this.ukYesterdayRate.ErrorPercentage = 0;
-    this.isProcessing = true;
     this.fillUKDailyRate();
   }
 
   fillUKDailyRate(){
-    this.apiService.getDailyRate(this.ukYesterdayRate.CountryId, this.ukYesterdayRate.StartDate, this.ukYesterdayRate.EndDate)
+
+    this.ukYesterdayRate.countryId = Countries.UK;
+    this.ukYesterdayRate.errorPercentage = 0;
+    this.isProcessing = true;
+
+    this.apiService.getDailyRate(this.ukYesterdayRate.countryId, this.ukYesterdayRate.startDate, this.ukYesterdayRate.endDate)
       .then(async (response: IDailyRateResponse) => {
         this.ukYesterdayRate = response.records[0];
         this.isProcessing = false;

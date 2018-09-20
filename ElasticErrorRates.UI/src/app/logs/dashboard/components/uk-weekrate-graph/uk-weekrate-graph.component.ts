@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, SimpleChange } from '@angular/core';
 import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
 import { IGraphRequestResponse } from '../../../../_shared/api/dashboard/response/api-graphrequestresponse';
 import { WeekDays } from '../../../../_shared/helpers/WeekDays.enum';
@@ -11,41 +11,48 @@ import { Countries } from '../../../../_shared/helpers/Country.enum';
   templateUrl: './uk-weekrate-graph.component.html',
   styleUrls: ['./uk-weekrate-graph.component.css']
 })
-export class UkWeekRateGraphComponent implements OnInit {
+export class UkWeekRateGraphComponent {
 
   public dataDailySalesChart: ChartModel;
   public chartName : string;
   public isProcessing: boolean;
   public comparison: any = {  };
 
+  @Input() datePickerChanged: Date;
+
   constructor(private apiService: ApiDashboardService) { }
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
+    const datePickerChanged: SimpleChange = changes.datePickerChanged;
+    
+    if((datePickerChanged.previousValue != datePickerChanged.currentValue) && datePickerChanged.currentValue != undefined ){
+      this.fillRate(datePickerChanged.currentValue)
+    }
+    
+  }
+  
+  fillRate(newDate : Date){
 
-     /* ----------==========     UKWeekGraphTasksChart initialization    ==========---------- */
+    /* ----------==========     UKWeekGraphTasksChart initialization    ==========---------- */
     this.chartName = 'UKWeekGraphTasksChart';
 
     this.dataDailySalesChart = { labels: [], series: []}
     this.isProcessing = true;
-    this.fillRate();
-  }
-
-  fillRate(){
     
-    this.apiService.getGraphValues(Countries.UK, GraphTypeAggregation.Day,"7")
+    this.apiService.getGraphValues(Countries.UK, GraphTypeAggregation.Day,"7", newDate)
       .then(async (response: IGraphRequestResponse) => {
         var self = this;
         var labelArray: string[] = [];
         var seriesArray: number[] = [];
           
-        await response.records.forEach(function(element){
+        await response.records.forEach(function(element)
+        {
           seriesArray.push(Number(element.errorPercentage))
           labelArray.push(WeekDays[(new Date(element.date)).getDay()])
         });
 
         self.dataDailySalesChart.series.push(seriesArray.slice().reverse());
         self.dataDailySalesChart.labels = labelArray.reverse();
-        
       
         this.comparison.value = (seriesArray[0] / seriesArray[1] * 100) - 100;  
         this.comparison.valueAbsolute = Math.abs(this.comparison.value);

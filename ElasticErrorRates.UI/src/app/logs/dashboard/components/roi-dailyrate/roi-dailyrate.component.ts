@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChange, SimpleChanges } from '@angular/core';
 import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
 import { IDailyRate, DailyRate } from '../../../../_shared/api/dashboard/model/dailyrate';
 import { IDailyRateResponse } from '../../../../_shared/api/dashboard/response/api-dailyrateresponse';
@@ -8,32 +8,41 @@ import { IDailyRateResponse } from '../../../../_shared/api/dashboard/response/a
   templateUrl: './roi-dailyrate.component.html',
   styleUrls: ['./roi-dailyrate.component.css']
 })
-export class ROIDailyRateComponent implements OnInit {
-  titleDate: Date;
+export class ROIDailyRateComponent {
   public roiDailyRate: IDailyRate = new DailyRate();
   public isProcessing: boolean;
+  public titleDate: Date;
 
+  @Input() datePickerChanged: Date;
+  
   constructor(private apiService: ApiDashboardService) { }
 
-  ngOnInit() {
-
-    this.roiDailyRate.CountryId = 2;
-    this.roiDailyRate.StartDate = new Date();
-    this.roiDailyRate.StartDate.setDate(this.roiDailyRate.StartDate.getDate() - 1);
-
-    this.roiDailyRate.EndDate = new Date();
-    this.roiDailyRate.EndDate.setDate(this.roiDailyRate.EndDate.getDate());
-
-    this.titleDate = this.roiDailyRate.EndDate;
-
-    this.roiDailyRate.ErrorPercentage = 0;
-    this.isProcessing = true;
-
-    this.fillUKDailyRate();
+  ngOnChanges(changes: SimpleChanges) {
+    const datePickerChanged: SimpleChange = changes.datePickerChanged;
+    
+    if((datePickerChanged.previousValue != datePickerChanged.currentValue) && datePickerChanged.currentValue != undefined ){
+      this.setDates(datePickerChanged.currentValue)
+    }
+    
   }
 
-  fillUKDailyRate(){
-    this.apiService.getDailyRate(this.roiDailyRate.CountryId, this.roiDailyRate.StartDate, this.roiDailyRate.EndDate)
+  setDates(newDate : Date){
+
+    this.roiDailyRate.startDate.setDate(newDate.getDate() - 1);
+    this.roiDailyRate.endDate.setDate(newDate.getDate());
+
+    this.titleDate = this.roiDailyRate.endDate;
+
+    this.fillROIDailyRate();
+  }
+
+  fillROIDailyRate(){
+
+    this.roiDailyRate.countryId = 2;
+    this.roiDailyRate.errorPercentage = 0;
+    this.isProcessing = true;
+
+    this.apiService.getDailyRate(this.roiDailyRate.countryId, this.roiDailyRate.startDate, this.roiDailyRate.endDate)
       .then(async (response: IDailyRateResponse) => {
         this.roiDailyRate = response.records[0];
         this.isProcessing = false;

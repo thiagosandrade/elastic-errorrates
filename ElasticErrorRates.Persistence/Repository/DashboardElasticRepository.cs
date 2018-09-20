@@ -81,18 +81,26 @@ namespace ElasticErrorRates.Persistence.Repository
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                     .Query(q => q
-                        .Bool(bl =>
-                                bl.Filter(fq => 
+                        .Bool(bl => bl
+                            .Must(
+                                fq =>
                                 {
                                     QueryContainer query = null;
 
-                                    query &= fq.Term(
-                                        t => t.Field("countryId").Value(criteria.CountryId)
+                                    query &= fq.Term(t => t
+                                        .Field("countryId").Value(criteria.CountryId)
                                     );
 
                                     return query;
                                 }
                             )
+                            .Filter(
+                                ft => new DateRangeQuery
+                                {
+                                    Field = "startDate",
+                                    //GreaterThanOrEqualTo = criteria.StartDate,
+                                    LessThanOrEqualTo = criteria.EndDate
+                                })
                         )
                     )
                     .Aggregations(ag =>
@@ -126,7 +134,7 @@ namespace ElasticErrorRates.Persistence.Repository
                        }
                    )
                    .From(0)
-                   .Size(10);
+                   .Size(criteria.NumberOfResults);
 
             var result = await BasicQuery(queryCommand);
 

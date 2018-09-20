@@ -1,39 +1,39 @@
 <div class="main-content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <uk-dailyrate></uk-dailyrate> 
+            <div class="col-md-3">
+                <uk-dailyrate [datePickerChanged]="datePickerDate"></uk-dailyrate> 
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <uk-yesterdayrate></uk-yesterdayrate> 
+            <div class="col-md-3">
+                <uk-yesterdayrate [datePickerChanged]="datePickerDate"></uk-yesterdayrate> 
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <roi-dailyrate></roi-dailyrate> 
+            <div class="col-md-3">
+                <roi-dailyrate [datePickerChanged]="datePickerDate"></roi-dailyrate> 
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <roi-yesterdayrate></roi-yesterdayrate> 
+            <div class="col-md-3">
+                <roi-yesterdayrate [datePickerChanged]="datePickerDate"></roi-yesterdayrate> 
             </div>
         </div>
         <div class="row">
             <div class="col-md-3">
-                <uk-weekrate-graph></uk-weekrate-graph>
+                <uk-weekrate-graph [datePickerChanged]="datePickerDate"></uk-weekrate-graph>
             </div>
             <div class="col-md-3">
-                <uk-monthrate-graph></uk-monthrate-graph>
+                <uk-monthrate-graph [datePickerChanged]="datePickerDate"></uk-monthrate-graph>
             </div>
             <div class="col-md-3">
-                <roi-weekrate-graph></roi-weekrate-graph>
+                <roi-weekrate-graph [datePickerChanged]="datePickerDate"></roi-weekrate-graph>
             </div>
             <div class="col-md-3">
-                <roi-monthrate-graph></roi-monthrate-graph>
+                <roi-monthrate-graph [datePickerChanged]="datePickerDate"></roi-monthrate-graph>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-md-12">
-                <uk-errors-rank></uk-errors-rank>
+            <div class="col-md-6">
+                <uk-errors-rank [datePickerChanged]="datePickerDate"></uk-errors-rank>
             </div>
-            <div class="col-lg-6 col-md-12">
-                <roi-errors-rank></roi-errors-rank>
+            <div class="col-md-6">
+                <roi-errors-rank [datePickerChanged]="datePickerDate"></roi-errors-rank>
             </div>
         </div>
     </div>
