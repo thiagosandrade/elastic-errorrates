@@ -34,6 +34,8 @@ export const MY_FORMATS = {
 @Injectable()
 export class DatepickerMaterialComponent {
   
+  public startDate : any;
+  
   constructor(private datePickerService: DatePickerService){
     
   }

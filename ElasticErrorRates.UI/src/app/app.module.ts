@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './_shared/shared.module';
 import { LogsModule } from './logs/logs.module';
 
+import { GrowlModule } from 'primeng/growl';
+
 import {
   MatButtonModule,
   MatInputModule,
@@ -33,6 +35,7 @@ import {
     NgbModule.forRoot(),
     SharedModule,
     LogsModule,
+    GrowlModule,
 
     MatButtonModule,
     MatRippleModule,

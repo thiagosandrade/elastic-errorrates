@@ -12,7 +12,9 @@ import { ChartGeneratorComponent } from './chartGenerator/chartgenerator.compone
 import { MatNativeDateModule, MatDatepickerModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatRippleModule } from '@angular/material';
 import { DatePickerService } from './datepicker-material/datePicker.service';
 import { DatepickerMaterialComponent } from './datepicker-material/datepicker-material.component';
-import {DatePipe} from '@angular/common';
+import { DatePipe } from '@angular/common';
+import { SignalRService } from './signalR/signalR.service';
+import { SignalRMessage } from './signalR/signalR.message';
 
 @NgModule({
    imports: [
@@ -43,7 +45,8 @@ import {DatePipe} from '@angular/common';
         ApiDashboardService,
         ModalService,
         DatePickerService,
-        DatePipe
+        DatePipe,
+        SignalRService
     ]
 })
 export class SharedModule { 
