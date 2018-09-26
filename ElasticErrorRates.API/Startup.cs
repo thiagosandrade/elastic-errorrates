@@ -60,25 +60,24 @@ namespace ElasticErrorRates.API
                 .UseElasticErrorsRatesJobs(Configuration)
                 .UseHangfireDashboard();
 
-
-            var webSocketOptions = new WebSocketOptions()
-            {
-                KeepAliveInterval = TimeSpan.FromSeconds(120),
-                ReceiveBufferSize = 4 * 1024
-            };
+            app.UseCors("AllowAll");
 
             //Websockets configuration
-            WebSocketsConfig(app, webSocketOptions);
-
-            app.UseCors("AllowAll");
+            WebSocketsConfig(app);
 
             app.UseMvc(
             //routes => { routes.MapRoute("elastic", "api/{controller=Elastic}/{action=Find}/{term?}/{sort?}/{match?}"); }
             );
         }
 
-        private void WebSocketsConfig(IApplicationBuilder app, WebSocketOptions webSocketOptions)
+        private void WebSocketsConfig(IApplicationBuilder app)
         {
+            var webSocketOptions = new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+                ReceiveBufferSize = 4 * 1024
+            };
+
             app.UseWebSockets(webSocketOptions);
 
             app.Use(async (context, next) =>
@@ -105,6 +104,7 @@ namespace ElasticErrorRates.API
             {
                 routes.MapHub<NotifyHub>("/api/notify");
             });
+
         }
 
         private async Task Echo(HttpContext context, WebSocket webSocket)

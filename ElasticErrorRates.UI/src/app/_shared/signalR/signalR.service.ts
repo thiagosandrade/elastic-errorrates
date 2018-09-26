@@ -21,9 +21,11 @@ export class SignalRService {
  
     private createConnection() {
         this._hubConnection = new HubConnectionBuilder()
-            .withUrl(this.baseUrl,{
-                transport: HttpTransportType.LongPolling
-            })
+            .withUrl(this.baseUrl,
+                {
+                    transport: HttpTransportType.LongPolling
+                }
+            )
             .build();
     }
  
@@ -43,7 +45,7 @@ export class SignalRService {
                 this.connectionEstablished.emit({ severity: 'true', summary: 'empty' });
             }).catch(err => {
                 console.log(`Error on connecting to signalR, retrying..`);
-                setTimeout(this.startConnection(), 5000);
+                // setTimeout(this.startConnection(), 10000);
             });
     }
 }
