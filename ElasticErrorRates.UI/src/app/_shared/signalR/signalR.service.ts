@@ -30,8 +30,6 @@ export class SignalRService {
     private registerOnServerEvents() {
         this._hubConnection
             .on('BroadcastMessage', (data) => {
-                console.log('broadcast Message'); 
-                console.log(data);
                  this.notificationReceived.emit(data);
                 }
             );
@@ -41,11 +39,11 @@ export class SignalRService {
         this._hubConnection
             .start()
             .then(() => {
-                console.log('Hub de conexão iniciado');
+                console.log('Hub started');
                 this.connectionEstablished.emit({ severity: 'true', summary: 'empty' });
             }).catch(err => {
-                console.log('Erro ao realizar conexão do signalR, tentando novamente');
-                // setTimeout(this.startConnection(), 5000);
+                console.log(`Error on connecting to signalR, retrying..`);
+                setTimeout(this.startConnection(), 5000);
             });
     }
 }

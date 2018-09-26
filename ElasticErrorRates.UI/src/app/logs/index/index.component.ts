@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiLogService } from '../../_shared/api/log/api.service';
-import { ILog } from '../../_shared/api/log/model/log';
-import { ILogResponse } from '../../_shared/api/log/response/api-logresponse';
 import { ILogSummaryResponse } from '../../_shared/api/log/response/api-logsummaryresponse';
 import { ILogSummary } from '../../_shared/api/log/model/logsummary';
 

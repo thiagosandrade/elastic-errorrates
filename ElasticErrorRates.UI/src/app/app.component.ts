@@ -17,18 +17,14 @@ export class AppComponent implements OnInit {
 
    ngOnInit(): void {
     this.signalRService.notificationReceived.subscribe((signalRMessage : SignalRMessage) => {
-      console.log("SignalR Updated");
-
       this.msgs = [];
       this.msgs.push({ 
         life: 3000, 
         sticky: false,
         severity: signalRMessage.type, 
         summary: signalRMessage.payload,
-        detail: "true",
         closable: true
       });
-      console.log(this.msgs);
     });
   }
 }
