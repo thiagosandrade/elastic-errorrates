@@ -326,9 +326,9 @@
     -ms-flex-align: flex-start;
     align-items: flex-start;
     -webkit-box-pack: flex-start;
-    -webkit-justify-content: flex-start;
+    // -webkit-justify-content: flex-start;
     -ms-flex-pack: flex-start;
-    justify-content: flex-start;
+    justify-content: center;
     text-align: center;
     text-anchor: middle
 }
@@ -380,9 +380,9 @@
     -ms-flex-align: flex-start;
     align-items: flex-start;
     -webkit-box-pack: center;
-    -webkit-justify-content: center;
+    // -webkit-justify-content: center;
     -ms-flex-pack: center;
-    justify-content: flex-end;
+     justify-content: center;
     text-align: center;
     text-anchor: start
 }

@@ -77,19 +77,31 @@ export class ChartGeneratorComponent implements OnInit, AfterViewInit {
       this.startAnimationForLineChart(ukWeekGraphTasksChart);
     }
     else if(this.chartName === 'ROIWeekGraphTasksChart'){
+      
       var roiWeekGraphTasksChart = new Chartist.Line(`#${this.chartName}`, this.chartData, this.optionsDailySalesChart);
       this.startAnimationForLineChart(roiWeekGraphTasksChart);
     }
     else if(this.chartName === 'UKMonthRateChart'){
+      this.includeRemainingSeriesItems();
       var ukMonthRateChart = new Chartist.Bar(`#${this.chartName}`, this.chartData, this.optionswebsiteViewsChart, this.responsiveOptions);
       this.startAnimationForBarChart(ukMonthRateChart);
     }
     else if(this.chartName === 'ROIMonthRateChart'){
+      this.includeRemainingSeriesItems();
       var roiMonthRateChart = new Chartist.Bar(`#${this.chartName}`, this.chartData, this.optionswebsiteViewsChart, this.responsiveOptions);
       this.startAnimationForBarChart(roiMonthRateChart);
     }
 
 
+  }
+
+  includeRemainingSeriesItems(){
+    if(this.chartData.series.length != 11){
+      var itemsToInclude = 11 - this.chartData.series.length;
+      for(var i = 0; i < itemsToInclude; i++){
+        this.chartData.series[0].push(0);
+      }
+    }
   }
 
   startAnimationForLineChart(chart){

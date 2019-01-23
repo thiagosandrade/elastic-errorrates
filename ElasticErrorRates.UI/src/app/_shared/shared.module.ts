@@ -15,6 +15,8 @@ import { DatepickerMaterialComponent } from './datepicker-material/datepicker-ma
 import { DatePipe } from '@angular/common';
 import { SignalRService } from './signalR/signalR.service';
 import { SignalRMessage } from './signalR/signalR.message';
+import { ChartFooterComponent } from './chartFooter/chartFooter.component';
+import { DailyRateFooterComponent } from './dailyRateFooter/dailyRateFooter.component';
 
 @NgModule({
    imports: [
@@ -29,7 +31,9 @@ import { SignalRMessage } from './signalR/signalR.message';
         KeepHtmlPipe,
         LoadingSpinnerComponent,
         ChartGeneratorComponent,
-        DatepickerMaterialComponent
+        DatepickerMaterialComponent,
+        ChartFooterComponent,
+        DailyRateFooterComponent
    ],
    exports: [
         ModalComponent,
@@ -38,7 +42,9 @@ import { SignalRMessage } from './signalR/signalR.message';
         LoadingSpinnerComponent,
         ChartGeneratorComponent,
         MatNativeDateModule, MatDatepickerModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatRippleModule,
-        DatepickerMaterialComponent
+        DatepickerMaterialComponent,
+        ChartFooterComponent,
+        DailyRateFooterComponent
    ],
    providers: [
         ApiLogService,

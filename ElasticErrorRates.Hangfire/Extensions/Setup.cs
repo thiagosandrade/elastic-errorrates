@@ -27,9 +27,10 @@ namespace ElasticErrorRates.Hangfire.Extensions
             var jobs = new Jobs(appBuilder.ApplicationServices);
 
             //Cron UTC - IE 23:00 UTC -> 00:00 Lisbon
+            RecurringJob.AddOrUpdate(() => jobs.FlushOldLogs(), Cron.Daily(23, 01));
             RecurringJob.AddOrUpdate(() => jobs.ImportYesterdayLogs(), Cron.Daily(23, 05));
             RecurringJob.AddOrUpdate(() => jobs.ImportYesterdayDailyRateLogs(), Cron.Daily(23, 07));
-
+            
             return appBuilder;
         }
 

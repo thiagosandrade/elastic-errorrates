@@ -153,9 +153,22 @@ namespace ElasticErrorRates.Persistence.Repository
             await _elasticContext.ElasticClient.IndexAsync<T>(log, x => x.Index(defaultIndex));
         }
 
-        public async Task Delete(T log)
+        public async Task Delete(SearchCriteria criteria)
         {
-            await _elasticContext.ElasticClient.DeleteAsync<T>(log, x => x.Index(defaultIndex));
+            var result = await _elasticContext.ElasticClient.DeleteByQueryAsync<DailyRate>(q => q
+                .Index(defaultIndex)
+                .Query(ft => new DateRangeQuery
+                            {
+                                Field = "endDate",
+                                //GreaterThanOrEqualTo = criteria.EndDate,
+                                LessThanOrEqualTo = criteria.EndDate
+                            })
+            );
+
+            if (!result.IsValid)
+            {
+                throw new InvalidOperationException(result.DebugInformation);
+            }
         }
 
         public async Task Bulk(IEnumerable<DailyRate> records)

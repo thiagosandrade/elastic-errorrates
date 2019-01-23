@@ -11,8 +11,6 @@ namespace ElasticErrorRates.Core.Persistence
         Task<ElasticResponse<T>> Search(SearchCriteria criteria);
         Task<ElasticResponse<T>> SearchAggregate(GraphCriteria criteria);
         Task Bulk(IEnumerable<DailyRate> records);
-
-        
-
+        Task Delete(SearchCriteria criteria);
     }
 }

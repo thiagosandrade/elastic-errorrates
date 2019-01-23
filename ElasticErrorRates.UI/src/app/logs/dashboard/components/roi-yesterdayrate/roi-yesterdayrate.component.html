@@ -12,13 +12,6 @@
         <loading-spinner [isProcessing]="isProcessing" ></loading-spinner>
     </div>
     <div class="card-footer">
-            <div class="stats">
-                <i class="material-icons text-success">attach_money</i>
-                Order-Count: {{ roiYesterdayRate.orderCount | number  }}
-            </div>
-        <div class="stats">
-            <i class="material-icons text-danger">warning</i>
-            Error-Count: {{ roiYesterdayRate.errorCount | number  }}
-        </div>
+        <dailyrate-footer style="display: contents" [rate]="roiYesterdayRate"></dailyrate-footer>
     </div>
 </div>

@@ -54,7 +54,7 @@ export class ROIWeekrateGraphComponent {
         self.dataDailySalesChart.series.push(seriesArray.slice().reverse());
         self.dataDailySalesChart.labels = labelArray.reverse();
 
-        this.comparison.value = (seriesArray[0] / seriesArray[1] * 100) - 100;  
+        this.comparison.value = !Number.isNaN(seriesArray[0] / seriesArray[1]) ? (seriesArray[0] / seriesArray[1] * 100) - 100 : 0;  
         this.comparison.valueAbsolute = Math.abs(this.comparison.value);
 
         this.isProcessing = false;
