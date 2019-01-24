@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ElasticErrorRates.API.SignalR;
-using Microsoft.AspNetCore.Http;
+using ElasticErrorRates.Core.SignalR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 
 namespace ElasticErrorRates.API.Controllers
 {
     [Route("api/SignalR")]
     public class SignalRController : Controller
     {
-        private readonly IHubContext<NotifyHub, ITypedHubClient> _hubContext;
+        private readonly ISignalRHub _hubContext;
 
-        public SignalRController(IHubContext<NotifyHub, ITypedHubClient> hubContext)
+        public SignalRController(ISignalRHub hubContext)
         {
             _hubContext = hubContext;
         }
@@ -25,7 +20,8 @@ namespace ElasticErrorRates.API.Controllers
             string retMessage;
             try
             {
-                _hubContext.Clients.All.BroadCastMessage(message);
+                _hubContext.BroadCastMessage(message);
+                //_hubContext.Clients.All.BroadCastMessage(message);
                 retMessage = "Success";
             }
             catch (Exception e)

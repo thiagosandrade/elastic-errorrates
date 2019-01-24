@@ -5,7 +5,6 @@ using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using ElasticErrorRates.Persistence.Context;
 using ElasticErrorRates.Persistence.Repository;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 

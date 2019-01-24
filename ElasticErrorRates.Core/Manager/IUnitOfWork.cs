@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 
 namespace ElasticErrorRates.Core.Manager

@@ -3,7 +3,7 @@
         <div class="card-icon">
             <i class="material-icons">swap_vert</i>
         </div>
-        <p class="card-category">Previous UK Yesterday Rate ( {{this.titleDate | date: 'dd/MM/yyyy'}} )</p>
+        <p class="card-category">UK Yesterday Rate ( {{this.titleDate | date: 'dd/MM/yyyy'}} )</p>
         <div *ngIf="!isProcessing">
             <h3 class="card-title">{{ ukYesterdayRate.errorPercentage }}
                 <small>%</small>

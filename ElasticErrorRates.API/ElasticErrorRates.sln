@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElasticErrorRates.CQRS", ".
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElasticErrorRates.Injection", "..\ElasticErrorRates.Injection\ElasticErrorRates.Injection.csproj", "{869C01ED-8316-43EA-A805-0C0547F31569}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticErrorRates.Hangfire", "..\ElasticErrorRates.Hangfire\ElasticErrorRates.Hangfire.csproj", "{BB2BBF98-DF6A-4EA5-BDE0-87DACFB56E92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElasticErrorRates.Hangfire", "..\ElasticErrorRates.Hangfire\ElasticErrorRates.Hangfire.csproj", "{BB2BBF98-DF6A-4EA5-BDE0-87DACFB56E92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticErrorRates.SignalR", "..\ElasticErrorRates.SignalR\ElasticErrorRates.SignalR.csproj", "{FD603C82-6DC3-495D-9FB1-1E65B241AEEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{BB2BBF98-DF6A-4EA5-BDE0-87DACFB56E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB2BBF98-DF6A-4EA5-BDE0-87DACFB56E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB2BBF98-DF6A-4EA5-BDE0-87DACFB56E92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD603C82-6DC3-495D-9FB1-1E65B241AEEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD603C82-6DC3-495D-9FB1-1E65B241AEEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD603C82-6DC3-495D-9FB1-1E65B241AEEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD603C82-6DC3-495D-9FB1-1E65B241AEEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

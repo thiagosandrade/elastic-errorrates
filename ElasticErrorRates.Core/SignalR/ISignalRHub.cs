@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace ElasticErrorRates.API.SignalR
+namespace ElasticErrorRates.Core.SignalR
 {
-    public interface ITypedHubClient
+    public interface ISignalRHub
     {
         Task BroadCastMessage(SignalRMessage message);
     }

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using ElasticErrorRates.Persistence.Utils;
-using Elasticsearch.Net;
 using Nest;
 using DashboardSearchCriteria = ElasticErrorRates.Core.Criteria.Dashboard.SearchCriteria;
 

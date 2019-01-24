@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ElasticErrorRates.Core.Persistence;
 using Microsoft.Extensions.Configuration;
 using Nest;

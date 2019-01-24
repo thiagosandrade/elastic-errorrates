@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ElasticErrorRates.Core.Criteria.Log
+﻿namespace ElasticErrorRates.Core.Criteria.Log
 {
     public class FindCriteria : IFindCriteria
     {

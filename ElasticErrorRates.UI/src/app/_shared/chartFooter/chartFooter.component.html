@@ -6,12 +6,12 @@
       <span class="text-success" *ngIf="comparison.value < 0">
           <i class="material-icons text-success">arrow_downward</i>
       </span> 
-      {{comparison.valueAbsolute | number: '1.2-2' }} {{comparison.value > 0 ? 'increase' : 'decrease' }} comparing actual and previous values.
+      {{comparison.valueAbsolute | number: '1.2-2' }} {{comparison.value > 0 ? 'up' : 'down' }} comparing actual and previous values.
     </p>
     <p class="card-category" *ngIf="comparison.value != null && comparison.value == 0">
       <span class="text-success">
           <i class="material-icons text-success">close</i>
       </span> 
-      No previous data to compare
+      No previous data to compare.
     </p>
 </div>
