@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using ElasticErrorRates.Core.SignalR;
 using SearchCriteria = ElasticErrorRates.Core.Criteria.Dashboard.SearchCriteria;
 
 namespace ElasticErrorRates.Hangfire.Tasks
@@ -14,6 +15,7 @@ namespace ElasticErrorRates.Hangfire.Tasks
     public class Jobs
     {
         private readonly IServiceProvider _provider;
+        private readonly IHubContextWrapper _hubContext;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IQueryDispatcher _queryDispatcher;
         private readonly ICommandDispatcher _commandDispatcher;
@@ -21,6 +23,7 @@ namespace ElasticErrorRates.Hangfire.Tasks
         public Jobs(IServiceProvider provider)
         {
             _provider = provider;
+            _hubContext = _provider.GetRequiredService<IHubContextWrapper>();
             _unitOfWork = _provider.GetRequiredService<IUnitOfWork>();
             _queryDispatcher = _provider.GetRequiredService<IQueryDispatcher>();
             _commandDispatcher = _provider.GetRequiredService<ICommandDispatcher>();
@@ -51,6 +54,8 @@ namespace ElasticErrorRates.Hangfire.Tasks
                 //Push the logs into Elastic Search
                 await _commandDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<Log>().Bulk, logs);
             }
+
+            await _commandDispatcher.DispatchAsync(_hubContext.SendMessage, new SignalRMessage(){Payload = "Completed Import Yesterday Logs"});
         }
 
         public async Task ImportYesterdayDailyRateLogs()
@@ -80,6 +85,8 @@ namespace ElasticErrorRates.Hangfire.Tasks
                 //Push the logs into Elastic Search
                 await commandDispatcher.DispatchAsync(unitOfWork.DashboardElasticRepository<DailyRate>().Bulk, dailyRates);
             }
+
+            await _commandDispatcher.DispatchAsync(_hubContext.SendMessage, new SignalRMessage(){Payload = "Completed Import Yesterday Daily Rate Logs"});
         }
 
         public async Task FlushOldLogs()
@@ -92,7 +99,8 @@ namespace ElasticErrorRates.Hangfire.Tasks
 
              //Clear the logs into Elastic Search
             await _commandDispatcher.DispatchAsync(_unitOfWork.DashboardElasticRepository<DailyRate>().Delete, searchCriteria);
-        }
 
+            await _commandDispatcher.DispatchAsync(_hubContext.SendMessage, new SignalRMessage(){Payload = "Completed Flush Old Logs"});
+        }
     }
 }

@@ -16,14 +16,16 @@ export class AppComponent implements OnInit {
   constructor(private signalRService : SignalRService) {  }
 
    ngOnInit(): void {
-    this.signalRService.notificationReceived.subscribe((signalRMessage : SignalRMessage) => {
+    this.signalRService.notificationReceived.subscribe((signalRMessage : SignalRMessage[]) => {
       this.msgs = [];
-      this.msgs.push({ 
-        life: 3000, 
-        sticky: false,
-        severity: signalRMessage.type, 
-        summary: signalRMessage.payload,
-        closable: true
+      signalRMessage.forEach(message => {
+        this.msgs.push({ 
+          life: 3000, 
+          sticky: false,
+          severity: message.type, 
+          summary: message.payload,
+          closable: true
+        });  
       });
     });
   }

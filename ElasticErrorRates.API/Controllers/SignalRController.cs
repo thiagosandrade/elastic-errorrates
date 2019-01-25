@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.SignalR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,29 +9,28 @@ namespace ElasticErrorRates.API.Controllers
     [Route("api/SignalR")]
     public class SignalRController : Controller
     {
-        private readonly ISignalRHub _hubContext;
+        private readonly IHubContextWrapper _hubContext;
+        private readonly ICommandDispatcher _commandDispatcher;
 
-        public SignalRController(ISignalRHub hubContext)
+        public SignalRController(IHubContextWrapper hubContext, ICommandDispatcher commandDispatcher)
         {
             _hubContext = hubContext;
+            _commandDispatcher = commandDispatcher;
         }
 
         [HttpPost]
-        public string Post([FromBody] SignalRMessage message)
+        public async Task<IActionResult> Post([FromBody] SignalRMessage message)
         {
-            string retMessage;
             try
             {
-                _hubContext.BroadCastMessage(message);
-                //_hubContext.Clients.All.BroadCastMessage(message);
-                retMessage = "Success";
-            }
-            catch (Exception e)
-            {
-                retMessage = e.ToString();
-            }
+                await _commandDispatcher.DispatchAsync(_hubContext.SendMessage, message);
 
-            return retMessage;
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace ElasticErrorRates.Injection
             services.AddScoped(typeof(IElasticContext), typeof(ElasticContext));
             services.AddScoped(typeof(ILogElasticMappers<>), typeof(LogElasticMappers<>));
             services.AddScoped(typeof(IDashboardElasticMappers<>), typeof(DashboardElasticMappers<>));
-            services.AddScoped(typeof(ISignalRHub), typeof(SignalRHub));
+            services.AddScoped(typeof(IHubContextWrapper), typeof(HubContextWrapper));
         }
     }
 }
