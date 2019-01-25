@@ -27,9 +27,9 @@ namespace ElasticErrorRates.API
                     builder =>
                     {
                         builder
-                            .AllowAnyOrigin()
                             .AllowAnyMethod()
                             .AllowAnyHeader()
+                            .WithOrigins("http://localhost:4200")                            
                             .AllowCredentials();
                     });
             });
