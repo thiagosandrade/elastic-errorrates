@@ -10,10 +10,10 @@ namespace ElasticErrorRates.Core.Persistence
     {
         Task<ElasticResponse<T>> SearchAggregateByCountryId(DashboardSearchCriteria criteria);
         Task<ElasticResponse<T>> Search(SearchCriteria criteria);
-        Task<ElasticResponse<T>> SearchAggregate();
+        Task<ElasticResponse<T>> SearchAggregate(SearchAgreggateCriteria criteria);
         Task<ElasticResponse<T>> Find(FindCriteria criteria);
         Task Create(T product);
-        Task Delete(T product);
+        Task Delete(DashboardSearchCriteria criteria);
         Task Bulk(IEnumerable<T> records);
 
 

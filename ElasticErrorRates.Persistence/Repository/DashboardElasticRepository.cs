@@ -155,7 +155,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task Delete(SearchCriteria criteria)
         {
-            var result = await _elasticContext.ElasticClient.DeleteByQueryAsync<DailyRate>(q => q
+            var result = await _elasticContext.ElasticClient.DeleteByQueryAsync<T>(q => q
                 .Index(defaultIndex)
                 .Query(ft => new DateRangeQuery
                             {

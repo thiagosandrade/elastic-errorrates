@@ -51,9 +51,14 @@ namespace ElasticErrorRates.API
                 app.UseDeveloperExceptionPage();
             }
 
+            var options = new DashboardOptions()
+            {
+                AppPath = "http://localhost:4200"
+            };
+
             app.UseHangfireServer()
                 .UseElasticErrorsRatesJobs(Configuration)
-                .UseHangfireDashboard();
+                .UseHangfireDashboard("/hangfire", options);
 
             app.UseCors("AllowAll");
 

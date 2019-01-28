@@ -44,11 +44,19 @@ namespace ElasticErrorRates.API.Controllers
         }
 
         [HttpGet("searchaggregate")]
-        public async Task<IActionResult> SearchAggregate()
+        public async Task<IActionResult> SearchAggregate(DateTime? startdate = null, DateTime? enddate = null)
         {
             try
             {
-                var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<LogSummary>().SearchAggregate);
+                startdate = startdate ?? DateTime.MinValue;
+                enddate = enddate ?? DateTime.MinValue;
+
+                var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<LogSummary>().SearchAggregate,
+                    new SearchAgreggateCriteria()
+                    {
+                        StartDate = startdate.Value,
+                        EndDate = enddate.Value
+                    });
 
                 return Ok(result);
             }

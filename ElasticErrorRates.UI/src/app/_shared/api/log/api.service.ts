@@ -4,25 +4,38 @@ import { Headers, Http, Response, RequestOptions } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../../environments/environment';
+
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators';
 
 import { ILogResponse } from './response/api-logresponse';
 import { ILogSummaryResponse } from './response/api-logsummaryresponse';
+import { DatePipe } from '@angular/common';
 
 @Injectable()
 export class ApiLogService {
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, public datepipe: DatePipe) { }
 
-    public importLogs(): Observable<any>{
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        const options = new RequestOptions({ headers: headers });
+    public async getLogsAggregate(startDate: Date = null, endDate: Date = null): Promise<ILogSummaryResponse> {
+        
+        var url: string =  `${environment.apiUrl}/log/searchaggregate`;
 
-        return this.http.post(`${environment.apiUrl}/log/import`, options)
-            .catch((error: any) => { return Observable.throw(error) });
-    }
-
-    public getLogsAggregate(): Observable<ILogSummaryResponse> {
-        return this.http.get<ILogSummaryResponse>(`${environment.apiUrl}/log/searchaggregate`);
+        if(startDate !== null && endDate !== null){
+            startDate.setHours(6,0,0,0);
+            endDate.setHours(6,0,0,0);
+            
+            url = url.concat(`?startdate=${this.datepipe
+                .transform(startDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}&enddate=${this.datepipe.transform(endDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}`);
+        }
+        
+        return await this.http.get<ILogSummaryResponse>(url)
+            .pipe(
+                map( response => {
+                    return response;
+                })
+            )
+            .toPromise();
     }
 
     public getLogs(page: number, pageSize: number, httpUrl: string): Observable<ILogResponse> {

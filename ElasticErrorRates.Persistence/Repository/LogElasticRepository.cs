@@ -51,9 +51,21 @@ namespace ElasticErrorRates.Persistence.Repository
              });
         } 
 
-        public async Task<ElasticResponse<T>> SearchAggregate()
+        public async Task<ElasticResponse<T>> SearchAggregate(SearchAgreggateCriteria criteria)
         {
-            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>();
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
+                .Query(q => q
+                    .Bool(bl => bl
+                        .Filter(
+                            ft => new DateRangeQuery
+                            {
+                                Field = "dateTimeLogged",
+                                GreaterThanOrEqualTo = criteria.StartDate,
+                                LessThanOrEqualTo = criteria.EndDate
+                            })
+                    )
+                );
+                
 
             queryCommand.Aggregations(AggregateCommand().Result);
 
@@ -258,9 +270,22 @@ namespace ElasticErrorRates.Persistence.Repository
             await _elasticContext.ElasticClient.IndexAsync<T>(log, x => x.Index(defaultIndex));
         }
 
-        public async Task Delete(T log)
+        public async Task Delete(DashboardSearchCriteria criteria)
         {
-            await _elasticContext.ElasticClient.DeleteAsync<T>(log, x => x.Index(defaultIndex));
+            var result = await _elasticContext.ElasticClient.DeleteByQueryAsync<T>(q => q
+                .Index(defaultIndex)
+                .Query(ft => new DateRangeQuery
+                {
+                    Field = "dateTimeLogged",
+                    //GreaterThanOrEqualTo = criteria.EndDate,
+                    LessThanOrEqualTo = criteria.EndDate
+                })
+            );
+
+            if (!result.IsValid)
+            {
+                throw new InvalidOperationException(result.DebugInformation);
+            }
         }
 
         public async Task Bulk(IEnumerable<T> records)
