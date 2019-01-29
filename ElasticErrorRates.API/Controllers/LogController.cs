@@ -54,8 +54,8 @@ namespace ElasticErrorRates.API.Controllers
                 var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<LogSummary>().SearchAggregate,
                     new SearchAgreggateCriteria()
                     {
-                        StartDate = startdate.Value,
-                        EndDate = enddate.Value
+                        StartDateTimeLogged = startdate.Value,
+                        EndDateTimeLogged = enddate.Value
                     });
 
                 return Ok(result);
@@ -71,7 +71,13 @@ namespace ElasticErrorRates.API.Controllers
         {
             try
             {
-                var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<Log>().Search, new SearchCriteria{HttpUrl = httpUrl, Page = page, PageSize = pageSize});
+                var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<Log>().Search, 
+                    new LogSearchCriteria
+                    {
+                        HttpUrl = httpUrl, 
+                        Page = page, 
+                        PageSize = pageSize
+                    });
 
                 return Ok(result);
             }
@@ -82,18 +88,29 @@ namespace ElasticErrorRates.API.Controllers
         }
 
         [HttpGet("find")]
-        public async Task<IActionResult> Find(string columnField, string httpUrl, string term)
+        public async Task<IActionResult> Find(string columnField, string httpUrl, string term, DateTime? startdate = null, DateTime? enddate = null)
         {
             try
             {
+                startdate = startdate ?? DateTime.MinValue;
+                enddate = enddate ?? DateTime.MinValue;
+
+                var criteria = new LogSearchCriteria()
+                {
+                    ColumnField = columnField, 
+                    HttpUrl = httpUrl, 
+                    Term = term,
+                    StartDateTimeLogged = startdate.Value,
+                    EndDateTimeLogged = enddate.Value
+                };
+
                 switch (columnField)
                 {
                     case "exception":
-                        var queryLog = _unitOfWork.LogElasticRepository<Log>();
-                        return Ok(await _queryDispatcher.DispatchAsync(queryLog.Find, new FindCriteria{ColumnField = columnField, HttpUrl = httpUrl, Term = term}));
+                        return Ok(await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<Log>().Find, criteria));
 
                     case "httpUrl":
-                        return Ok(await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<LogSummary>().Find, new FindCriteria { ColumnField = columnField, HttpUrl = httpUrl, Term = term }));
+                        return Ok(await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<LogSummary>().Find, criteria));
                 }
 
                 return BadRequest();

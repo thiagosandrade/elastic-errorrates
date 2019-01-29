@@ -7,8 +7,9 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using ElasticErrorRates.Core.Criteria;
+using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.SignalR;
-using SearchCriteria = ElasticErrorRates.Core.Criteria.Dashboard.SearchCriteria;
 
 namespace ElasticErrorRates.Hangfire.Tasks
 {
@@ -72,9 +73,9 @@ namespace ElasticErrorRates.Hangfire.Tasks
         public async Task FlushOldLogs()
         {
             var oldestDate = DateTime.Now.AddDays(7);
-            var searchCriteria = new SearchCriteria
+            LogCriteria searchCriteria = new LogSearchCriteria
             {
-                EndDate = oldestDate
+                StartDateTimeLogged = oldestDate
             };
 
              //Clear the logs into Elastic Search

@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class DatePickerService {
-    private subject = new Subject<Date>();
+    private subject = new BehaviorSubject<Date>(new Date());
 
-constructor() { }
+    constructor() {
+    }
+
     getDateValue() : Observable<Date>{
         return this.subject.asObservable();
     }

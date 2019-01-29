@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ElasticErrorRates.Core.Criteria;
+using ElasticErrorRates.Core.Criteria.Dashboard;
 using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using ElasticErrorRates.Persistence.Utils;
 using Nest;
-using DashboardSearchCriteria = ElasticErrorRates.Core.Criteria.Dashboard.SearchCriteria;
 
 namespace ElasticErrorRates.Persistence.Repository
 {
@@ -56,15 +57,16 @@ namespace ElasticErrorRates.Persistence.Repository
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
                     .Bool(bl => bl
-                        .Filter(
+                        .Must(
                             ft => new DateRangeQuery
                             {
                                 Field = "dateTimeLogged",
-                                GreaterThanOrEqualTo = criteria.StartDate,
-                                LessThanOrEqualTo = criteria.EndDate
+                                GreaterThanOrEqualTo = criteria.StartDateTimeLogged,
+                                LessThanOrEqualTo = criteria.EndDateTimeLogged
                             })
                     )
-                );
+                )
+                .Size(0);
                 
 
             queryCommand.Aggregations(AggregateCommand().Result);
@@ -82,7 +84,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
-        public async Task<ElasticResponse<T>> SearchAggregateByCountryId(DashboardSearchCriteria searchCriteria)
+        public async Task<ElasticResponse<T>> SearchAggregateByCountryId(GraphCriteria searchCriteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
@@ -107,8 +109,8 @@ namespace ElasticErrorRates.Persistence.Repository
                             ft => new DateRangeQuery
                             {
                                 Field = "dateTimeLogged",
-                                GreaterThanOrEqualTo = searchCriteria.StartDate,
-                                LessThanOrEqualTo = searchCriteria.EndDate
+                                GreaterThanOrEqualTo = searchCriteria.StartDateTimeLogged,
+                                LessThanOrEqualTo = searchCriteria.EndDateTimeLogged
                             })
                     )
                 );
@@ -127,12 +129,12 @@ namespace ElasticErrorRates.Persistence.Repository
             return response;
         }
 
-        public async Task<ElasticResponse<T>> Search(SearchCriteria criteria)
+        public async Task<ElasticResponse<T>> Search(LogSearchCriteria criteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
                     .Bool(bl =>
-                        bl.Filter(
+                        bl.Must(
                             fq =>
                             {
                                 QueryContainer query = null;
@@ -165,15 +167,15 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
-        public async Task<ElasticResponse<T>> Find(FindCriteria criteria)
+        public async Task<ElasticResponse<T>> Find(LogSearchCriteria criteria)
         {
-            var result = await FindLog(criteria.ColumnField, criteria.HttpUrl, criteria.Term);
+            var result = await FindLog(criteria);
 
             switch (criteria.ColumnField)
             {
                 case "exception":
                     
-                    return _logElasticMappers.MapElasticResults(result, criteria.ColumnField, criteria.Term);
+                    return _logElasticMappers.MapElasticResults(result, criteria.Term);
 
                 case "httpUrl":
 
@@ -188,79 +190,67 @@ namespace ElasticErrorRates.Persistence.Repository
             return null;
         }
 
-        private async Task<ISearchResponse<T>> FindLog(string columnField, string httpUrl, string term)
+        private async Task<ISearchResponse<T>> FindLog(LogSearchCriteria searchCriteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
-                    .Query(q => q
-                        .Bool(bl =>
-                            bl.Filter(
-                                fq =>
-                                {
-                                    QueryContainer query = null;
-
-                                    if (term != "null")
-                                    {
-                                        query &= fq.Match(qs => qs
-                                            .Field(columnField)
-                                            .Query(term)
-                                            .MinimumShouldMatch("80%")
-                                        );
-                                    }
-
-                                    if (httpUrl != "null")
-                                    {
-                                        query &= fq.Term(t => t
-                                            .Field("httpUrl.keyword").Value(httpUrl)
-                                        );
-                                    }
-
-                                    return query;
-                                }
-                            )
-                        )
-                    )
-                    .Aggregations(ag =>
-                        {
-                            AggregationContainerDescriptor<T> query = null;
-
-                            if (columnField.Equals("httpUrl"))
+                .Query(q => q
+                    .Bool(bl => bl
+                        .Must(
+                            fq =>
                             {
-                                query &= ag.Terms("group_by_httpUrl",
-                                        t => t.Field("httpUrl.keyword")
-                                            .Aggregations(aa => aa
-                                                .Min("first_occurrence",
-                                                    m => m.Field("dateTimeLogged"))
-                                                .Max("last_occurrence",
-                                                    mm => mm.Field("dateTimeLogged"))
-                                            )
-                                            .Size(int.MaxValue)
-                                    );
-                            }
+                                QueryContainer query = null;
 
-                            return query;
-                        }
-                    )
-                    .Sort(q =>
-                        {
-                            return q
-                                .Field(p => p
-                                    .Field("dateTimeLogged")
-                                    .Order(SortOrder.Descending)
+                                //if (searchCriteria.Term != "null")
+                                //{
+                                //    query &= fq.Match(qs => qs
+                                //        .Field(searchCriteria.ColumnField)
+                                //        .Query(searchCriteria.Term)
+                                //        .MinimumShouldMatch("80%")
+                                //    );
+                                //}
+
+                                query &= fq.Term(t => t
+                                    .Field("httpUrl")
+                                    .Value(searchCriteria.Term)
                                 );
-                        }
-                    )
-                    .From(0)
-                    .Size(10)
-                    .Highlight(z => z
-                        .Fields(y => y
-                            .Field(columnField)
-                            .PreTags("<b>")
-                            .PostTags("</b>")
+
+                                return query;
+                            }
                         )
-                        .NumberOfFragments(10)
-                        .FragmentSize(1)
-                        .Order(HighlighterOrder.Score)
-                    );
+                        .Filter(
+                            ft => new DateRangeQuery
+                            {
+                                Field = "dateTimeLogged",
+                                GreaterThanOrEqualTo = searchCriteria.StartDateTimeLogged,
+                                LessThanOrEqualTo = searchCriteria.EndDateTimeLogged
+                            }
+                        )
+                    )
+                )
+                .Sort(q =>
+                    {
+                        return q
+                            .Field(p => p
+                                .Field("dateTimeLogged")
+                                .Order(SortOrder.Descending)
+                            );
+                    }
+                )
+                .From(0)
+                .Size(10)
+                .Highlight(z => z
+                    .Fields(y => y
+                        .Field(searchCriteria.ColumnField)
+                        .PreTags("<b>")
+                        .PostTags("</b>")
+                    )
+                    .NumberOfFragments(10)
+                    .FragmentSize(1)
+                    .Order(HighlighterOrder.Score)
+                );
+                
+
+            queryCommand.Aggregations(AggregateCommand().Result);
 
             return await BasicQuery(queryCommand);
         }
@@ -270,15 +260,14 @@ namespace ElasticErrorRates.Persistence.Repository
             await _elasticContext.ElasticClient.IndexAsync<T>(log, x => x.Index(defaultIndex));
         }
 
-        public async Task Delete(DashboardSearchCriteria criteria)
+        public async Task Delete(LogCriteria criteria)
         {
             var result = await _elasticContext.ElasticClient.DeleteByQueryAsync<T>(q => q
                 .Index(defaultIndex)
                 .Query(ft => new DateRangeQuery
                 {
                     Field = "dateTimeLogged",
-                    //GreaterThanOrEqualTo = criteria.EndDate,
-                    LessThanOrEqualTo = criteria.EndDate
+                    LessThanOrEqualTo = criteria.EndDateTimeLogged
                 })
             );
 

@@ -5,6 +5,7 @@ using Nest;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ElasticErrorRates.Core.Criteria;
 
 namespace ElasticErrorRates.Persistence.Repository
 {
@@ -29,7 +30,7 @@ namespace ElasticErrorRates.Persistence.Repository
             return await _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex).AllTypes());
         }
 
-        public async Task<ElasticResponse<T>> Search(SearchCriteria criteria)
+        public async Task<ElasticResponse<T>> Search(DashboardSearchCriteria criteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
@@ -43,19 +44,19 @@ namespace ElasticErrorRates.Persistence.Repository
                                     t => t.Field("countryId").Value(criteria.CountryId)
                                 );
 
-                                if (criteria.StartDate != DateTime.MinValue && criteria.EndDate != DateTime.MinValue)
+                                if (criteria.StartDateTimeLogged != DateTime.MinValue && criteria.EndDateTimeLogged != DateTime.MinValue)
                                 {
                                     query &= fq.DateRange(
                                         descriptor => descriptor
                                             .Name("date_filter_start")
                                             .Field("startDate")
-                                            .GreaterThanOrEquals(criteria.StartDate));
+                                            .GreaterThanOrEquals(criteria.StartDateTimeLogged));
 
                                     query &= fq.DateRange(
                                         descriptor => descriptor
                                             .Name("date_filter_end")
                                             .Field("endDate")
-                                            .LessThanOrEquals(criteria.EndDate));
+                                            .LessThanOrEquals(criteria.EndDateTimeLogged));
                                 }
 
                                 return query;
@@ -99,7 +100,7 @@ namespace ElasticErrorRates.Persistence.Repository
                                 {
                                     Field = "startDate",
                                     //GreaterThanOrEqualTo = criteria.StartDate,
-                                    LessThanOrEqualTo = criteria.EndDate
+                                    LessThanOrEqualTo = criteria.EndDateTimeLogged
                                 })
                         )
                     )
@@ -153,7 +154,7 @@ namespace ElasticErrorRates.Persistence.Repository
             await _elasticContext.ElasticClient.IndexAsync<T>(log, x => x.Index(defaultIndex));
         }
 
-        public async Task Delete(SearchCriteria criteria)
+        public async Task Delete(LogCriteria criteria)
         {
             var result = await _elasticContext.ElasticClient.DeleteByQueryAsync<T>(q => q
                 .Index(defaultIndex)
@@ -161,7 +162,7 @@ namespace ElasticErrorRates.Persistence.Repository
                             {
                                 Field = "endDate",
                                 //GreaterThanOrEqualTo = criteria.EndDate,
-                                LessThanOrEqualTo = criteria.EndDate
+                                LessThanOrEqualTo = criteria.EndDateTimeLogged
                             })
             );
 

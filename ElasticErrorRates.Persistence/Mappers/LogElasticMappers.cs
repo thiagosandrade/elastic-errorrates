@@ -19,8 +19,8 @@ namespace ElasticErrorRates.Persistence.Mappers
                         {
                             HttpUrlCount = x.DocCount.Value,
                             HttpUrl = x.Key,
-                            FirstOccurrence = string.Format("{0:yyyy/MM/dd hh:mm:ss}", Convert.ToDateTime(x.Min("first_occurrence").ValueAsString)),
-                            LastOccurrence = string.Format("{0:yyyy/MM/dd hh:mm:ss}", Convert.ToDateTime(x.Max("last_occurrence").ValueAsString))
+                            FirstOccurrence = $"{Convert.ToDateTime(x.Min("first_occurrence").ValueAsString):yyyy/MM/dd HH:mm:ss}",
+                            LastOccurrence = $"{Convert.ToDateTime(x.Max("last_occurrence").ValueAsString):yyyy/MM/dd HH:mm:ss}"
                         };
 
                         return record;
@@ -39,7 +39,7 @@ namespace ElasticErrorRates.Persistence.Mappers
             };
         }
 
-        public ElasticResponse<T> MapElasticResults(ISearchResponse<T> result, string columnField, string highlightTerm = "")
+        public ElasticResponse<T> MapElasticResults(ISearchResponse<T> result, string highlightTerm)
         {
             ISearchResponse<Log> convertedResult = (ISearchResponse<Log>) result;
 

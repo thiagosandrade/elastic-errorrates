@@ -55,11 +55,11 @@ namespace ElasticErrorRates.API.Controllers
 
                 var result = await _queryDispatcher.DispatchAsync(
                     _unitOfWork.DashboardElasticRepository<DailyRate>().Search,
-                    new SearchCriteria
+                    new DashboardSearchCriteria()
                     {
                         CountryId = (Country)countryId,
-                        StartDate = startdate.Value,
-                        EndDate = enddate.Value
+                        StartDateTimeLogged = startdate.Value,
+                        EndDateTimeLogged = enddate.Value
                     });
                 
                 
@@ -87,7 +87,7 @@ namespace ElasticErrorRates.API.Controllers
                         CountryId = (Country)countryId,
                         TypeAggregation = typeAggregation,
                         NumberOfResults = numberOfResult,
-                        EndDate = enddate.Value
+                        EndDateTimeLogged = enddate.Value
                     });
 
 
@@ -110,11 +110,11 @@ namespace ElasticErrorRates.API.Controllers
 
                 var result = await _queryDispatcher.DispatchAsync(
                     _unitOfWork.LogElasticRepository<LogSummary>().SearchAggregateByCountryId, 
-                    new SearchCriteria()
+                    new GraphCriteria()
                     {
                         CountryId = (Country)countryId,
-                        StartDate = startdate.Value,
-                        EndDate = enddate.Value
+                        StartDateTimeLogged = startdate.Value,
+                        EndDateTimeLogged = enddate.Value
                     });
 
 

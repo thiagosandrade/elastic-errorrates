@@ -46,7 +46,24 @@ export class ApiLogService {
         return this.http.get<ILogResponse>(`${environment.apiUrl}/log/find/?columnField=${columnField}&httpUrl=${httpUrl}&term=${term}`);
     }
 
-    public findLogsSummary(columnField: string, httpUrl: string, term : string): Observable<ILogSummaryResponse> {
-        return this.http.get<ILogSummaryResponse>(`${environment.apiUrl}/log/find/?columnField=${columnField}&httpUrl=${httpUrl}&term=${term}`);
+    public async findLogsSummary(columnField: string, httpUrl: string, term : string, startDate: Date = null, endDate: Date = null): Promise<ILogSummaryResponse> {
+        
+        var url: string =  `${environment.apiUrl}/log/find?columnField=${columnField}&httpUrl=${httpUrl}&term=${term}`;
+
+        if(startDate !== null && endDate !== null){
+            startDate.setHours(6,0,0,0);
+            endDate.setHours(6,0,0,0);
+
+            url = url.concat(`&startdate=${this.datepipe
+                .transform(startDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}&enddate=${this.datepipe.transform(endDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}`);
+        }
+
+        return await this.http.get<ILogSummaryResponse>(url)
+            .pipe(
+                map( response => {
+                    return response;
+                })
+            )
+            .toPromise();
     }
 }

@@ -13,7 +13,5 @@ namespace ElasticErrorRates.Core.Manager
         void RollBack();
         T GetInstance<T>() where T : class;
         IGenericRepository<T> GenericRepository<T>() where T : class;
-        //IGenericRepository<Log> LogRepository { get; }
-        //IGenericRepository<DailyRate> DailyRateRepository { get; }
     }
 }
