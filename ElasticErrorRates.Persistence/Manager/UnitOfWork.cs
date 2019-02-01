@@ -18,41 +18,12 @@ namespace ElasticErrorRates.Persistence.Manager
         private bool _disposed;
         private IDbContextTransaction _transaction;
 
-        //private GenericRepository<Log> _logRepository;
-        //private GenericRepository<DailyRate> _dailyRateRepository;
-
         public UnitOfWork(DashboardContext dsContext, ApplicationDbContext context, IServiceProvider serviceprovider)
         {
             _dsContext = dsContext;
             _context = context;
             _serviceprovider = serviceprovider;
         }
-
-        //public IGenericRepository<Log> LogRepository
-        //{
-        //    get
-        //    {
-        //        if (this._logRepository == null)
-        //        {
-        //            this._logRepository = new GenericRepository<Log>(_context);
-        //        }
-
-        //        return _logRepository;
-        //    }
-        //}
-
-        //public IGenericRepository<DailyRate> DailyRateRepository
-        //{
-        //    get
-        //    {
-        //        if (this._dailyRateRepository == null)
-        //        {
-        //            this._dailyRateRepository = new GenericRepository<DailyRate>(_dsContext);
-        //        }
-
-        //        return _dailyRateRepository;
-        //    }
-        //}
 
         public T GetInstance<T>() where T : class
         {

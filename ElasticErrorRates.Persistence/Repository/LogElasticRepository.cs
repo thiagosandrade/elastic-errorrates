@@ -29,7 +29,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         private async Task<ISearchResponse<T>> BasicQuery(SearchDescriptor<T> queryCommand)
         {
-            return await _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex).AllTypes());
+            return await Task.Run(() => _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex).AllTypes()));
         }
 
         public async Task<Func<AggregationContainerDescriptor<T>, IAggregationContainer>> AggregateCommand()
@@ -46,7 +46,7 @@ namespace ElasticErrorRates.Persistence.Repository
                                      .Max("last_occurrence",
                                          mm => mm.Field("dateTimeLogged"))
                                  )
-                                 .Size(int.MaxValue)
+                                 .Size(20)
                          )
                      );
              });
@@ -67,7 +67,6 @@ namespace ElasticErrorRates.Persistence.Repository
                     )
                 )
                 .Size(0);
-                
 
             queryCommand.Aggregations(AggregateCommand().Result);
 
@@ -241,8 +240,8 @@ namespace ElasticErrorRates.Persistence.Repository
                 .Highlight(z => z
                     .Fields(y => y
                         .Field(searchCriteria.ColumnField)
-                        .PreTags("<b>")
-                        .PostTags("</b>")
+                        .PreTags("<u>")
+                        .PostTags("</u>")
                     )
                     .NumberOfFragments(10)
                     .FragmentSize(1)

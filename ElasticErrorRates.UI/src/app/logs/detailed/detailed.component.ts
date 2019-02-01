@@ -4,7 +4,7 @@ import { ILog } from '../../_shared/api/log/model/log';
 import { ILogResponse } from '../../_shared/api/log/response/api-logresponse';
 import { ActivatedRoute, Params } from '@angular/router';
 import { KeepHtmlPipe } from '../../_shared/keepHtmlPipe/keep-html.pipe';
-
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'logs-detailed',

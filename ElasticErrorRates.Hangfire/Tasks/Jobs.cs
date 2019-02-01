@@ -30,7 +30,7 @@ namespace ElasticErrorRates.Hangfire.Tasks
 
         public async Task ImportYesterdayLogs()
         {
-            var yesterdayDate = DateTime.Now.AddDays(-7);
+            var yesterdayDate = DateTime.Now.AddDays(-1);
 
             var startDate = new DateTime(yesterdayDate.Year,
                 yesterdayDate.Month, yesterdayDate.Day, 6, 0, 0);
@@ -38,7 +38,10 @@ namespace ElasticErrorRates.Hangfire.Tasks
             var endDate = new DateTime(DateTime.Now.Year,
                 DateTime.Now.Month, DateTime.Now.Day, 6, 0, 0);
 
-            Expression<Func<Log, bool>> predicate = srv => srv.DateTimeLogged >= startDate && srv.DateTimeLogged <= endDate;
+            Expression<Func<Log, bool>> predicate = 
+                srv => 
+                    srv.DateTimeLogged >= startDate && srv.DateTimeLogged <= endDate
+                    && srv.Level.Equals("ERROR");
 
             //Get Logs data from database
             var logs = (await _queryDispatcher.DispatchAsync(_unitOfWork.GenericRepository<Log>()
@@ -72,10 +75,10 @@ namespace ElasticErrorRates.Hangfire.Tasks
 
         public async Task FlushOldLogs()
         {
-            var oldestDate = DateTime.Now.AddDays(7);
+            var oldestDate = DateTime.Now.AddDays(0);
             LogCriteria searchCriteria = new LogSearchCriteria
             {
-                StartDateTimeLogged = oldestDate
+                EndDateTimeLogged = oldestDate
             };
 
              //Clear the logs into Elastic Search

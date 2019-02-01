@@ -23,11 +23,11 @@
                         <table class="table table-striped tables">
                             <thead>
                                 <tr>
-                                    <td class="smallColumn">Id</td>
-                                    <td class="smallColumn">Level</td>
+                                    <td class="smallColumn"></td>
                                     <td>Message</td>
-                                    <td>Source</td>
-                                    <td>Exception</td>
+                                    <td>Date Logged</td>
+                                    <!-- <td>Source</td>
+                                    <td>Exception</td> -->
                                 </tr>
                             </thead>
                         </table>
@@ -37,14 +37,13 @@
                     <tbody>
                         <tr *ngFor="let log of logs">
                             <td class="smallColumn">
-                                <a type="button" class="btn btn-link" (click)="onSelectLog(log)">
-                                    {{ log.id }}
-                                </a>
+                                <a class="button" (click)="onSelectLog(log)"><i class="fa fa-search"></i></a>
                             </td>
-                            <td class="smallColumn">{{ log.level }}</td>
                             <td class="ellipsis">{{ log.message }}</td>
-                            <td class="ellipsis">{{ log.source }}</td>
-                            <td class="ellipsis" [innerHTML]="log.exception | keepHtml"></td>
+                            <td class="ellipsis">{{ log.dateTimeLogged | date:'yyyy-MM-ddTHH:mm:ss.SSS'}}</td>
+                            
+                            <!-- <td class="ellipsis">{{ log.source }}</td>
+                            <td class="ellipsis" [innerHTML]="log.exception | keepHtml"></td> -->
                         </tr>
                     </tbody>
                 </table>

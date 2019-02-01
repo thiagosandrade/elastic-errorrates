@@ -6,5 +6,6 @@
         public string HttpUrl { get; set; }
         public string FirstOccurrence { get; set; }
         public string LastOccurrence { get; set; }
+        public string Highlight { get; set; }
     }
 }

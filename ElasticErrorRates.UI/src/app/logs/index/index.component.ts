@@ -31,13 +31,9 @@ export class IndexComponent {
 
   getValues() : void {
     this.datePickerService.getDateValue()
-    .map((res: Date) => {
-      this.setDates(res);
-      return res;
-    })
     .subscribe(
       (res : Date) => {
-          this.setDates(res);
+        this.setDates(res);
       }
     );
 
@@ -64,7 +60,6 @@ export class IndexComponent {
       this.isProcessing = true;
       this.logs = null;
       this.totalRecords = null;
-
       this.apiService.getLogsAggregate(this.filterStartDate, this.filterEndDate)
         .then(async (logs: ILogSummaryResponse) => {
         this.logs = logs.records;
@@ -75,14 +70,21 @@ export class IndexComponent {
   }
 
   onInputText(term : string){
-    this.term = (term != null && term != undefined && term != "") ? term : "null"
-    this.apiService.findLogsSummary(this.columnField,"null",this.term, this.filterStartDate, this.filterEndDate)
-      .then(async (logs : ILogSummaryResponse) => {
-        this.logs = logs.records;
-        this.totalRecords = logs.totalRecords
-        this.isProcessing = false;
-      }
-    );
+    this.term = (term != null && term != undefined) ? term : "null"
+    if(term !== "null"){
+      this.apiService.findLogsSummary(this.columnField,"null",this.term, this.filterStartDate, this.filterEndDate)
+        .then(async (logs : ILogSummaryResponse) => {
+          this.logs = logs.records;
+          this.totalRecords = logs.totalRecords
+          this.isProcessing = false;
+        }
+      );
+      
+    }
+    else{
+      this.fillGrid();
+    }
+    
   }
 
   onSelectLog(logId : string){
