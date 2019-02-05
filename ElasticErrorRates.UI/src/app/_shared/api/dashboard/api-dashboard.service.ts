@@ -83,4 +83,19 @@ export class ApiDashboardService {
             .toPromise();
     }
 
+    public async getLogsQuantity(startDate: Date = null, enddate: Date = null) : Promise<Number>{
+        var url: string =  `${environment.apiUrl}/dashboard/getlogsquantity`;
+
+        if(startDate !== null && enddate !== null){
+            startDate.setHours(6,0,0,0);
+            enddate.setHours(6,0,0,0);
+            
+            url = url.concat(`?startdate=${this.datepipe.transform(startDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}&enddate=${this.datepipe.transform(enddate, 'yyyy-MM-ddTHH:mm:ss.SSS')}`);
+        }
+
+        return await this.http.get<Number>(url)
+            .map( response => response as Number)
+            .toPromise();
+    }
+
 }

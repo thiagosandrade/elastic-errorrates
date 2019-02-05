@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.CQRS.Query;
+using ElasticErrorRates.Core.Criteria;
 using ElasticErrorRates.Core.Criteria.Dashboard;
 using ElasticErrorRates.Core.Enums;
 using ElasticErrorRates.Core.Manager;
@@ -38,6 +39,30 @@ namespace ElasticErrorRates.API.Controllers
                 await _commandDispatcher.DispatchAsync(_unitOfWork.DashboardElasticRepository<DailyRate>().Bulk, extractedResult);
 
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [HttpGet("getlogsquantity")]
+        public async Task<IActionResult> GetLogsQuantity(DateTime? startdate = null, DateTime? enddate = null)
+        {
+            try
+            {
+                startdate = startdate ?? DateTime.MinValue;
+                enddate = enddate ?? DateTime.MinValue;
+
+                var result = await _queryDispatcher.DispatchAsync(
+                    _unitOfWork.LogElasticRepository<Log>().GetLogsQuantity, new LogQuantityCriteria(){
+                        StartDateTimeLogged = startdate.Value,
+                        EndDateTimeLogged = enddate.Value
+                    });
+
+
+                return Ok(result);
+
             }
             catch (Exception ex)
             {

@@ -16,5 +16,6 @@ namespace ElasticErrorRates.Core.Persistence
         Task Create(T product);
         Task Delete(LogCriteria criteria);
         Task Bulk(IEnumerable<T> records);
+        Task<long> GetLogsQuantity(LogQuantityCriteria criteria);
     }
 }

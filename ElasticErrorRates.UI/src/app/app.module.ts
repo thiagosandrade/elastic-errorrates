@@ -1,14 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './_shared/shared.module';
-import { LogsModule } from './logs/logs.module';
+import { InfiniteScrollModule} from 'ngx-infinite-scroll';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { GrowlModule } from 'primeng/growl';
 
@@ -28,6 +29,8 @@ import {
     AppComponent
 ],
   imports: [
+    InfiniteScrollModule,
+    BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
@@ -35,7 +38,6 @@ import {
     AppRoutingModule,
     NgbModule.forRoot(),
     SharedModule,
-    LogsModule,
     GrowlModule,
 
     MatButtonModule,
@@ -48,14 +50,7 @@ import {
     MatIconModule
   ],
   exports:[
-    MatButtonModule,
-    MatRippleModule,
-    MatInputModule,
-    MatTooltipModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatFormFieldModule,
-    MatIconModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

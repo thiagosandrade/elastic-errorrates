@@ -32,6 +32,7 @@ export class SignalRService {
     private registerOnServerEvents() {
         this._hubConnection
             .on('BroadcastMessage', (data) => {
+                // console.log(data);
                  this.notificationReceived.emit(data);
                 }
             );

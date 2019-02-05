@@ -284,5 +284,36 @@ namespace ElasticErrorRates.Persistence.Repository
             }
          
         }
+
+        public async Task<long> GetLogsQuantity(LogQuantityCriteria criteria)
+        {
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
+                .Query(q => q
+                    .Bool(bl =>
+                        bl.Filter(
+                            ft => new DateRangeQuery
+                            {
+                                Field = "dateTimeLogged",
+                                GreaterThanOrEqualTo = criteria.StartDateTimeLogged,
+                                LessThanOrEqualTo = criteria.EndDateTimeLogged
+                            })
+                    )
+                );
+
+            
+
+            return await Task.Run(async () =>
+            {
+                var result = await BasicQuery(queryCommand);
+
+                if (!result.IsValid)
+                {
+                    throw new InvalidOperationException(result.DebugInformation);
+                }
+
+                return result.Hits.Count;
+            });
+
+        }
     }
 }

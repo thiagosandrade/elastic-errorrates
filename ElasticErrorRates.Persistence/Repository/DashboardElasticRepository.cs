@@ -176,5 +176,7 @@ namespace ElasticErrorRates.Persistence.Repository
         {
             await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(records));
         }
+
+        
     }
 }
