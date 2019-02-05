@@ -109,7 +109,7 @@ namespace ElasticErrorRates.API.Controllers
                 enddate = enddate ?? DateTime.MinValue;
 
                 var result = await _queryDispatcher.DispatchAsync(
-                    _unitOfWork.LogElasticRepository<LogSummary>().SearchAggregateByCountryId, 
+                    _unitOfWork.LogElasticRepository<LogSummary>().SearchLogsAggregateByCountryId, 
                     new GraphCriteria()
                     {
                         CountryId = (Country)countryId,

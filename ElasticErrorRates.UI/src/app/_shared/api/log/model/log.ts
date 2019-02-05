@@ -6,6 +6,7 @@ export interface ILog {
     Exception: string;
     HttpUrl: string;
     DateTimeLogged: Date;
+    DateTimeLoggedAsString: string;
 }
 
 export class Log implements ILog {
@@ -16,4 +17,5 @@ export class Log implements ILog {
     Exception: string;
     HttpUrl: string;
     DateTimeLogged: Date;
+    DateTimeLoggedAsString: string;
 }

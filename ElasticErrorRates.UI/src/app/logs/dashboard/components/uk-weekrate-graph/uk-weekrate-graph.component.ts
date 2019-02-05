@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, SimpleChanges, SimpleChange } from '@angular/core';
-import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
+import { ApiDashboardService } from '../../../../_shared/api/dashboard/api-dashboard.service';
 import { IGraphRequestResponse } from '../../../../_shared/api/dashboard/response/api-graphrequestresponse';
 import { WeekDays } from '../../../../_shared/helpers/WeekDays.enum';
 import { ChartModel } from '../../../../_shared/helpers/ChartModel';

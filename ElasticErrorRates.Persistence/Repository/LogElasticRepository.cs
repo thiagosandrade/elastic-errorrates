@@ -32,7 +32,7 @@ namespace ElasticErrorRates.Persistence.Repository
             return await Task.Run(() => _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex).AllTypes()));
         }
 
-        public async Task<Func<AggregationContainerDescriptor<T>, IAggregationContainer>> AggregateCommand()
+        private async Task<Func<AggregationContainerDescriptor<T>, IAggregationContainer>> AggregateCommand()
         {
             return await Task.Run(() =>
              {
@@ -50,9 +50,22 @@ namespace ElasticErrorRates.Persistence.Repository
                          )
                      );
              });
-        } 
+        }
 
-        public async Task<ElasticResponse<T>> SearchAggregate(SearchAgreggateCriteria criteria)
+        private async Task<Func<SortDescriptor<T>, IPromise<IList<ISort>>>> SortCommand()
+        {
+            return await Task.Run(() => { 
+                return new Func<SortDescriptor<T>, IPromise<IList<ISort>>>
+                    (st => st
+                            .Field(p => p
+                                .Field("dateTimeLogged")
+                                .Order(SortOrder.Descending)
+                            )
+                    );
+            });
+        }
+
+        public async Task<ElasticResponse<T>> SearchLogsAggregate(SearchAgreggateCriteria criteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
@@ -83,7 +96,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         }
 
-        public async Task<ElasticResponse<T>> SearchAggregateByCountryId(GraphCriteria searchCriteria)
+        public async Task<ElasticResponse<T>> SearchLogsAggregateByCountryId(GraphCriteria searchCriteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
@@ -95,10 +108,6 @@ namespace ElasticErrorRates.Persistence.Repository
 
                                 query &= fq.Term(t => t
                                     .Field("countryId").Value(searchCriteria.CountryId)
-                                );
-
-                                query &= fq.Term(t => t
-                                    .Field("level").Value("error")
                                 );
 
                                 return query;
@@ -128,7 +137,7 @@ namespace ElasticErrorRates.Persistence.Repository
             return response;
         }
 
-        public async Task<ElasticResponse<T>> Search(LogSearchCriteria criteria)
+        public async Task<ElasticResponse<T>> SearchLogsDetailed(LogSearchCriteria criteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
@@ -148,8 +157,16 @@ namespace ElasticErrorRates.Persistence.Repository
                                 return query;
                             }
                         )
+                         .Filter(
+                            ft => new DateRangeQuery
+                            {
+                                Field = "dateTimeLogged",
+                                GreaterThanOrEqualTo = criteria.StartDateTimeLogged,
+                                LessThanOrEqualTo = criteria.EndDateTimeLogged
+                            })
                     )
                 )
+                .Sort(SortCommand().Result)
                 .From(criteria.Page * criteria.PageSize)
                 .Size(criteria.PageSize);
 
@@ -163,7 +180,6 @@ namespace ElasticErrorRates.Persistence.Repository
             }
 
             return response;
-
         }
 
         public async Task<ElasticResponse<T>> Find(LogSearchCriteria criteria)
@@ -189,7 +205,7 @@ namespace ElasticErrorRates.Persistence.Repository
             return null;
         }
 
-        private async Task<ISearchResponse<T>> FindLog(LogSearchCriteria searchCriteria)
+        private async Task<ISearchResponse<T>> FindLog(LogSearchCriteria criteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
                 .Query(q => q
@@ -199,18 +215,9 @@ namespace ElasticErrorRates.Persistence.Repository
                             {
                                 QueryContainer query = null;
 
-                                //if (searchCriteria.Term != "null")
-                                //{
-                                //    query &= fq.Match(qs => qs
-                                //        .Field(searchCriteria.ColumnField)
-                                //        .Query(searchCriteria.Term)
-                                //        .MinimumShouldMatch("80%")
-                                //    );
-                                //}
-
                                 query &= fq.Term(t => t
                                     .Field("httpUrl")
-                                    .Value(searchCriteria.Term)
+                                    .Value(criteria.Term)
                                 );
 
                                 return query;
@@ -220,32 +227,24 @@ namespace ElasticErrorRates.Persistence.Repository
                             ft => new DateRangeQuery
                             {
                                 Field = "dateTimeLogged",
-                                GreaterThanOrEqualTo = searchCriteria.StartDateTimeLogged,
-                                LessThanOrEqualTo = searchCriteria.EndDateTimeLogged
+                                GreaterThanOrEqualTo = criteria.StartDateTimeLogged,
+                                LessThanOrEqualTo = criteria.EndDateTimeLogged
                             }
                         )
                     )
                 )
-                .Sort(q =>
-                    {
-                        return q
-                            .Field(p => p
-                                .Field("dateTimeLogged")
-                                .Order(SortOrder.Descending)
-                            );
-                    }
-                )
+                .Sort(SortCommand().Result)
                 .From(0)
                 .Size(10)
                 .Highlight(z => z
                     .Fields(y => y
-                        .Field(searchCriteria.ColumnField)
+                        .Field(criteria.ColumnField)
                         .PreTags("<u>")
                         .PostTags("</u>")
                     )
-                    .NumberOfFragments(10)
-                    .FragmentSize(1)
-                    .Order(HighlighterOrder.Score)
+                .NumberOfFragments(10)
+                .FragmentSize(1)
+                .Order(HighlighterOrder.Score)
                 );
                 
 

@@ -25,7 +25,10 @@
                             </label>
                         </div>
                     </td>
-                    <td class="d-inline-block col-7">{{error.httpUrl}}</td>
+                    <td class="d-inline-block col-7">
+                        <!-- {{error.httpUrl}} -->
+                        <a [routerLink]="['/logs/detailed']" [queryParams]="{ httpUrl : error.httpUrl }">{{error.httpUrl}}</a>
+                    </td>
                     <td class="d-inline-block col-2">{{error.lastOccurrence}}</td>
                     <td class="d-inline-block col-2 text-center">{{error.httpUrlCount}}</td>
                 </tr>

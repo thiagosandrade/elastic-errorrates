@@ -26,7 +26,6 @@ export class ModalComponent implements OnChanges, OnInit {
     ngOnChanges(changes: SimpleChanges){
         if(this.log != null || this.log != undefined){
             this.displayModal = true;
-            console.log(this);
         }
         
     }

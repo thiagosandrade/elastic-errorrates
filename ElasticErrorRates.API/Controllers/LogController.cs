@@ -43,15 +43,15 @@ namespace ElasticErrorRates.API.Controllers
             }
         }
 
-        [HttpGet("searchaggregate")]
-        public async Task<IActionResult> SearchAggregate(DateTime? startdate = null, DateTime? enddate = null)
+        [HttpGet("searchlogsaggregate")]
+        public async Task<IActionResult> SearchLogsAggregate(DateTime? startdate = null, DateTime? enddate = null)
         {
             try
             {
                 startdate = startdate ?? DateTime.MinValue;
                 enddate = enddate ?? DateTime.MinValue;
 
-                var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<LogSummary>().SearchAggregate,
+                var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<LogSummary>().SearchLogsAggregate,
                     new SearchAgreggateCriteria()
                     {
                         StartDateTimeLogged = startdate.Value,
@@ -66,17 +66,22 @@ namespace ElasticErrorRates.API.Controllers
             }
         }
 
-        [HttpGet("search/{page}/{pageSize}")]
-        public async Task<IActionResult> Search(int page, int pageSize, string httpUrl)
+        [HttpGet("searchlogsdetailed/{page}/{pageSize}")]
+        public async Task<IActionResult> SearchLogsDetailed(int page, int pageSize, string httpUrl, string term, DateTime? startdate = null, DateTime? enddate = null)
         {
             try
             {
-                var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<Log>().Search, 
+                startdate = startdate ?? DateTime.MinValue;
+                enddate = enddate ?? DateTime.MinValue;
+
+                var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<Log>().SearchLogsDetailed, 
                     new LogSearchCriteria
                     {
                         HttpUrl = httpUrl, 
                         Page = page, 
-                        PageSize = pageSize
+                        PageSize = pageSize,
+                        StartDateTimeLogged = startdate.Value,
+                        EndDateTimeLogged = enddate.Value
                     });
 
                 return Ok(result);

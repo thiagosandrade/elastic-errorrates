@@ -1,23 +1,28 @@
-.tables {
+.tables 
+{
     vertical-align: middle;
     text-align: center;
     width: 100%;
     margin-bottom: 0px;
 }
 
-.tables > thead {
+.tables > thead 
+{
     background-color: lightgrey;
 }
 
-.menuoptions {
+.menuoptions 
+{
     text-align: left;
 }
 
-.menuoptions > thead {
+.menuoptions > thead 
+{
     background-color: lightgrey;
 }
 
-.dimOverlay{
+.dimOverlay
+{
     position: absolute;
     top: 0;
     left: 0;
@@ -27,12 +32,28 @@
     background-color: rgba(0,0,0,0.5);
 }
 
-.smallColumn{
-    width: 77px;
+.smallColumn
+{
+    width: 5%;
 }
 
-.ellipsis {
-    max-width: 50px;
+.midColumn
+{
+    width: 35%;
+}
+
+.bigColumn
+{
+    width: 330px;
+}
+
+.dateColumn
+{
+    width: 20%;
+}
+.ellipsis 
+{
+    max-width: 40px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -45,15 +66,26 @@
     width: 50px;
 }
 
-.fixedHeader, .fixedTableHeader{
+.fixedHeader, .fixedTableHeader
+{
     position: sticky;
     background-color: white;
+    z-index: 1;
 }
 
-.fixedHeader{
+.fixedHeader
+{
     top: 55px;
 }
 
-.fixedTableHeader{
-    top: 187px;
+.fixedTableHeader
+{
+    top: 107px;
+}
+
+.inputFilter
+{
+    height: 40px; 
+    width: 100%;
+    font-size: 20px;
 }

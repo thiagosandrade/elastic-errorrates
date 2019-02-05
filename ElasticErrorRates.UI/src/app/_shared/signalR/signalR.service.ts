@@ -41,7 +41,7 @@ export class SignalRService {
         this._hubConnection
             .start()
             .then(() => {
-                console.log('Hub started');
+                // console.log('Hub started');
                 this.connectionEstablished.emit({ severity: 'true', summary: 'empty' });
             }).catch(err => {
                 console.log(`Error on connecting to signalR, retrying..`);

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, SimpleChanges, SimpleChange } from '@angular/core';
-import { ApiLogService } from '../../_shared/api/log/api.service';
+import { ApiLogService } from '../../_shared/api/log/api-log.service';
 import { ILogSummaryResponse } from '../../_shared/api/log/response/api-logsummaryresponse';
 import { ILogSummary } from '../../_shared/api/log/model/logsummary';
 import { DatePickerService } from '../../_shared/datepicker-material/datePicker.service';

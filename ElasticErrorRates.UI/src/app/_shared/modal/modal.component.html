@@ -32,15 +32,15 @@
                                 <div-flexible [textContent]="log.exception"></div-flexible>
                             </div>
                             <div class="form-group">
-                                <label for="logDateTimeLabel">Datetime Logged</label>
-                                <input type="text" class="form-control" id="logDateTimeLabel" [(ngModel)]="log.dateTimeLogged">
+                                <label for="logDateTimeLabel">Date Logged</label>
+                                <input type="text" class="form-control" id="logDateTimeLabel" [(ngModel)]="log.dateTimeLoggedAsString">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" (click)="onCloseModal()">OK</button>
+                <button type="submit" class="btn btn-info" (click)="onCloseModal()">OK</button>
             </div>
         </div>
     </div>

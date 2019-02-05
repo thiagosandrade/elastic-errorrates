@@ -42,6 +42,13 @@ namespace ElasticErrorRates.Core.Models
         }
 
         public DateTime DateTimeLogged { get; set; }
+        public string DateTimeLoggedAsString 
+        { 
+            get
+            { 
+                return $"{Convert.ToDateTime(DateTimeLogged):yyyy/MM/dd HH:mm:ss}";
+            }
+        }
 
         public Country CountryId
         {

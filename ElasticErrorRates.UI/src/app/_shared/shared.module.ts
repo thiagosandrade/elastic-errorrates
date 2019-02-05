@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiDashboardService } from './api/dashboard/api.service';
-import { ApiLogService } from './api/log/api.service';
+import { ApiDashboardService } from './api/dashboard/api-dashboard.service';
+import { ApiLogService } from './api/log/api-log.service';
 import { ModalComponent } from './modal/modal.component';
 import { ModalService } from './modal/modal.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

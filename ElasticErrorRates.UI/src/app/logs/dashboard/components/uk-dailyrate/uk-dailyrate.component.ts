@@ -1,5 +1,5 @@
 import { Component, Input, SimpleChanges, SimpleChange } from '@angular/core';
-import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
+import { ApiDashboardService } from '../../../../_shared/api/dashboard/api-dashboard.service';
 import { IDailyRate, DailyRate } from '../../../../_shared/api/dashboard/model/dailyrate';
 import { IDailyRateResponse } from '../../../../_shared/api/dashboard/response/api-dailyrateresponse';
 import { Countries } from '../../../../_shared/helpers/Country.enum';

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiLogService } from '../../_shared/api/log/api.service';
+import { Component, OnInit, SimpleChanges, SimpleChange } from '@angular/core';
+import { ApiLogService } from '../../_shared/api/log/api-log.service';
 import { ILog } from '../../_shared/api/log/model/log';
 import { ILogResponse } from '../../_shared/api/log/response/api-logresponse';
 import { ActivatedRoute, Params } from '@angular/router';
 import { KeepHtmlPipe } from '../../_shared/keepHtmlPipe/keep-html.pipe';
 import { DatePipe } from '@angular/common';
+import { DatePickerService } from '../../_shared/datepicker-material/datePicker.service';
 
 @Component({
   selector: 'logs-detailed',
@@ -22,13 +23,41 @@ export class DetailedComponent implements OnInit {
   public currentPage = 0;
   public pageSize = 50;
   public columnField = "exception";
+  public filterStartDate: Date = new Date();
+  public filterEndDate: Date = new Date();
 
-  constructor(private apiService: ApiLogService, private activatedRoute: ActivatedRoute) {   }
+  constructor(private apiService: ApiLogService, private activatedRoute: ActivatedRoute, private datePickerService : DatePickerService) {   }
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       this.httpUrl = params['httpUrl'];
     });
+
+    this.getValues();
+  }
+
+  getValues() : void {
+    this.datePickerService.getDateValue()
+    .subscribe(
+      (res : Date) => {
+        this.setDates(res);
+      }
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const datePickerChanged: SimpleChange = changes.datePickerChanged;
+    
+    if((datePickerChanged.previousValue != datePickerChanged.currentValue) && datePickerChanged.currentValue != undefined ){
+      this.setDates(datePickerChanged.currentValue)
+    }
+    
+  }
+
+  setDates(newDate : Date){
+
+    this.filterStartDate.setDate(newDate.getDate() - 1);
+    this.filterEndDate.setDate(newDate.getDate());
 
     this.fillGrid();
   }
@@ -36,17 +65,13 @@ export class DetailedComponent implements OnInit {
   fillGrid() {
     this.isProcessing = true;
 
-    this.apiService.getLogs(this.currentPage, this.pageSize, this.httpUrl).subscribe((logs: ILogResponse) => {
-      this.logs = this.logs.concat(logs.records);
-      this.totalRecords = logs.totalRecords;
-    },
-    (err: any) => {
-      console.log(err);
-    },
-    () => {
-      this.isProcessing = false;
-    });
+    this.apiService.getLogs(this.filterStartDate, this.filterEndDate, this.currentPage, this.pageSize, this.httpUrl)
+      .then(async (logs: ILogResponse) => {
+        this.logs = this.logs.concat(logs.records);
+        this.totalRecords = logs.totalRecords;
 
+        this.isProcessing = false;
+    });
   }
 
   onInputText(term : string){

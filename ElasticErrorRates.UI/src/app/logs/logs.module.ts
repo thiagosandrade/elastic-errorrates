@@ -6,10 +6,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LogsRoutingModule } from './logs-routing.module';
 import { IndexComponent } from './index/index.component';
 import { SharedModule } from '../_shared/shared.module';
-import { ApiLogService } from '../_shared/api/log/api.service';
+import { ApiLogService } from '../_shared/api/log/api-log.service';
 import { DetailedComponent } from './detailed/detailed.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ApiDashboardService } from '../_shared/api/dashboard/api.service';
+import { ApiDashboardService } from '../_shared/api/dashboard/api-dashboard.service';
 
 import { UkDailyRateComponent } from './dashboard/components/uk-dailyrate/uk-dailyrate.component';
 import { UkYesterdayRateComponent } from './dashboard/components/uk-yesterdayrate/uk-yesterdayrate.component';

@@ -19,7 +19,8 @@ import {
   MatTooltipModule,
   MatDatepickerModule,
   MatNativeDateModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatIconModule
 } from '@angular/material';
 
 @NgModule({
@@ -43,7 +44,18 @@ import {
     MatTooltipModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatIconModule
+  ],
+  exports:[
+    MatButtonModule,
+    MatRippleModule,
+    MatInputModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response, RequestOptions } from '@angular/http';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -19,15 +18,9 @@ export class ApiLogService {
 
     public async getLogsAggregate(startDate: Date = null, endDate: Date = null): Promise<ILogSummaryResponse> {
         
-        var url: string =  `${environment.apiUrl}/log/searchaggregate`;
+        var url: string =  `${environment.apiUrl}/log/searchlogsaggregate?`;
 
-        if(startDate !== null && endDate !== null){
-            startDate.setHours(6,0,0,0);
-            endDate.setHours(6,0,0,0);
-            
-            url = url.concat(`?startdate=${this.datepipe
-                .transform(startDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}&enddate=${this.datepipe.transform(endDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}`);
-        }
+        url = this.urlFormatter(startDate, endDate, url);
         
         return await this.http.get<ILogSummaryResponse>(url)
             .pipe(
@@ -38,8 +31,21 @@ export class ApiLogService {
             .toPromise();
     }
 
-    public getLogs(page: number, pageSize: number, httpUrl: string): Observable<ILogResponse> {
-        return this.http.get<ILogResponse>(`${environment.apiUrl}/log/search/${page}/${pageSize}?httpUrl=${httpUrl}`);
+    
+
+    public async getLogs(startDate: Date = null, endDate: Date = null, page: number, pageSize: number, httpUrl: string): Promise<ILogResponse> {
+
+        var url: string =  `${environment.apiUrl}/log/searchlogsdetailed/${page}/${pageSize}?httpUrl=${httpUrl}&`;
+
+        url = this.urlFormatter(startDate, endDate, url);
+
+        return await this.http.get<ILogResponse>(url)
+            .pipe(
+                map( response => {
+                    return response;
+                })
+            )
+            .toPromise();
     }
 
     public findLogs(columnField: string, httpUrl: string, term : string): Observable<ILogResponse> {
@@ -48,15 +54,9 @@ export class ApiLogService {
 
     public async findLogsSummary(columnField: string, httpUrl: string, term : string, startDate: Date = null, endDate: Date = null): Promise<ILogSummaryResponse> {
         
-        var url: string =  `${environment.apiUrl}/log/find?columnField=${columnField}&httpUrl=${httpUrl}&term=${term}`;
+        var url: string =  `${environment.apiUrl}/log/find?columnField=${columnField}&httpUrl=${httpUrl}&term=${term}&`;
 
-        if(startDate !== null && endDate !== null){
-            startDate.setHours(6,0,0,0);
-            endDate.setHours(6,0,0,0);
-
-            url = url.concat(`&startdate=${this.datepipe
-                .transform(startDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}&enddate=${this.datepipe.transform(endDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}`);
-        }
+        url = this.urlFormatter(startDate, endDate, url);
 
         return await this.http.get<ILogSummaryResponse>(url)
             .pipe(
@@ -65,5 +65,15 @@ export class ApiLogService {
                 })
             )
             .toPromise();
+    }
+
+    private urlFormatter(startDate: Date, endDate: Date, url: string) {
+        if (startDate !== null && endDate !== null) {
+            startDate.setHours(6, 0, 0, 0);
+            endDate.setHours(6, 0, 0, 0);
+            url = url.concat(`startdate=${this.datepipe
+                .transform(startDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}&enddate=${this.datepipe.transform(endDate, 'yyyy-MM-ddTHH:mm:ss.SSS')}`);
+        }
+        return url;
     }
 }

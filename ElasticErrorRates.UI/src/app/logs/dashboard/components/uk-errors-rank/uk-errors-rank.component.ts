@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, SimpleChanges, SimpleChange } from '@angular/core';
-import { ApiDashboardService } from '../../../../_shared/api/dashboard/api.service';
+import { ApiDashboardService } from '../../../../_shared/api/dashboard/api-dashboard.service';
 import { IError } from '../../../../_shared/api/dashboard/model/error';
 import { Countries } from '../../../../_shared/helpers/Country.enum';
 import { IErrorsRankResponse } from '../../../../_shared/api/dashboard/response/api-errorsrankresponse';
