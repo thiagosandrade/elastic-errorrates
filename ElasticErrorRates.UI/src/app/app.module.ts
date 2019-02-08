@@ -29,6 +29,7 @@ import {
     AppComponent
 ],
   imports: [
+    SharedModule,
     InfiniteScrollModule,
     BrowserAnimationsModule,
     BrowserModule,
@@ -37,7 +38,6 @@ import {
     HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
-    SharedModule,
     GrowlModule,
 
     MatButtonModule,
@@ -50,7 +50,6 @@ import {
     MatIconModule
   ],
   exports:[
-    
   ],
   providers: [],
   bootstrap: [AppComponent]

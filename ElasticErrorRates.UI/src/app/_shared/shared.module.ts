@@ -5,9 +5,11 @@ import { ApiLogService } from './api/log/api-log.service';
 import { ModalComponent } from './modal/modal.component';
 import { ModalService } from './modal/modal.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DivFlexibleComponent } from './divFlexible/divFlexible.component';
+
+import { DivFlexibleComponent } from './divFlexible/divflexible.component';
+import { LoadingSpinnerComponent } from './loadingSpinner/loadingspinner.component';
+
 import { KeepHtmlPipe } from './keepHtmlPipe/keep-html.pipe';
-import { LoadingSpinnerComponent } from './LoadingSpinner/loadingSpinner.component';
 import { ChartGeneratorComponent } from './chartGenerator/chartgenerator.component';
 import { MatNativeDateModule, MatDatepickerModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatRippleModule } from '@angular/material';
 import { DatePickerService } from './datepicker-material/datePicker.service';
@@ -27,9 +29,11 @@ import { DailyRateFooterComponent } from './dailyRateFooter/dailyRateFooter.comp
    ],
    declarations: [
         ModalComponent,
+
         DivFlexibleComponent,
-        KeepHtmlPipe,
         LoadingSpinnerComponent,
+
+        KeepHtmlPipe,
         ChartGeneratorComponent,
         DatepickerMaterialComponent,
         ChartFooterComponent,
@@ -37,9 +41,11 @@ import { DailyRateFooterComponent } from './dailyRateFooter/dailyRateFooter.comp
    ],
    exports: [
         ModalComponent,
+
         DivFlexibleComponent,
-        KeepHtmlPipe,
         LoadingSpinnerComponent,
+
+        KeepHtmlPipe,
         ChartGeneratorComponent,
         MatNativeDateModule, MatDatepickerModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatRippleModule,
         DatepickerMaterialComponent,

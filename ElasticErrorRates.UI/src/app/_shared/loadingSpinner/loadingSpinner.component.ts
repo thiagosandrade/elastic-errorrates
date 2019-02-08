@@ -2,8 +2,8 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 
 @Component({
   selector: 'loading-spinner',
-  styleUrls: ['./loadingSpinner.component.css'],
-  templateUrl: './loadingSpinner.component.html'
+  styleUrls: ['./loadingspinner.component.css'],
+  templateUrl: './loadingspinner.component.html'
 })
 export class LoadingSpinnerComponent implements OnChanges, OnInit {
   
