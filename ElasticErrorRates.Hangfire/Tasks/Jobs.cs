@@ -87,5 +87,19 @@ namespace ElasticErrorRates.Hangfire.Tasks
 
             await _commandDispatcher.DispatchAsync(_hubContext.SendMessage, new SignalRMessage(){ Payload = "Completed Flush Old Logs" });
         }
+
+        public async Task UpdateLogs()
+        {
+           await _commandDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<Log>().UpdateLogsToActualDate);
+
+           await _commandDispatcher.DispatchAsync(_hubContext.SendMessage, new SignalRMessage(){ Payload = "Completed Date Update for Logs" });
+        }
+
+        public async Task UpdateDailyRates()
+        {
+            await _commandDispatcher.DispatchAsync(_unitOfWork.DashboardElasticRepository<DailyRate>().UpdateLogsToActualDate);
+
+            await _commandDispatcher.DispatchAsync(_hubContext.SendMessage, new SignalRMessage(){ Payload = "Completed Date Update for Daily Rates" });
+        }
     }
 }

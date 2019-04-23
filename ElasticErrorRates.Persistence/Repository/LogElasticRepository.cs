@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.Criteria;
 using ElasticErrorRates.Core.Criteria.Dashboard;
@@ -85,7 +86,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             var result = await BasicQuery(queryCommand);
 
-            var response = _logElasticMappers.MapElasticResults(result);
+            var response = await _logElasticMappers.MapElasticResults(result);
 
             if (!result.IsValid)
             {
@@ -127,7 +128,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             var result = await BasicQuery(queryCommand);
 
-            var response = _logElasticMappers.MapElasticResults(result);
+            var response = await _logElasticMappers.MapElasticResults(result);
 
             if (!result.IsValid)
             {
@@ -172,7 +173,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
             var result = await BasicQuery(queryCommand);
 
-            var response = _logElasticMappers.MapElasticResults(result, "exception");
+            var response = await _logElasticMappers.MapElasticResults(result, "exception");
 
             if (!result.IsValid)
             {
@@ -190,11 +191,11 @@ namespace ElasticErrorRates.Persistence.Repository
             {
                 case "exception":
                     
-                    return _logElasticMappers.MapElasticResults(result, criteria.Term);
+                    return await _logElasticMappers.MapElasticResults(result, criteria.Term);
 
                 case "httpUrl":
 
-                    return _logElasticMappers.MapElasticResults(result);
+                    return await _logElasticMappers.MapElasticResults(result);
             }
 
             if (!result.IsValid)
@@ -314,6 +315,43 @@ namespace ElasticErrorRates.Persistence.Repository
                 return result.Hits.Count;
             });
 
+        }
+
+        public async Task UpdateLogsToActualDate()
+        {
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>();
+            queryCommand.Size(10000);
+
+            await Task.Run(async () =>
+            {
+                var result = await BasicQuery(queryCommand);
+                if (!result.IsValid)
+                {
+                    throw new InvalidOperationException(result.DebugInformation);
+                }
+
+                IEnumerable<T> listOfResultsToBeModified = new List<T>();
+
+                var resultHits = result.Hits.Count;
+                for (int i = 0; i < resultHits; i+=1000)
+                {
+                    SearchDescriptor<T> queryCommandToRegisters = new SearchDescriptor<T>();
+                    queryCommandToRegisters.From(i).Size(1000);
+
+                    var response = await BasicQuery(queryCommandToRegisters);
+                    var registerToBeModified = await _logElasticMappers.MapElasticResults(response, "",true);
+
+                    listOfResultsToBeModified = listOfResultsToBeModified.Concat(registerToBeModified.Records);
+                }
+
+                await Delete(new LogSearchCriteria
+                {
+                    EndDateTimeLogged = DateTime.Now.AddDays(0)
+                });
+
+                await Bulk(listOfResultsToBeModified);
+
+            });
         }
     }
 }

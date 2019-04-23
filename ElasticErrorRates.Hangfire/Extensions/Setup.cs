@@ -1,6 +1,7 @@
 ﻿using ElasticErrorRates.Hangfire.Tasks;
 using Hangfire;
 using Hangfire.Annotations;
+using Hangfire.Common;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -27,9 +28,11 @@ namespace ElasticErrorRates.Hangfire.Extensions
             var jobs = new Jobs(appBuilder.ApplicationServices);
 
             //Cron UTC - IE 23:00 UTC -> 00:00 Lisbon
-            RecurringJob.AddOrUpdate(() => jobs.FlushOldLogs(), Cron.Daily(23, 01));
-            RecurringJob.AddOrUpdate(() => jobs.ImportYesterdayLogs(), Cron.Daily(23, 05));
-            RecurringJob.AddOrUpdate(() => jobs.ImportYesterdayDailyRateLogs(), Cron.Daily(23, 07));
+            //RecurringJob.AddOrUpdate(() => jobs.FlushOldLogs(), Cron.Daily(23, 01));
+            //RecurringJob.AddOrUpdate(() => jobs.ImportYesterdayLogs(), Cron.Daily(23, 05));
+            //RecurringJob.AddOrUpdate(() => jobs.ImportYesterdayDailyRateLogs(), Cron.Daily(23, 07));
+            RecurringJob.AddOrUpdate(() => jobs.UpdateLogs(), Cron.Daily(23, 10));
+            RecurringJob.AddOrUpdate(() => jobs.UpdateDailyRates(), Cron.Daily(23, 15));
             
             return appBuilder;
         }

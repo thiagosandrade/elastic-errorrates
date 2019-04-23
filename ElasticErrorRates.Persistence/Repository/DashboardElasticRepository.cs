@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.Criteria;
+using System.Linq;
 
 namespace ElasticErrorRates.Persistence.Repository
 {
@@ -172,11 +173,47 @@ namespace ElasticErrorRates.Persistence.Repository
             }
         }
 
-        public async Task Bulk(IEnumerable<DailyRate> records)
+        public async Task Bulk(IEnumerable<T> records)
         {
             await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(records));
         }
 
+        public async Task UpdateLogsToActualDate()
+        {
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>();
+            queryCommand.Size(10000);
+
+            await Task.Run(async () =>
+            {
+                var result = await BasicQuery(queryCommand);
+                if (!result.IsValid)
+                {
+                    throw new InvalidOperationException(result.DebugInformation);
+                }
+
+                IEnumerable<T> listOfResultsToBeModified = new List<T>();
+
+                var resultHits = result.Hits.Count;
+                for (int i = 0; i < resultHits; i+=1000)
+                {
+                    SearchDescriptor<T> queryCommandToRegisters = new SearchDescriptor<T>();
+                    queryCommandToRegisters.From(i).Size(1000);
+
+                    var response = await BasicQuery(queryCommandToRegisters);
+                    var registerToBeModified = await _dashboardElasticMappers.MapElasticResults(response, true);
+
+                    listOfResultsToBeModified = listOfResultsToBeModified.Concat(registerToBeModified.Records);
+                }
+
+                await Delete(new DashboardSearchCriteria
+                {
+                    EndDateTimeLogged = DateTime.Now.AddDays(0)
+                });
+
+                await Bulk(listOfResultsToBeModified);
+
+            });
+        }
         
     }
 }

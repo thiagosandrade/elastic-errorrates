@@ -11,18 +11,20 @@ namespace ElasticErrorRates.Persistence.Mappers
 {
     public class DashboardElasticMappers<T> : IDashboardElasticMappers<T> where T : class
     {
-        public async Task<ElasticResponse<T>> MapElasticResults(ISearchResponse<T> result)
+        public async Task<ElasticResponse<T>> MapElasticResults(ISearchResponse<T> result, bool updateData = false)
         {
             ISearchResponse<DailyRate> convertedResult = (ISearchResponse<DailyRate>)result;
+            Random random = new Random();
+            int days = 1;
 
             IEnumerable<T> records = convertedResult.Hits.Select(x =>
             {
                 var log = new DailyRate
                 {
-                    Id = x.Source.Id,
+                    Id = !updateData ? x.Source.Id : random.Next(),
                     CountryId = x.Source.CountryId,
-                    StartDate = x.Source.StartDate,
-                    EndDate = x.Source.EndDate,
+                    StartDate = updateData ? x.Source.StartDate.AddDays(days) : x.Source.StartDate,
+                    EndDate = updateData ? x.Source.EndDate.AddDays(days) : x.Source.EndDate,
                     ErrorCount = x.Source.ErrorCount,
                     OrderCount = x.Source.OrderCount,
                     OrderValue = x.Source.OrderValue,

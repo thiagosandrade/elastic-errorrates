@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using Nest;
@@ -9,7 +10,7 @@ namespace ElasticErrorRates.Persistence.Mappers
 {
     public class LogElasticMappers<T> : ILogElasticMappers<T> where T : class
     {
-        public ElasticResponse<T> MapElasticResults(ISearchResponse<T> result)
+        public async Task<ElasticResponse<T>> MapElasticResults(ISearchResponse<T> result)
         {
             IEnumerable<T> aggregatedResults = result.Aggregations.Terms("group_by_httpUrl").Buckets.Select(x =>
                 {
@@ -19,8 +20,10 @@ namespace ElasticErrorRates.Persistence.Mappers
                         {
                             HttpUrlCount = x.DocCount.Value,
                             HttpUrl = x.Key,
-                            FirstOccurrence = $"{Convert.ToDateTime(x.Min("first_occurrence").ValueAsString):yyyy/MM/dd HH:mm:ss}",
-                            LastOccurrence = $"{Convert.ToDateTime(x.Max("last_occurrence").ValueAsString):yyyy/MM/dd HH:mm:ss}"
+                            FirstOccurrence =
+                                $"{Convert.ToDateTime(x.Min("first_occurrence").ValueAsString):yyyy/MM/dd HH:mm:ss}",
+                            LastOccurrence =
+                                $"{Convert.ToDateTime(x.Max("last_occurrence").ValueAsString):yyyy/MM/dd HH:mm:ss}"
                         };
 
                         return record;
@@ -32,51 +35,60 @@ namespace ElasticErrorRates.Persistence.Mappers
 
             var totalRecords = aggregatedResults.Count();
 
-            return new ElasticResponse<T>
-            {
-                TotalRecords = totalRecords,
-                Records = aggregatedResults
-            };
+            return await Task.Run(() =>
+                new ElasticResponse<T>
+                {
+                    TotalRecords = totalRecords,
+                    Records = aggregatedResults
+                }
+            );
         }
 
-        public ElasticResponse<T> MapElasticResults(ISearchResponse<T> result, string highlightTerm)
+        public async Task<ElasticResponse<T>> MapElasticResults(ISearchResponse<T> result, string highlightTerm, bool updateData = false)
         {
             ISearchResponse<Log> convertedResult = (ISearchResponse<Log>) result;
+            Random random = new Random();
+            int days = 1;
 
             IEnumerable<T> records = convertedResult.Hits.Select(x =>
             {
                 var log = new Log
                 {
-                    Id = x.Source.Id,
+                    Id = !updateData ? x.Source.Id : random.Next(),
                     Level = x.Source.Level,
                     Message = x.Source.Message,
                     Source = x.Source.Source,
                     Exception = x.Source.Exception,
                     HttpUrl = x.Source.HttpUrl,
                     Highlight = x.Highlights.SelectMany(y => y.Value.Highlights.ToList()).ToList().AsReadOnly(),
-                    DateTimeLogged = x.Source.DateTimeLogged
+                    DateTimeLogged = updateData ? x.Source.DateTimeLogged.AddDays(days) : x.Source.DateTimeLogged
                 };
 
                 return log;
 
             }).Cast<T>().ToList();
 
-            foreach (var log in records.OfType<Log>())
+            if (!updateData)
             {
-                string highlight = log.Highlight.FirstOrDefault();
-
-                if (!string.IsNullOrEmpty(highlight))
+                foreach (var log in records.OfType<Log>())
                 {
-                    log.Exception = log.Exception.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3,
-                        highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 8));
+                    string highlight = log.Highlight.FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(highlight))
+                    {
+                        log.Exception = log.Exception.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3,
+                            highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 8));
+                    }
                 }
             }
 
-            return new ElasticResponse<T>
-            {
-                TotalRecords = result.Total,
-                Records = records
-            };
+            return await Task.Run(() =>
+                new ElasticResponse<T>
+                {
+                    TotalRecords = result.Total,
+                    Records = records
+                }
+            );
         }
     }
 

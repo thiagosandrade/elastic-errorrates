@@ -13,7 +13,7 @@ namespace ElasticErrorRates.Core.CQRS.Command
             _unitOfWork = unitOfWork;
         }
 
-        public async Task DispatchAsync<TRequest>(Func<Task<TRequest>> command)
+        public async Task DispatchAsync(Func<Task> command)
         {
             try
             {

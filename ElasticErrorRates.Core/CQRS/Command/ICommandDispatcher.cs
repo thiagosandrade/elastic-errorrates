@@ -10,7 +10,7 @@ namespace ElasticErrorRates.Core.CQRS.Command
         /// </summary>
         /// <typeparam name="TRequest">Command Type</typeparam>
         /// <param name="command">The command to be passed to the handler</param>
-        Task DispatchAsync<TRequest>(Func<Task<TRequest>> command);
+        Task DispatchAsync(Func<Task> command);
         Task DispatchAsync<TRequest>(Func<TRequest, Task> command, TRequest request);
     }
 }

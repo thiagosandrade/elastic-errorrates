@@ -10,8 +10,9 @@ namespace ElasticErrorRates.Core.Persistence
     {
         Task<ElasticResponse<T>> Search(DashboardSearchCriteria criteria);
         Task<ElasticResponse<T>> SearchAggregate(GraphCriteria criteria);
-        Task Bulk(IEnumerable<DailyRate> records);
+        Task Bulk(IEnumerable<T> records);
         Task Delete(LogCriteria criteria);
+        Task UpdateLogsToActualDate();
         
     }
 }
