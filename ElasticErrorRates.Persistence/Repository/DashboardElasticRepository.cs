@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ElasticErrorRates.Core.Criteria;
 using System.Linq;
+using ElasticErrorRates.Persistence.Utils;
 
 namespace ElasticErrorRates.Persistence.Repository
 {
@@ -175,7 +176,11 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task Bulk(IEnumerable<T> records)
         {
-            await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(records));
+            var chunckedRecords = records.Chunk(1000);
+            foreach (var chunckedRecord in chunckedRecords)
+            {
+                await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(chunckedRecord));
+            }
         }
 
         public async Task UpdateLogsToActualDate()
@@ -191,29 +196,45 @@ namespace ElasticErrorRates.Persistence.Repository
                     throw new InvalidOperationException(result.DebugInformation);
                 }
 
-                IEnumerable<T> listOfResultsToBeModified = new List<T>();
+                IEnumerable<T> listOfResultsToBeModified = await GetListWithUpdatedData(result);
 
-                var resultHits = result.Hits.Count;
-                for (int i = 0; i < resultHits; i+=1000)
-                {
-                    SearchDescriptor<T> queryCommandToRegisters = new SearchDescriptor<T>();
-                    queryCommandToRegisters.From(i).Size(1000);
-
-                    var response = await BasicQuery(queryCommandToRegisters);
-                    var registerToBeModified = await _dashboardElasticMappers.MapElasticResults(response, true);
-
-                    listOfResultsToBeModified = listOfResultsToBeModified.Concat(registerToBeModified.Records);
-                }
-
-                await Delete(new DashboardSearchCriteria
-                {
-                    EndDateTimeLogged = DateTime.Now.AddDays(0)
-                });
+                //await Delete(new DashboardSearchCriteria
+                //{
+                //    EndDateTimeLogged = DateTime.Now.AddDays(0)
+                //});
 
                 await Bulk(listOfResultsToBeModified);
 
             });
         }
-        
+
+        private async Task<IEnumerable<T>> GetListWithUpdatedData(ISearchResponse<T> result)
+        {
+            IEnumerable<T> listOfResultsToBeModified = new List<T>();
+
+            var resultHits = result.Hits.Count;
+            for (int i = 0; i < resultHits; i+=1000)
+            {
+                SearchDescriptor<T> queryCommandToRegisters = new SearchDescriptor<T>();
+                queryCommandToRegisters.From(i).Size(1000);
+
+                var response = await BasicQuery(queryCommandToRegisters);
+                var registerToBeModified = await _dashboardElasticMappers.MapElasticResults(response, true);
+
+                listOfResultsToBeModified = listOfResultsToBeModified.Concat(registerToBeModified.Records).ToList();
+            }
+
+            var checkDate = listOfResultsToBeModified.FirstOrDefault();
+            if (checkDate != null)
+            {
+                var lastDateResource = (DateTime)checkDate.GetType().GetProperty("StartDate").GetValue(checkDate);
+                if (!(lastDateResource.Day.Equals(DateTime.Now.Day - 1) && lastDateResource.Month.Equals(DateTime.Now.Month) && lastDateResource.Year.Equals(DateTime.Now.Year)))
+                {
+                    listOfResultsToBeModified = _dashboardElasticMappers.UpdateDate(listOfResultsToBeModified);
+                }
+            }
+
+            return listOfResultsToBeModified;
+        }
     }
 }

@@ -81,7 +81,36 @@ namespace ElasticErrorRates.Persistence.Mappers
                 }
             );
         }
+
+        public IEnumerable<T> UpdateDate(IEnumerable<T> listOfResultsToBeModified)
+        {
+            var listOfResultsConverted = (IEnumerable<DailyRate>)listOfResultsToBeModified;
+
+            IEnumerable<T> results = listOfResultsConverted.Select(x =>
+            {
+                var log = new DailyRate
+                {
+                    Id = x.Id,
+                    CountryId = x.CountryId,
+                    StartDate = x.StartDate.AddDays(1),
+                    EndDate = x.EndDate.AddDays(1),
+                    ErrorCount = x.ErrorCount,
+                    OrderCount = x.OrderCount,
+                    OrderValue = x.OrderValue,
+                    ErrorPercentage = Math.Round((float)x.ErrorCount / x.OrderCount * 100,2)
+                };
+
+                return log;
+
+            }).Cast<T>().ToList();
+
+            var firstResult = results.OfType<DailyRate>().OrderByDescending(x => x.StartDate).FirstOrDefault();
+            if (firstResult != null && !(firstResult.StartDate.Day.Equals(DateTime.Now.Day - 1) && firstResult.StartDate.Month.Equals(DateTime.Now.Month) && firstResult.StartDate.Year.Equals(DateTime.Now.Year)))
+            {
+                results = UpdateDate(results);
+            }
+
+            return results;
+        }
     }
-
-
 }

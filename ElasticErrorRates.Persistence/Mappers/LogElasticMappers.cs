@@ -90,7 +90,35 @@ namespace ElasticErrorRates.Persistence.Mappers
                 }
             );
         }
+
+        public IEnumerable<T> UpdateDate(IEnumerable<T> listOfResultsToBeModified)
+        {
+            var listOfResultsConverted = (IEnumerable<Log>)listOfResultsToBeModified;
+
+            IEnumerable<T> results = listOfResultsConverted.Select(x =>
+            {
+                var log = new Log
+                {
+                    Id = x.Id,
+                    Exception = x.Exception,
+                    HttpUrl = x.HttpUrl,
+                    Level = x.Level,
+                    Message = x.Message,
+                    Source = x.Source,
+                    DateTimeLogged = x.DateTimeLogged.AddDays(1)
+                };
+
+                return log;
+
+            }).Cast<T>().ToList();
+
+            var firstResult = results.OfType<Log>().OrderByDescending(x => x.DateTimeLogged).FirstOrDefault();
+            if (firstResult != null && !(firstResult.DateTimeLogged.Day.Equals(DateTime.Now.Day - 1) && firstResult.DateTimeLogged.Month.Equals(DateTime.Now.Month) && firstResult.DateTimeLogged.Year.Equals(DateTime.Now.Year)))
+            {
+                results = results.Concat(UpdateDate(results));
+            }
+
+            return results;
+        }
     }
-
-
 }

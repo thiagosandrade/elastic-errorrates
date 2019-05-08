@@ -283,7 +283,6 @@ namespace ElasticErrorRates.Persistence.Repository
             {
                 await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(chunckedRecord));       
             }
-         
         }
 
         public async Task<long> GetLogsQuantity(LogQuantityCriteria criteria)
@@ -330,28 +329,44 @@ namespace ElasticErrorRates.Persistence.Repository
                     throw new InvalidOperationException(result.DebugInformation);
                 }
 
-                IEnumerable<T> listOfResultsToBeModified = new List<T>();
+                IEnumerable<T> listOfResultsToBeModified = await GetListWithUpdatedData(result);
 
-                var resultHits = result.Hits.Count;
-                for (int i = 0; i < resultHits; i+=1000)
-                {
-                    SearchDescriptor<T> queryCommandToRegisters = new SearchDescriptor<T>();
-                    queryCommandToRegisters.From(i).Size(1000);
-
-                    var response = await BasicQuery(queryCommandToRegisters);
-                    var registerToBeModified = await _logElasticMappers.MapElasticResults(response, "",true);
-
-                    listOfResultsToBeModified = listOfResultsToBeModified.Concat(registerToBeModified.Records);
-                }
-
-                await Delete(new LogSearchCriteria
-                {
-                    EndDateTimeLogged = DateTime.Now.AddDays(0)
-                });
+                //await Delete(new LogSearchCriteria
+                //{
+                //    EndDateTimeLogged = DateTime.Now.AddDays(0)
+                //});
 
                 await Bulk(listOfResultsToBeModified);
 
             });
+        }
+
+        private async Task<IEnumerable<T>> GetListWithUpdatedData(ISearchResponse<T> result)
+        {
+            IEnumerable<T> listOfResultsToBeModified = new List<T>();
+            var resultHits = result.Hits.Count;
+            for (int i = 0; i < resultHits; i += 1000)
+            {
+                SearchDescriptor<T> queryCommandToRegisters = new SearchDescriptor<T>();
+                queryCommandToRegisters.From(i).Size(1000);
+
+                var response = await BasicQuery(queryCommandToRegisters);
+                var registerToBeModified = await _logElasticMappers.MapElasticResults(response, "", true);
+
+                listOfResultsToBeModified = listOfResultsToBeModified.Concat(registerToBeModified.Records).ToList();
+            }
+
+            var checkDate = listOfResultsToBeModified.FirstOrDefault();
+            if (checkDate != null)
+            {
+                var lastDateResource = (DateTime)checkDate.GetType().GetProperty("DateTimeLogged").GetValue(checkDate);
+                if (!(lastDateResource.Day.Equals(DateTime.Now.Day - 1) && lastDateResource.Month.Equals(DateTime.Now.Month) && lastDateResource.Year.Equals(DateTime.Now.Year)))
+                {
+                    listOfResultsToBeModified = _logElasticMappers.UpdateDate(listOfResultsToBeModified);
+                }
+            }
+
+            return listOfResultsToBeModified;
         }
     }
 }
