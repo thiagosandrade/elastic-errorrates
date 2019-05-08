@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class DatePickerService {
+    static singletonInstance: DatePickerService;
+
     private subject = new BehaviorSubject<Date>(new Date());
 
     constructor() {
+        if(!DatePickerService.singletonInstance){
+            DatePickerService.singletonInstance = this;
+        }
+
+        return DatePickerService.singletonInstance;
     }
 
     getDateValue() : Observable<Date>{
