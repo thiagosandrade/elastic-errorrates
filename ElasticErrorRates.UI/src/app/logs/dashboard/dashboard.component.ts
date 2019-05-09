@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { DatePickerService } from '../../_shared/datepicker-material/datePicker.service';
 import { ApiDashboardService } from '../../_shared/api/dashboard/api-dashboard.service';
 
@@ -10,15 +10,16 @@ import { ApiDashboardService } from '../../_shared/api/dashboard/api-dashboard.s
 
 
 
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   
   @Output() datePickerDate : Date;
   public hasResults : Promise<boolean>;
+  public subscription : any;
 
   constructor(private datePickerService : DatePickerService, private apiService: ApiDashboardService ) {  }
   
   ngOnInit() {
-    this.datePickerService.getDateValue().subscribe(
+    this.subscription = this.datePickerService.getDateValue().subscribe(
       (res : Date) => {
           var yesterday = new Date();
           yesterday.setDate(res.getDate() - 1);
@@ -36,6 +37,10 @@ export class DashboardComponent implements OnInit {
           );
       }
     );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
  
 }

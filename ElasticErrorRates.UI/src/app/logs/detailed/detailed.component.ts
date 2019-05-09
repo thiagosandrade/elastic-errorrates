@@ -1,10 +1,8 @@
-import { Component, OnInit, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, SimpleChanges, SimpleChange, OnDestroy } from '@angular/core';
 import { ApiLogService } from '../../_shared/api/log/api-log.service';
 import { ILog } from '../../_shared/api/log/model/log';
 import { ILogResponse } from '../../_shared/api/log/response/api-logresponse';
 import { ActivatedRoute, Params } from '@angular/router';
-import { KeepHtmlPipe } from '../../_shared/keepHtmlPipe/keep-html.pipe';
-import { DatePipe } from '@angular/common';
 import { DatePickerService } from '../../_shared/datepicker-material/datePicker.service';
 
 @Component({
@@ -12,7 +10,7 @@ import { DatePickerService } from '../../_shared/datepicker-material/datePicker.
   styleUrls: ['./detailed.component.css'],
   templateUrl: './detailed.component.html'
 })
-export class DetailedComponent implements OnInit {
+export class DetailedComponent implements OnInit, OnDestroy {
   public logs: ILog[] = [];
   public totalRecords = 0;
   public isProcessing: boolean;
@@ -26,6 +24,8 @@ export class DetailedComponent implements OnInit {
   public filterStartDate: Date = new Date();
   public filterEndDate: Date = new Date();
 
+  public subscription : any;
+
   constructor(private apiService: ApiLogService, private activatedRoute: ActivatedRoute, private datePickerService : DatePickerService) {   }
 
   ngOnInit() {
@@ -37,7 +37,7 @@ export class DetailedComponent implements OnInit {
   }
 
   getValues() : void {
-    this.datePickerService.getDateValue()
+    this.subscription = this.datePickerService.getDateValue()
     .subscribe(
       (res : Date) => {
         this.setDates(res);
@@ -111,5 +111,9 @@ export class DetailedComponent implements OnInit {
       () => {
         this.isProcessing = false;
       });  
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

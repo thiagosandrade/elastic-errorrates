@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, SimpleChange, OnDestroy } from '@angular/core';
 import { ApiLogService } from '../../_shared/api/log/api-log.service';
 import { ILogSummaryResponse } from '../../_shared/api/log/response/api-logsummaryresponse';
 import { ILogSummary } from '../../_shared/api/log/model/logsummary';
@@ -9,7 +9,7 @@ import { DatePickerService } from '../../_shared/datepicker-material/datePicker.
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.css']
 })
-export class IndexComponent {
+export class IndexComponent implements OnInit, OnDestroy {
   public logs: ILogSummary[] = [];
   public totalRecords = 0;
   public isProcessing: boolean;
@@ -21,6 +21,8 @@ export class IndexComponent {
   public filterStartDate: Date = new Date();
   public filterEndDate: Date = new Date();
 
+  public subscription : any;
+
   @Input() datePickerChanged: Date;
 
   constructor(private apiService: ApiLogService, private datePickerService : DatePickerService) {   }
@@ -30,7 +32,7 @@ export class IndexComponent {
   }
 
   getValues() : void {
-    this.datePickerService.getDateValue()
+    this.subscription = this.datePickerService.getDateValue()
     .subscribe(
       (res : Date) => {
         this.setDates(res);
@@ -90,5 +92,9 @@ export class IndexComponent {
   onSelectLog(logId : string){
     this.displayModal = true;
     this.selectedLog = logId;
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
