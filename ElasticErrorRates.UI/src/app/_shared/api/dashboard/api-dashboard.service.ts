@@ -20,7 +20,10 @@ export class ApiDashboardService {
     constructor(private http: HttpClient, public datepipe: DatePipe) { }
 
     public importLogs(): Observable<any>{
-        const headers = new Headers({ 'Content-Type': 'application/json' });
+        const headers = new Headers(
+            { 
+                'Content-Type': 'application/json'
+            });
         const options = new RequestOptions({ headers: headers });
 
         return this.http.post(`${environment.apiUrl}/dashboard/import`, options)

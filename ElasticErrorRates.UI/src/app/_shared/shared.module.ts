@@ -7,7 +7,7 @@ import { ModalService } from './modal/modal.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DivFlexibleComponent } from './divFlexible/divflexible.component';
-import { LoadingSpinnerComponent } from './loadingSpinner/loadingspinner.component';
+import { LoadingSpinnerComponent } from './loadingSpinner/loadingSpinner.component';
 
 import { KeepHtmlPipe } from './keepHtmlPipe/keep-html.pipe';
 import { ChartGeneratorComponent } from './chartGenerator/chartgenerator.component';

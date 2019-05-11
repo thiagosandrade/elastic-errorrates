@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+  elastic-ui:
+    image: elastic-ui
+    build:
+       context: ./ElasticErrorRates.UI
+    ports:
+      - "4200:4200"
+    expose:
+       - 4200
+    networks:
+      - elastic-network
+    depends_on:
+      - elastic-api
+      
+  elastic-api:
+    image: elastic-api
+    build:
+      context: .
+    ports:
+      - "30540:30540"
+    expose:
+        - 30540
+    networks:
+      - elastic-network
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Preprod"
+   
+  
+networks: 
+  elastic-network:
+    driver: bridge
