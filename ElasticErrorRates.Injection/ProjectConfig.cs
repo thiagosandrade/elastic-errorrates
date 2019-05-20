@@ -1,4 +1,5 @@
-﻿using ElasticErrorRates.Core.CQRS.Command;
+﻿using ElasticErrorRates.Core.Cache;
+using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.CQRS.Query;
 using ElasticErrorRates.Core.Manager;
 using ElasticErrorRates.Core.Persistence;
@@ -11,6 +12,7 @@ using ElasticErrorRates.Persistence.Mappers;
 using ElasticErrorRates.Persistence.Repository;
 using ElasticErrorRates.SignalR.Implementation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -36,6 +38,8 @@ namespace ElasticErrorRates.Injection
             services.AddScoped(typeof(ILogElasticMappers<>), typeof(LogElasticMappers<>));
             services.AddScoped(typeof(IDashboardElasticMappers<>), typeof(DashboardElasticMappers<>));
             services.AddScoped(typeof(IHubContextWrapper), typeof(HubContextWrapper));
+
+            services.AddSingleton(typeof(ICacheService), typeof(CacheService));
         }
     }
 }

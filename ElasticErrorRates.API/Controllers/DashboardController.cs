@@ -54,11 +54,14 @@ namespace ElasticErrorRates.API.Controllers
                 startdate = startdate ?? DateTime.MinValue;
                 enddate = enddate ?? DateTime.MinValue;
 
+                string cacheKey = $"{startdate} - {enddate}";
+
                 var result = await _queryDispatcher.DispatchAsync(
                     _unitOfWork.LogElasticRepository<Log>().GetLogsQuantity, new LogQuantityCriteria(){
                         StartDateTimeLogged = startdate.Value,
                         EndDateTimeLogged = enddate.Value
-                    });
+                    }, 
+                    cacheKey);
 
 
                 return Ok(result);
@@ -78,6 +81,8 @@ namespace ElasticErrorRates.API.Controllers
                 startdate = startdate ?? DateTime.MinValue;
                 enddate = enddate ?? DateTime.MinValue;
 
+                string cacheKey = $"{startdate} - {enddate} - {countryId}";
+
                 var result = await _queryDispatcher.DispatchAsync(
                     _unitOfWork.DashboardElasticRepository<DailyRate>().Search,
                     new DashboardSearchCriteria()
@@ -85,7 +90,8 @@ namespace ElasticErrorRates.API.Controllers
                         CountryId = (Country)countryId,
                         StartDateTimeLogged = startdate.Value,
                         EndDateTimeLogged = enddate.Value
-                    });
+                    }, 
+                    cacheKey);
                 
                 
                 return Ok(result);
@@ -105,6 +111,9 @@ namespace ElasticErrorRates.API.Controllers
                 int.TryParse(numberOfResults, out var numberOfResult);
                 enddate = enddate ?? DateTime.MinValue;
 
+                string cacheKey = $"{enddate} - {countryId}";
+
+
                 var result = await _queryDispatcher.DispatchAsync(
                     _unitOfWork.DashboardElasticRepository<ErrorRate>().SearchAggregate,
                     new GraphCriteria
@@ -113,7 +122,8 @@ namespace ElasticErrorRates.API.Controllers
                         TypeAggregation = typeAggregation,
                         NumberOfResults = numberOfResult,
                         EndDateTimeLogged = enddate.Value
-                    });
+                    },
+                    cacheKey);
 
 
                 return Ok(result);
@@ -133,6 +143,8 @@ namespace ElasticErrorRates.API.Controllers
                 startdate = startdate ?? DateTime.MinValue;
                 enddate = enddate ?? DateTime.MinValue;
 
+                string cacheKey = $"{startdate} - {enddate} - {countryId} - rank";
+
                 var result = await _queryDispatcher.DispatchAsync(
                     _unitOfWork.LogElasticRepository<LogSummary>().SearchLogsAggregateByCountryId, 
                     new GraphCriteria()
@@ -140,7 +152,8 @@ namespace ElasticErrorRates.API.Controllers
                         CountryId = (Country)countryId,
                         StartDateTimeLogged = startdate.Value,
                         EndDateTimeLogged = enddate.Value
-                    });
+                    },
+                    cacheKey);
 
 
                 result.Records = result.Records.Take(5);
