@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ElasticErrorRates.API.Controllers
 {
     [Route("api/[controller]")]
-    public class LogController : Controller
+    public class LogController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IQueryDispatcher _queryDispatcher;

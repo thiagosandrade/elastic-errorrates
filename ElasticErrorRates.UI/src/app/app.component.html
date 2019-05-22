@@ -25,10 +25,16 @@
                 <div class="mat-app-background basic-container">
                     <datepicker-material></datepicker-material>
                 </div>
+                <div class="mat-app-background basic-container">
+                  <button mat-button [matMenuTriggerFor]="menu">Account</button>
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item class="nav-link" routerLink="/login" routerLinkActive="active" *ngIf="!isLoggedIn">Login</button>
+                    <button mat-menu-item (click)="onLogout()" *ngIf="isLoggedIn">Logout</button>
+                  </mat-menu>
+              </div>
               </ng-container>
             </nav>
         </header>
-          
     </div>
     <div id="body">
         <section id="main" class="container-fluid">
@@ -46,8 +52,7 @@
     </div>
  </div>
 
-<p-growl [value]="msgs"></p-growl>
-
+<message-notifier></message-notifier>
 
 
 

@@ -23,32 +23,31 @@ namespace ElasticErrorRates.Core.Models
         [Text(Fielddata = true)]
         public string HttpUrl
         {
-            get
+            get => _httpUrl;
+            set
             {
-                if (_httpUrl == null) return _httpUrl;
+                _httpUrl = null;
 
-                var queryStringIndexOf = _httpUrl.IndexOf("?", StringComparison.InvariantCulture);
+                if (value != null)
+                {
+                    var queryStringIndexOf = value.IndexOf("?", StringComparison.InvariantCulture);
 
-                if (queryStringIndexOf <= -1) return _httpUrl;
+                    if (queryStringIndexOf > 1)
+                    {
+                        var lengthToRemove = value.Length - queryStringIndexOf;
 
-                var lengthToRemove = _httpUrl.Length - queryStringIndexOf;
-
-                _httpUrl = _httpUrl.Remove(queryStringIndexOf, lengthToRemove);
-
-                return _httpUrl;
-
+                        _httpUrl = value.Remove(queryStringIndexOf, lengthToRemove);
+                    }
+                    else
+                    {
+                        _httpUrl = value;
+                    }
+                }
             }
-            set => _httpUrl = value;
         }
 
         public DateTime DateTimeLogged { get; set; }
-        public string DateTimeLoggedAsString 
-        { 
-            get
-            { 
-                return $"{Convert.ToDateTime(DateTimeLogged):yyyy/MM/dd HH:mm:ss}";
-            }
-        }
+        public string DateTimeLoggedAsString => $"{Convert.ToDateTime(DateTimeLogged):yyyy/MM/dd HH:mm:ss}";
 
         public Country CountryId
         {

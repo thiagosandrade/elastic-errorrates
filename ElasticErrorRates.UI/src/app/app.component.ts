@@ -1,32 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { SignalRService } from './_shared/signalR/signalR.service';
 import { SignalRMessage } from './_shared/signalR/signalR.message';
-import { Message } from 'primeng/api';
+import { ApiUserService } from './_shared/api/user/api-user.service';
+import { User } from './_shared/api/user/model/user';
+import { MessageNotifierService } from './_shared/messageNotifier/messageNotifier.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent implements OnInit {
-  
+
   title = 'app';
+  public isLoggedIn: boolean = false;
 
-  public msgs: Message[] = [];
+  constructor(private signalRService: SignalRService,
+    private apiUserService: ApiUserService,
+    private messageNotifierService: MessageNotifierService) { }
 
-  constructor(private signalRService : SignalRService) {  }
-
-   ngOnInit(): void {
-    this.signalRService.notificationReceived.subscribe((signalRMessage : SignalRMessage[]) => {
-      this.msgs = [];
+  ngOnInit(): void {
+    this.signalRService.notificationReceived.subscribe((signalRMessage: SignalRMessage[]) => {
       signalRMessage.forEach(message => {
-        this.msgs.push({ 
-          life: 3000, 
-          sticky: false,
-          severity: message.type, 
-          summary: message.payload,
-          closable: true
-        });  
+        this.messageNotifierService.messageNotify(message.type, message.payload);
       });
     });
+
+    this.apiUserService.getUser().subscribe((user: User) => {
+      if (user != null && user.token != "") {
+        this.isLoggedIn = true;
+      }
+    });
   }
+
+  onLogout(): void {
+    this.apiUserService.logout();
+    this.messageNotifierService.messageNotify('success', 'User logged out!');
+    this.isLoggedIn = false;
+  }
+
 }

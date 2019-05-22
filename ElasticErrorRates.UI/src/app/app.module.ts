@@ -10,8 +10,8 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './_shared/shared.module';
 import { InfiniteScrollModule} from 'ngx-infinite-scroll';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthGuard } from './_guards';
 
-import { GrowlModule } from 'primeng/growl';
 
 import {
   MatButtonModule,
@@ -21,7 +21,8 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
   MatFormFieldModule,
-  MatIconModule
+  MatIconModule,
+  MatMenuModule
 } from '@angular/material';
 
 @NgModule({
@@ -38,7 +39,6 @@ import {
     HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
-    GrowlModule,
 
     MatButtonModule,
     MatRippleModule,
@@ -47,11 +47,14 @@ import {
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
-    MatIconModule
+    MatIconModule,
+    MatMenuModule
   ],
   exports:[
   ],
-  providers: [],
+  providers: [
+    AuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

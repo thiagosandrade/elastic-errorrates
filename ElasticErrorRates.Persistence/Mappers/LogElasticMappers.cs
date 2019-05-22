@@ -113,7 +113,10 @@ namespace ElasticErrorRates.Persistence.Mappers
             }).Cast<T>().ToList();
 
             var firstResult = results.OfType<Log>().OrderByDescending(x => x.DateTimeLogged).FirstOrDefault();
-            if (firstResult != null && !(firstResult.DateTimeLogged.Day.Equals(DateTime.Now.Day - 1) && firstResult.DateTimeLogged.Month.Equals(DateTime.Now.Month) && firstResult.DateTimeLogged.Year.Equals(DateTime.Now.Year)))
+            if (firstResult != null 
+                && (firstResult.DateTimeLogged.Day <= DateTime.Now.Day
+                     && firstResult.DateTimeLogged.Month.Equals(DateTime.Now.Month) 
+                     && firstResult.DateTimeLogged.Year.Equals(DateTime.Now.Year)))
             {
                 results = results.Concat(UpdateDate(results));
             }

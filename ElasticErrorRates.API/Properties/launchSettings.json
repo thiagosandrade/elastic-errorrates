@@ -10,18 +10,18 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Preprod"
-      }
+      },
+      "applicationUrl": "http://localhost:30540/"
     },
     "ElasticErrorRates": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Preprod"
       },
-      "applicationUrl": "http://localhost:30540/"
+      "applicationUrl": "http://localhost:30541/"
     }
   }
 }
