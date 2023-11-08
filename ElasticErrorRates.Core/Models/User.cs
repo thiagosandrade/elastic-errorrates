@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace ElasticErrorRates.Core.Models
+﻿namespace ElasticErrorRates.Core.Models
 {
     public class User
     {

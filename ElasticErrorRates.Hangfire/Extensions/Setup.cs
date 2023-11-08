@@ -1,40 +1,47 @@
 ﻿using ElasticErrorRates.Hangfire.Tasks;
 using Hangfire;
-using Hangfire.Annotations;
-using Hangfire.Common;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+
 namespace ElasticErrorRates.Hangfire.Extensions
 {
     public static class Setup
     {
-        public static IServiceCollection AddHangfireInMemory(this IServiceCollection services)
+        public static WebApplicationBuilder AddHangfireInMemory(this WebApplicationBuilder builder)
         {
-            services.AddHangfire(cfg => cfg.UseMemoryStorage());
+            string? hangFireConnection = builder.Configuration.GetConnectionString("HangFireConnection");
 
-            return services;
+            builder.Services.AddHangfire(cfg =>
+                cfg.UseMemoryStorage()
+                //cfg.UseSqlServerStorage(hangFireConnection)
+            );
+
+            builder.Services.AddHangfireServer();
+
+            return builder;
         }
 
-        public static IApplicationBuilder UseElasticErrorsRatesJobs([NotNull] this IApplicationBuilder appBuilder,
-            IConfiguration configuration)
+        public static IApplicationBuilder UseElasticErrorsRatesJobs(this IApplicationBuilder application)
         {
-            bool.TryParse(configuration["Jobs:IsOn"], out var jobIsOn);
+            var configuration = application.ApplicationServices.GetRequiredService<IConfiguration>();
 
-            if (!jobIsOn) return appBuilder;
+            bool.TryParse(configuration["Jobs:IsOn"], out bool jobIsOn);
 
-            var jobs = new Jobs(appBuilder.ApplicationServices);
+            if (!jobIsOn) return application;
+
+            var jobs = new Jobs(application.ApplicationServices);
 
             //Cron UTC - IE 23:00 UTC -> 00:00 Lisbon
             //RecurringJob.AddOrUpdate(() => jobs.FlushOldLogs(), Cron.Daily(23, 01));
             //RecurringJob.AddOrUpdate(() => jobs.ImportYesterdayLogs(), Cron.Daily(23, 05));
             //RecurringJob.AddOrUpdate(() => jobs.ImportYesterdayDailyRateLogs(), Cron.Daily(23, 07));
-            RecurringJob.AddOrUpdate(() => jobs.UpdateLogs(), Cron.Daily(23, 10));
-            RecurringJob.AddOrUpdate(() => jobs.UpdateDailyRates(), Cron.Daily(23, 15));
+            RecurringJob.AddOrUpdate("UpdateLogs", () => jobs.UpdateLogs(), Cron.Daily(23, 10));
+            RecurringJob.AddOrUpdate("UpdateDailyRates", () => jobs.UpdateDailyRates(), Cron.Daily(23, 15));
             
-            return appBuilder;
+            return application;
         }
 
     }

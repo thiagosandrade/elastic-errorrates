@@ -2,12 +2,7 @@
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using Nest;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ElasticErrorRates.Core.Criteria;
-using System.Linq;
-using ElasticErrorRates.Persistence.Utils;
 
 namespace ElasticErrorRates.Persistence.Repository
 {
@@ -29,7 +24,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         private async Task<ISearchResponse<T>> BasicQuery(SearchDescriptor<T> queryCommand)
         {
-            return await _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex).AllTypes());
+            return await _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex));
         }
 
         public async Task<ElasticResponse<T>> Search(DashboardSearchCriteria criteria)
@@ -176,10 +171,10 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task Bulk(IEnumerable<T> records)
         {
-            var chunckedRecords = records.Chunk(1000);
-            foreach (var chunckedRecord in chunckedRecords)
+            var chunkedRecords = records.Chunk(1000);
+            foreach (var chunkedRecord in chunkedRecords)
             {
-                await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(chunckedRecord));
+                await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(chunkedRecord));
             }
         }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.WebSockets;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net.WebSockets;
 using ElasticErrorRates.Core.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -11,19 +8,18 @@ namespace ElasticErrorRates.SignalR.Extensions
 {
     public static class Setup
     {
-        public static IServiceCollection AddSignalRInjection(this IServiceCollection services)
+        public static WebApplicationBuilder AddSignalRInjection(this WebApplicationBuilder builder)
         {
-            services.AddSignalR();
+            builder.Services.AddSignalR();
 
-            return services;
+            return builder;
         }
 
-        public static IApplicationBuilder WebSocketsConfig(this IApplicationBuilder app)
+        public static IApplicationBuilder WebSocketsConfig(this WebApplication app)
         {
             var webSocketOptions = new WebSocketOptions()
             {
                 KeepAliveInterval = TimeSpan.FromSeconds(120),
-                ReceiveBufferSize = 4 * 1024
             };
 
             app.UseWebSockets(webSocketOptions);
@@ -48,10 +44,7 @@ namespace ElasticErrorRates.SignalR.Extensions
                 }
             });
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<SignalRHub>("/api/notify");
-            });
+            app.MapHub<SignalRHub>("/api/notify");
 
             return app;
 

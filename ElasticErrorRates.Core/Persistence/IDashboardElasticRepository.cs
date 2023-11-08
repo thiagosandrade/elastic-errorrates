@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.Criteria;
+﻿using ElasticErrorRates.Core.Criteria;
 using ElasticErrorRates.Core.Criteria.Dashboard;
 using ElasticErrorRates.Core.Models;
 

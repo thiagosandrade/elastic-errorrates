@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.CQRS.Command;
+﻿using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.SignalR;
 using Microsoft.AspNetCore.Mvc;
 

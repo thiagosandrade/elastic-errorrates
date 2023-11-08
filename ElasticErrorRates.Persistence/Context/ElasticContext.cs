@@ -1,5 +1,4 @@
-﻿using System;
-using ElasticErrorRates.Core.Persistence;
+﻿using ElasticErrorRates.Core.Persistence;
 using Microsoft.Extensions.Configuration;
 using Nest;
 
@@ -12,13 +11,15 @@ namespace ElasticErrorRates.Persistence.Context
 
         public ElasticContext(IConfiguration configuration)
         {
-            ConnSettings = new ConnectionSettings(new Uri(configuration.GetConnectionString("ElasticConnection")));
+            ConnSettings = new ConnectionSettings(
+                new Uri(configuration.GetConnectionString("ElasticConnection") 
+                ?? throw new Exception("ElasticConnection not found ")));
             ElasticClient = new ElasticClient(ConnSettings);
         }
 
         public void SetupIndex<T>(string defaultIndex) where T : class
         {
-            if (!ElasticClient.IndexExists(defaultIndex).Exists)
+            if (!ElasticClient.Indices.Exists(defaultIndex).Exists)
             {
                 var settings = new CreateIndexRequest(defaultIndex)
                 {
@@ -34,9 +35,8 @@ namespace ElasticErrorRates.Persistence.Context
                     }
                 };
 
-                ElasticClient.CreateIndex(defaultIndex, i => i
-                    .Mappings(m => m
-                        .Map<T>(ms => ms.AutoMap()))
+                ElasticClient.Indices.Create(defaultIndex, i => i
+                    .Map(m => m.AutoMap())
                     .InitializeUsing(settings)
                 );
             }

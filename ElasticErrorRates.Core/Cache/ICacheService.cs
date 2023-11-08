@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ElasticErrorRates.Core.Cache
+﻿namespace ElasticErrorRates.Core.Cache
 {
     public interface ICacheService
     {

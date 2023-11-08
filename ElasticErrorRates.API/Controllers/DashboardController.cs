@@ -1,9 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.CQRS.Command;
+﻿using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.CQRS.Query;
-using ElasticErrorRates.Core.Criteria;
 using ElasticErrorRates.Core.Criteria.Dashboard;
 using ElasticErrorRates.Core.Enums;
 using ElasticErrorRates.Core.Manager;
@@ -51,8 +47,8 @@ namespace ElasticErrorRates.API.Controllers
         {
             try
             {
-                startdate = startdate ?? DateTime.MinValue;
-                enddate = enddate ?? DateTime.MinValue;
+                startdate ??= DateTime.MinValue;
+                enddate ??= DateTime.MinValue;
 
                 string cacheKey = $"{startdate} - {enddate}";
 

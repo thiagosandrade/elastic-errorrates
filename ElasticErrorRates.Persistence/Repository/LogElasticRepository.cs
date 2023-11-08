@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.Criteria;
+﻿using ElasticErrorRates.Core.Criteria;
 using ElasticErrorRates.Core.Criteria.Dashboard;
 using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
-using ElasticErrorRates.Persistence.Utils;
 using Nest;
 
 namespace ElasticErrorRates.Persistence.Repository
@@ -30,10 +25,10 @@ namespace ElasticErrorRates.Persistence.Repository
 
         private async Task<ISearchResponse<T>> BasicQuery(SearchDescriptor<T> queryCommand)
         {
-            return await Task.Run(() => _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex).AllTypes()));
+            return await Task.Run(() => _elasticContext.ElasticClient.SearchAsync<T>(queryCommand.Index(defaultIndex)));
         }
 
-        private async Task<Func<AggregationContainerDescriptor<T>, IAggregationContainer>> AggregateCommand()
+        private static async Task<Func<AggregationContainerDescriptor<T>, IAggregationContainer>> AggregateCommand()
         {
             return await Task.Run(() =>
              {
@@ -53,7 +48,7 @@ namespace ElasticErrorRates.Persistence.Repository
              });
         }
 
-        private async Task<Func<SortDescriptor<T>, IPromise<IList<ISort>>>> SortCommand()
+        private static async Task<Func<SortDescriptor<T>, IPromise<IList<ISort>>>> SortCommand()
         {
             return await Task.Run(() => { 
                 return new Func<SortDescriptor<T>, IPromise<IList<ISort>>>
@@ -82,7 +77,7 @@ namespace ElasticErrorRates.Persistence.Repository
                 )
                 .Size(0);
 
-            queryCommand.Aggregations(AggregateCommand().Result);
+            queryCommand.Aggregations(LogElasticRepository<T>.AggregateCommand().Result);
 
             var result = await BasicQuery(queryCommand);
 
@@ -124,7 +119,7 @@ namespace ElasticErrorRates.Persistence.Repository
                     )
                 );
 
-            queryCommand.Aggregations(AggregateCommand().Result);
+            queryCommand.Aggregations(LogElasticRepository<T>.AggregateCommand().Result);
 
             var result = await BasicQuery(queryCommand);
 
@@ -167,7 +162,7 @@ namespace ElasticErrorRates.Persistence.Repository
                             })
                     )
                 )
-                .Sort(SortCommand().Result)
+                .Sort(LogElasticRepository<T>.SortCommand().Result)
                 .From(criteria.Page * criteria.PageSize)
                 .Size(criteria.PageSize);
 
@@ -234,7 +229,7 @@ namespace ElasticErrorRates.Persistence.Repository
                         )
                     )
                 )
-                .Sort(SortCommand().Result)
+                .Sort(LogElasticRepository<T>.SortCommand().Result)
                 .From(0)
                 .Size(10)
                 .Highlight(z => z
@@ -249,7 +244,7 @@ namespace ElasticErrorRates.Persistence.Repository
                 );
                 
 
-            queryCommand.Aggregations(AggregateCommand().Result);
+            queryCommand.Aggregations(LogElasticRepository<T>.AggregateCommand().Result);
 
             return await BasicQuery(queryCommand);
         }
@@ -278,10 +273,10 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task Bulk(IEnumerable<T> records)
         {
-            var chunckedRecords = records.Chunk(1000);
-            foreach (var chunckedRecord in chunckedRecords)
+            var chunkedRecords = records.Chunk(1000);
+            foreach (var chunkedRecord in chunkedRecords)
             {
-                await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(chunckedRecord));       
+                await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(chunkedRecord));       
             }
         }
 
@@ -300,25 +295,32 @@ namespace ElasticErrorRates.Persistence.Repository
                     )
                 );
 
-            
-
             return await Task.Run(async () =>
             {
-                var result = await BasicQuery(queryCommand);
-
-                if (!result.IsValid)
+                try
                 {
-                    throw new InvalidOperationException(result.DebugInformation);
+                    var result = await BasicQuery(queryCommand);
+
+                    if (!result.IsValid)
+                    {
+                        throw new InvalidOperationException(result.DebugInformation);
+                    }
+
+                    return result.Total;
+
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
 
-                return result.Hits.Count;
+                    throw;
+                }
             });
-
         }
 
         public async Task UpdateLogsToActualDate()
         {
-            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>();
+            SearchDescriptor<T> queryCommand = new();
             queryCommand.Size(10000);
 
             await Task.Run(async () =>
@@ -347,7 +349,7 @@ namespace ElasticErrorRates.Persistence.Repository
             var resultHits = result.Hits.Count;
             for (int i = 0; i < resultHits; i += 1000)
             {
-                SearchDescriptor<T> queryCommandToRegisters = new SearchDescriptor<T>();
+                SearchDescriptor<T> queryCommandToRegisters = new();
                 queryCommandToRegisters.From(i).Size(1000);
 
                 var response = await BasicQuery(queryCommandToRegisters);

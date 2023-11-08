@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.CQRS.Query;
+﻿using ElasticErrorRates.Core.CQRS.Query;
 
 namespace ElasticErrorRates.CQRS.Query
 {

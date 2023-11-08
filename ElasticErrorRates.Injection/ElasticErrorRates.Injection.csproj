@@ -1,26 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Globals">
-    <SccProjectName>SAK</SccProjectName>
-    <SccProvider>SAK</SccProvider>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccLocalPath>SAK</SccLocalPath>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-  </PropertyGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.13" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ElasticErrorRates.Core\ElasticErrorRates.Core.csproj" />
-    <ProjectReference Include="..\ElasticErrorRates.CQRS\ElasticErrorRates.CQRS.csproj" />
-    <ProjectReference Include="..\ElasticErrorRates.Persistence\ElasticErrorRates.Persistence.csproj" />
-    <ProjectReference Include="..\ElasticErrorRates.SignalR\ElasticErrorRates.SignalR.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ElasticErrorRates.Core\ElasticErrorRates.Core.csproj" />
+		<ProjectReference Include="..\ElasticErrorRates.CQRS\ElasticErrorRates.CQRS.csproj" />
+		<ProjectReference Include="..\ElasticErrorRates.Persistence\ElasticErrorRates.Persistence.csproj" />
+		<ProjectReference Include="..\ElasticErrorRates.SignalR\ElasticErrorRates.SignalR.csproj" />
+	</ItemGroup>
 
 </Project>

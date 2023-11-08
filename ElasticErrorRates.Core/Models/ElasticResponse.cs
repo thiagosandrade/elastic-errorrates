@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ElasticErrorRates.Core.Models
+﻿namespace ElasticErrorRates.Core.Models
 {
     public class ElasticResponse<T> where T : class
     {

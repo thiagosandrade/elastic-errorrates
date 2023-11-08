@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using ElasticErrorRates.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,7 +41,7 @@ namespace ElasticErrorRates.Persistence.Repository
 
         public async Task<List<T>> GetAllAsync()
         {
-            return await Context.Set<T>().Take(3500)
+            return await Context.Set<T>()
                 .ToListAsync();
         }
 

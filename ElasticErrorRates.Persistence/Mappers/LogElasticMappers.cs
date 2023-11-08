@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.Models;
+﻿using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using Nest;
 
@@ -47,7 +43,7 @@ namespace ElasticErrorRates.Persistence.Mappers
         public async Task<ElasticResponse<T>> MapElasticResults(ISearchResponse<T> result, string highlightTerm, bool updateData = false)
         {
             ISearchResponse<Log> convertedResult = (ISearchResponse<Log>) result;
-            Random random = new Random();
+            Random random = new();
             int days = 1;
 
             IEnumerable<T> records = convertedResult.Hits.Select(x =>
@@ -60,7 +56,7 @@ namespace ElasticErrorRates.Persistence.Mappers
                     Source = x.Source.Source,
                     Exception = x.Source.Exception,
                     HttpUrl = x.Source.HttpUrl,
-                    Highlight = x.Highlights.SelectMany(y => y.Value.Highlights.ToList()).ToList().AsReadOnly(),
+                    Highlight = x.Highlight.SelectMany(y => y.Value.ToList()).ToList().AsReadOnly(),
                     DateTimeLogged = updateData ? x.Source.DateTimeLogged.AddDays(days) : x.Source.DateTimeLogged
                 };
 

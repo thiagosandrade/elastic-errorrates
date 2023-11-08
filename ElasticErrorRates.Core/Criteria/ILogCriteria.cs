@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ElasticErrorRates.Core.Criteria
+﻿namespace ElasticErrorRates.Core.Criteria
 {
     public abstract class LogCriteria
     {

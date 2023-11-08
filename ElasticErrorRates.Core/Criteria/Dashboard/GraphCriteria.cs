@@ -1,5 +1,4 @@
-﻿using System;
-using ElasticErrorRates.Core.Enums;
+﻿using ElasticErrorRates.Core.Enums;
 
 namespace ElasticErrorRates.Core.Criteria.Dashboard
 {

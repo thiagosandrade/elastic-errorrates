@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ElasticErrorRates.Core.CQRS.Command
+﻿namespace ElasticErrorRates.Core.CQRS.Command
 {
     public interface ICommand
     {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.Manager;
+﻿using ElasticErrorRates.Core.Manager;
 using ElasticErrorRates.Core.Models;
 using ElasticErrorRates.Core.Persistence;
 using ElasticErrorRates.Persistence.Context;

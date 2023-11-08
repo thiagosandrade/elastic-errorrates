@@ -1,14 +1,11 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 
 namespace ElasticErrorRates.Core.Cache
 {
     public class CacheService : ICacheService
     {
         private readonly IMemoryCache _memoryCache;
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _semaphore = new(1, 1);
 
         public CacheService(IMemoryCache memoryCache)
         {

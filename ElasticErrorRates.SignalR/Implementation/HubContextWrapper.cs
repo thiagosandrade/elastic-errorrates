@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using ElasticErrorRates.Core.SignalR;
+﻿using ElasticErrorRates.Core.SignalR;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ElasticErrorRates.SignalR.Implementation

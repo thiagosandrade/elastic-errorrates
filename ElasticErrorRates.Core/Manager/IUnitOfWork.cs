@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.Persistence;
+﻿using ElasticErrorRates.Core.Persistence;
 
 namespace ElasticErrorRates.Core.Manager
 {

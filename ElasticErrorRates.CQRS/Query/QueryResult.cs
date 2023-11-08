@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ElasticErrorRates.Core.CQRS.Query;
+﻿using ElasticErrorRates.Core.CQRS.Query;
 
 namespace ElasticErrorRates.CQRS.Query
 {

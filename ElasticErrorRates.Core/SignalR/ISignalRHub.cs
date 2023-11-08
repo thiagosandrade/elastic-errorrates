@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ElasticErrorRates.Core.SignalR
+﻿namespace ElasticErrorRates.Core.SignalR
 {
     public interface ISignalRHub
     {

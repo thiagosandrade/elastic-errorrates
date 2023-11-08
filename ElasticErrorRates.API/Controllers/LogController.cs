@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ElasticErrorRates.Core.CQRS.Command;
+﻿using ElasticErrorRates.Core.CQRS.Command;
 using ElasticErrorRates.Core.CQRS.Query;
 using ElasticErrorRates.Core.Criteria.Log;
 using ElasticErrorRates.Core.Manager;
@@ -48,8 +46,8 @@ namespace ElasticErrorRates.API.Controllers
         {
             try
             {
-                startdate = startdate ?? DateTime.MinValue;
-                enddate = enddate ?? DateTime.MinValue;
+                startdate ??= DateTime.MinValue;
+                enddate ??= DateTime.MinValue;
 
                 var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<LogSummary>().SearchLogsAggregate,
                     new SearchAgreggateCriteria()
@@ -71,8 +69,8 @@ namespace ElasticErrorRates.API.Controllers
         {
             try
             {
-                startdate = startdate ?? DateTime.MinValue;
-                enddate = enddate ?? DateTime.MinValue;
+                startdate ??= DateTime.MinValue;
+                enddate ??= DateTime.MinValue;
 
                 var result = await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<Log>().SearchLogsDetailed, 
                     new LogSearchCriteria
@@ -97,8 +95,8 @@ namespace ElasticErrorRates.API.Controllers
         {
             try
             {
-                startdate = startdate ?? DateTime.MinValue;
-                enddate = enddate ?? DateTime.MinValue;
+                startdate ??= DateTime.MinValue;
+                enddate ??= DateTime.MinValue;
 
                 var criteria = new LogSearchCriteria()
                 {
@@ -116,6 +114,9 @@ namespace ElasticErrorRates.API.Controllers
 
                     case "httpUrl":
                         return Ok(await _queryDispatcher.DispatchAsync(_unitOfWork.LogElasticRepository<LogSummary>().Find, criteria));
+                    
+                    default:
+                        break;
                 }
 
                 return BadRequest();
