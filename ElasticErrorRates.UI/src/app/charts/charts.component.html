@@ -1,0 +1,31 @@
+<div class="card flex justify-content-center">
+    <p-accordion [activeIndex]="1">
+        <p-accordionTab header="Import">
+            <p-button label="Import to Elastic" icon="pi pi-check" (onClick)="onImport()" [disabled]="isProcessing"></p-button>
+        </p-accordionTab>
+        <p-accordionTab header="Logs Quantity">
+            <div class="container">
+                <div class="row">
+                    <p-calendar dateFormat="yy/mm/dd" [(ngModel)]="calendarDate" (ngModelChange)="dateChanged($event)"></p-calendar>
+                    <div class="col-4">
+                        <p-chart type="bar" [data]="basicData" [options]="basicOptions"></p-chart>
+                    </div>
+                    <div class="col-4">
+                        <p-chart type="bar" [data]="dailyRateUKData" [options]="basicOptionsDailyRateUKData"></p-chart>
+                    </div>
+                    <div class="col-4">
+                        <p-chart type="bar" [data]="dailyRateROIData" [options]="basicOptionsDailyRateROIData"></p-chart>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <p-chart type="bar" [data]="agreggateData" [options]="basicOptions"></p-chart>
+                    </div>
+                </div>
+            </div>
+        </p-accordionTab>
+        <p-accordionTab header="Horizontal">
+            <p-chart type="bar" [data]="data" [options]="options"></p-chart>
+        </p-accordionTab>
+    </p-accordion>
+</div>

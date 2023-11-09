@@ -1,12 +1,29 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+// fake backend
+import { fakeBackendInterceptor } from '@app/_helpers';
 
-if (environment.production) {
-  enableProdMode();
-}
+import { AppComponent } from '@app/app.component';
+import { jwtInterceptor, errorInterceptor } from '@app/_helpers';
+import { APP_ROUTES } from '@app/app.routes';
+import { DatePipe } from '@angular/common';
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.log(err));
+bootstrapApplication(AppComponent, {
+    providers: [
+        DatePipe,
+        provideAnimations(),
+        provideRouter(APP_ROUTES),
+        provideHttpClient(
+            withInterceptors([
+                jwtInterceptor, 
+                errorInterceptor
+
+                // fake backend
+                // fakeBackendInterceptor
+            ])
+        )
+    ]
+});

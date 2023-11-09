@@ -5,6 +5,7 @@ using ElasticErrorRates.API.Services;
 using ElasticErrorRates.Core.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Nest;
 
 namespace ElasticErrorRates.Core.Services
 {
@@ -12,9 +13,9 @@ namespace ElasticErrorRates.Core.Services
     {
         private readonly IOptions<AppSettings> _appSettings;
 
-        private readonly List<User> _users = new List<User>
+        private readonly List<User> _users = new()
         { 
-            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "TestUserName", Password = "123" } 
+            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "123" } 
         };
 
         public UserService(IOptions<AppSettings> appSettings)
@@ -27,7 +28,7 @@ namespace ElasticErrorRates.Core.Services
                                                    && x.Password.Equals(password));
 
             if (user == null)
-                return null;
+                return default!;
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Value.Secret);
@@ -47,6 +48,46 @@ namespace ElasticErrorRates.Core.Services
             user.Token = tokenHandler.WriteToken(token);
 
             return user;
+        }
+
+        public void Register(User userParam)
+        {
+            _users.Add(userParam);
+        }
+
+        public IEnumerable<User> GetAll()
+        {
+            return _users;
+        }
+
+        public User? GetById(int id)
+        {
+            return _users.Where(x => x.Id.Equals(id)).FirstOrDefault();
+        }
+
+        public void Update(int id, User user)
+        {
+            var userDb = _users.Where(x => x.Id.Equals(id)).FirstOrDefault();
+
+            if(userDb != null) 
+            {
+                userDb.FirstName = user.FirstName;
+                userDb.LastName = user.LastName;
+                userDb.Username = user.Username;
+                userDb.Password = user.Password;
+                
+                _users.Remove(userDb);
+                _users.Add(user);
+            }
+        }
+
+        public void Delete(int id)
+        {
+            var userDb = GetById(id);
+            if(userDb != null)
+            {
+                _users.Remove(userDb);
+            }
         }
     }
 }

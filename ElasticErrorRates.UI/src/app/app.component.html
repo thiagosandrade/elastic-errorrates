@@ -1,58 +1,15 @@
-<div id="container">
-    <div id="header">
-        <header>
-            <!-- Fixed navbar -->
-            <nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-background">
-              &nbsp;
-              <ng-container>
-                <a class="navbar-brand" href="#">Error Rates - Elastic Search | </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-                <div id="navbarCollapse" class="collapse navbar-collapse">
-                  <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                      <a class="nav-link" routerLink="/logs/dashboard" routerLinkActive="active"><i class="fas fa-chart-line"></i> DASHBOARD</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" routerLink="/logs" routerLinkActive="active"><i class="fas fa-list-alt"></i> LOGS</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link"  href="http://localhost:30540/hangfire/"><i class="fas fa-list-alt"></i> JOBS</a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="mat-app-background basic-container">
-                    <datepicker-material></datepicker-material>
-                </div>
-                <div class="mat-app-background basic-container">
-                  <button mat-button [matMenuTriggerFor]="menu">Account</button>
-                  <mat-menu #menu="matMenu">
-                    <button mat-menu-item class="nav-link" routerLink="/login" routerLinkActive="active" *ngIf="!isLoggedIn">Login</button>
-                    <button mat-menu-item (click)="onLogout()" *ngIf="isLoggedIn">Logout</button>
-                  </mat-menu>
-              </div>
-              </ng-container>
-            </nav>
-        </header>
+<!-- nav -->
+<nav class="navbar navbar-expand navbar-dark bg-dark px-3" *ngIf="user">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        <a class="nav-item nav-link" routerLink="/users" routerLinkActive="active">Users</a>
+        <a class="nav-item nav-link" routerLink="/charts" routerLinkActive="active">Charts</a>
+        <button class="btn btn-link nav-item nav-link" (click)="logout()">Logout</button>
     </div>
-    <div id="body">
-        <section id="main" class="container-fluid">
-            <router-outlet></router-outlet>
-          </section>
-    </div>
-    <div id="footer">
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                  <div class="col-sm">&copy;</div>
-                </div>
-            </div>
-          </footer>
-    </div>
- </div>
+</nav>
 
-<message-notifier></message-notifier>
-
-
-
+<!-- main app container -->
+<div class="container">
+    <alert></alert>
+    <router-outlet></router-outlet>
+</div>

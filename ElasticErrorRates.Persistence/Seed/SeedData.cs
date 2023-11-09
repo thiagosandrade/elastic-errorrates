@@ -51,7 +51,7 @@ namespace ElasticErrorRates.Persistence.Seed
                 .RuleFor(rate => rate.OrderCount, faker => faker.Random.Int(0, 1000))
                 .RuleFor(rate => rate.OrderValue, faker => faker.Random.Double(0, 1000));
 
-            return logs.Generate(1000000);
+            return logs.Generate(10000);
         }
 
         private static IEnumerable<Log> GenerateLogSeed()
@@ -65,7 +65,7 @@ namespace ElasticErrorRates.Persistence.Seed
                 .RuleFor(rate => rate.DateTimeLogged, faker => faker.Date.Past())
                 .RuleFor(rate => rate.CountryId, faker => faker.PickRandom<Country>());
 
-            return logs.Generate(1000000);
+            return logs.Generate(10000);
         }
     }
 }

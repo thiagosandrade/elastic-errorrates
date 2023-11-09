@@ -280,6 +280,33 @@ namespace ElasticErrorRates.Persistence.Repository
             }
         }
 
+        public async Task<long> GetTotalLogsQuantity(LogQuantityCriteria criteria)
+        {
+            return await Task.Run(async () =>
+            {
+                try
+                {
+                    var countRequest = new CountRequest(Indices.Index(defaultIndex));
+
+                    var result = await Task.Run(async () => await _elasticContext.ElasticClient.CountAsync(countRequest));
+
+                    if (!result.IsValid)
+                    {
+                        throw new InvalidOperationException(result.DebugInformation);
+                    }
+
+                    return result.Count;
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+
+                    throw;
+                }
+            });
+        }
+
         public async Task<long> GetLogsQuantity(LogQuantityCriteria criteria)
         {
             SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()

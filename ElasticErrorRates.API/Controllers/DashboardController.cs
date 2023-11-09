@@ -69,7 +69,7 @@ namespace ElasticErrorRates.API.Controllers
             }
         }
 
-        [HttpGet("search/{countryId}")]
+        [HttpGet("search")]
         public async Task<IActionResult> Search(int countryId, DateTime? startdate = null, DateTime? enddate = null)
         {
             try

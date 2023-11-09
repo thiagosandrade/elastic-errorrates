@@ -1,43 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { SignalRService } from './_shared/signalR/signalR.service';
-import { SignalRMessage } from './_shared/signalR/signalR.message';
-import { ApiUserService } from './_shared/api/user/api-user.service';
-import { User } from './_shared/api/user/model/user';
-import { MessageNotifierService } from './_shared/messageNotifier/messageNotifier.service';
+import { Component } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
+import { AccountService } from './_services';
+import { User } from './_models';
+import { AlertComponent } from './_components/alert.component';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root', templateUrl: 'app.component.html',
+    standalone: true,
+    imports: [NgIf, RouterOutlet, RouterLink, RouterLinkActive, AlertComponent]
 })
+export class AppComponent {
+    user?: User | null;
 
-export class AppComponent implements OnInit {
+    constructor(private accountService: AccountService) {
+        this.accountService.user.subscribe(x => this.user = x);
+    }
 
-  title = 'app';
-  public isLoggedIn: boolean = false;
-
-  constructor(private signalRService: SignalRService,
-    private apiUserService: ApiUserService,
-    private messageNotifierService: MessageNotifierService) { }
-
-  ngOnInit(): void {
-    this.signalRService.notificationReceived.subscribe((signalRMessage: SignalRMessage[]) => {
-      signalRMessage.forEach(message => {
-        this.messageNotifierService.messageNotify(message.type, message.payload);
-      });
-    });
-
-    this.apiUserService.getUser().subscribe((user: User) => {
-      if (user != null && user.token != "") {
-        this.isLoggedIn = true;
-      }
-    });
-  }
-
-  onLogout(): void {
-    this.apiUserService.logout();
-    this.messageNotifierService.messageNotify('success', 'User logged out!');
-    this.isLoggedIn = false;
-  }
-
+    logout() {
+        this.accountService.logout();
+    }
 }
