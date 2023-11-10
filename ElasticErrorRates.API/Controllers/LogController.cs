@@ -42,7 +42,7 @@ namespace ElasticErrorRates.API.Controllers
         }
 
         [HttpGet("searchlogsaggregate")]
-        public async Task<IActionResult> SearchLogsAggregate(DateTime? startdate = null, DateTime? enddate = null)
+        public async Task<ActionResult<ElasticResponse<LogSummary>>> SearchLogsAggregate(DateTime? startdate = null, DateTime? enddate = null)
         {
             try
             {

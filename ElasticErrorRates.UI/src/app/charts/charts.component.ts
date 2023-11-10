@@ -7,16 +7,19 @@ import { first } from 'rxjs';
 import { DashboardService } from '@app/_services/dashboard.service';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { LogService } from '@app/_services/log.service';
 
 @Component({
     selector: 'app-charts',
     templateUrl: './charts.component.html',
     styleUrls: ['./charts.component.css'],
-    imports: [ButtonModule, ChartModule, AccordionModule, CalendarModule, FormsModule],
+    imports: [ButtonModule, ChartModule, AccordionModule, CalendarModule, FormsModule, CommonModule],
     standalone: true
 })
 export class ChartsComponent implements OnInit {
     calendarDate: Date;
+
     data: any;
     options: any;
     
@@ -35,6 +38,8 @@ export class ChartsComponent implements OnInit {
     agreggateData: any;
 
     isProcessing: boolean = false;
+    gridValues: any;
+    totalRecords: Number = 0;
 
     constructor(private dashboardService: DashboardService, private alertService: AlertService) {
         this.calendarDate = new Date();

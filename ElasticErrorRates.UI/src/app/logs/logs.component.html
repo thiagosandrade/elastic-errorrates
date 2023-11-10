@@ -1,0 +1,41 @@
+<div class="card flex justify-content-center">
+    <p-accordion [activeIndex]="1">
+        <p-accordionTab header="Import">
+            <p-button label="Import to Elastic" icon="pi pi-check" (onClick)="onImport()" [disabled]="isProcessing"></p-button>
+        </p-accordionTab>
+        <p-accordionTab header="Logs">
+            <div class="row">
+                <div class="col-4">
+                    <p-calendar dateFormat="yy/mm/dd" [(ngModel)]="calendarDateDetails" (ngModelChange)="dateChangedDetails($event)"></p-calendar>
+                </div>
+                <div class="col-8 text-centralized">
+                    <span>Total Records - {{ totalRecords }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-striped tables">
+                        <thead>
+                            <tr>
+                                <td>Occurrences</td>
+                                <td>Http Url</td>
+                                <td>First Occurrence</td>
+                                <td>Last Occurrence</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let log of gridValues">
+                                <td>{{ log.httpUrlCount }}</td>
+                                <td class="ellipsis">
+                                    <a [routerLink]="['/logs/detailed']" [queryParams]="{ httpUrl : log.httpUrl, startDate : log.firstOccurrence, endDate : log.lastOccurrence  }">{{ log.httpUrl }}</a>
+                                </td>
+                                <td>{{ log.firstOccurrence }}</td>
+                                <td>{{ log.lastOccurrence }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </p-accordionTab>
+    </p-accordion>
+</div>

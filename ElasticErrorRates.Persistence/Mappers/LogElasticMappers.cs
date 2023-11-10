@@ -17,9 +17,9 @@ namespace ElasticErrorRates.Persistence.Mappers
                             HttpUrlCount = x.DocCount.Value,
                             HttpUrl = x.Key,
                             FirstOccurrence =
-                                $"{Convert.ToDateTime(x.Min("first_occurrence").ValueAsString):yyyy/MM/dd HH:mm:ss}",
+                                $"{Convert.ToDateTime(x.Min("first_occurrence").ValueAsString).ToUniversalTime():yyyy/MM/dd HH:mm:ss}",
                             LastOccurrence =
-                                $"{Convert.ToDateTime(x.Max("last_occurrence").ValueAsString):yyyy/MM/dd HH:mm:ss}"
+                                $"{Convert.ToDateTime(x.Max("last_occurrence").ValueAsString).ToUniversalTime():yyyy/MM/dd HH:mm:ss}"
                         };
 
                         return record;
@@ -72,8 +72,7 @@ namespace ElasticErrorRates.Persistence.Mappers
 
                     if (!string.IsNullOrEmpty(highlight))
                     {
-                        log.Exception = log.Exception.Replace(highlightTerm, highlight.Substring(highlight.ToLower().IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) - 3,
-                            highlight.IndexOf(highlightTerm.ToLower(), StringComparison.Ordinal) + highlightTerm.Length + 8));
+                        log.Exception = log.Exception.Replace(highlightTerm, highlight);
                     }
                 }
             }

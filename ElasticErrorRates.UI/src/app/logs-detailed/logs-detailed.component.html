@@ -1,0 +1,50 @@
+<div class="card flex justify-content-center">
+    <p-accordion [activeIndex]="0">
+        <p-accordionTab header="Log Details">
+            <div class="row">
+                <div class="col-8 text-centralized">
+                    <span>Total Records - {{ totalRecords }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 text-centralized text-start">
+                    <span>Url: {{ httpUrl}}</span>
+                </div>
+                <div class="col-6 text-centralized text-end">
+                    <a [routerLink]="['/logs']" [queryParams]="{ urlBackDate : urlBackdate  }">Back</a>
+                </div>
+            </div>
+            <div class="row">
+                <hr />
+                <input type="text" (input)="onInputText($event)" class="inputFilter" title="input">
+                <hr />
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-striped tables">
+                        <thead>
+                            <tr>
+                                <td class="ellipsis">Id</td>
+                                <td class="ellipsis">Level</td>
+                                <td class="ellipsis">Message</td>
+                                <td class="midColumn">Source</td>
+                                <td class="midColumn">Exception</td>
+                                <td class="dateColumn">Date Logged</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let log of gridValues">
+                                <td class="ellipsis">{{ log.id }}</td>
+                                <td class="ellipsis">{{ log.level }}</td>
+                                <td class="ellipsis">{{ log.message }}</td>
+                                <td class="midColumn">{{ log.source }}</td>
+                                <td class="ellipsis" [innerHTML]="log.exception | keepHtml"></td>
+                                <td class="dateColumn">{{ log.dateTimeLoggedAsString }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </p-accordionTab>
+    </p-accordion>
+</div>

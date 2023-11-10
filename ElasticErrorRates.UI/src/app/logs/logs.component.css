@@ -1,0 +1,12 @@
+.text-centralized
+{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.ellipsis 
+{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

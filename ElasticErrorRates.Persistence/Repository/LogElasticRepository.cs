@@ -198,7 +198,7 @@ namespace ElasticErrorRates.Persistence.Repository
                 throw new InvalidOperationException(result.DebugInformation);
             }
 
-            return null;
+            return default!;
         }
 
         private async Task<ISearchResponse<T>> FindLog(LogSearchCriteria criteria)
@@ -212,19 +212,38 @@ namespace ElasticErrorRates.Persistence.Repository
                                 QueryContainer query = null;
 
                                 query &= fq.Term(t => t
-                                    .Field("httpUrl")
-                                    .Value(criteria.Term)
+                                    .Field(criteria.ColumnField)
+                                    .Value(criteria.Term.ToLower())
                                 );
 
                                 return query;
                             }
                         )
                         .Filter(
-                            ft => new DateRangeQuery
+                            fq =>
                             {
-                                Field = "dateTimeLogged",
-                                GreaterThanOrEqualTo = criteria.StartDateTimeLogged,
-                                LessThanOrEqualTo = criteria.EndDateTimeLogged
+                                QueryContainer query = null;
+
+                                query &= fq.Term(
+                                    t => t.Field($"httpUrl.keyword").Value(criteria.HttpUrl)
+                                );
+
+                                if (criteria.StartDateTimeLogged != DateTime.MinValue && criteria.EndDateTimeLogged != DateTime.MinValue)
+                                {
+                                    query &= fq.DateRange(
+                                        descriptor => descriptor
+                                            .Name("date_filter_start")
+                                            .Field("dateTimeLogged")
+                                            .GreaterThanOrEquals(criteria.StartDateTimeLogged));
+
+                                    query &= fq.DateRange(
+                                        descriptor => descriptor
+                                            .Name("date_filter_end")
+                                            .Field("dateTimeLogged")
+                                            .LessThanOrEquals(criteria.EndDateTimeLogged));
+                                }
+
+                                return query;
                             }
                         )
                     )
@@ -235,8 +254,8 @@ namespace ElasticErrorRates.Persistence.Repository
                 .Highlight(z => z
                     .Fields(y => y
                         .Field(criteria.ColumnField)
-                        .PreTags("<u>")
-                        .PostTags("</u>")
+                        .PreTags("<span class=\"highlight\">")
+                        .PostTags("</span>")
                     )
                 .NumberOfFragments(10)
                 .FragmentSize(1)
@@ -244,7 +263,7 @@ namespace ElasticErrorRates.Persistence.Repository
                 );
                 
 
-            queryCommand.Aggregations(LogElasticRepository<T>.AggregateCommand().Result);
+            //queryCommand.Aggregations(LogElasticRepository<T>.AggregateCommand().Result);
 
             return await BasicQuery(queryCommand);
         }
@@ -278,33 +297,6 @@ namespace ElasticErrorRates.Persistence.Repository
             {
                 await _elasticContext.ElasticClient.BulkAsync(x => x.Index(defaultIndex).IndexMany(chunkedRecord));       
             }
-        }
-
-        public async Task<long> GetTotalLogsQuantity(LogQuantityCriteria criteria)
-        {
-            return await Task.Run(async () =>
-            {
-                try
-                {
-                    var countRequest = new CountRequest(Indices.Index(defaultIndex));
-
-                    var result = await Task.Run(async () => await _elasticContext.ElasticClient.CountAsync(countRequest));
-
-                    if (!result.IsValid)
-                    {
-                        throw new InvalidOperationException(result.DebugInformation);
-                    }
-
-                    return result.Count;
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-
-                    throw;
-                }
-            });
         }
 
         public async Task<long> GetLogsQuantity(LogQuantityCriteria criteria)
