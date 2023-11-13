@@ -24,22 +24,22 @@
                     <table class="table table-striped tables">
                         <thead>
                             <tr>
-                                <td class="ellipsis">Id</td>
-                                <td class="ellipsis">Level</td>
-                                <td class="ellipsis">Message</td>
-                                <td class="midColumn">Source</td>
-                                <td class="midColumn">Exception</td>
+                                <td>Id</td>
+                                <td>Level</td>
+                                <td>Message</td>
+                                <td>Source</td>
+                                <td>Exception</td>
                                 <td class="dateColumn">Date Logged</td>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let log of gridValues">
-                                <td class="ellipsis">{{ log.id }}</td>
-                                <td class="ellipsis">{{ log.level }}</td>
-                                <td class="ellipsis">{{ log.message }}</td>
-                                <td class="midColumn">{{ log.source }}</td>
-                                <td class="ellipsis" [innerHTML]="log.exception | keepHtml"></td>
-                                <td class="dateColumn">{{ log.dateTimeLoggedAsString }}</td>
+                                <td>{{ log.id }}</td>
+                                <td>{{ log.level }}</td>
+                                <td>{{ log.message }}</td>
+                                <td>{{ log.source }}</td>
+                                <td [innerHTML]="log.exception | keepHtml"></td>
+                                <td>{{ log.dateTimeLoggedAsString }}</td>
                             </tr>
                         </tbody>
                     </table>

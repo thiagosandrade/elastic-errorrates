@@ -142,7 +142,7 @@ namespace ElasticErrorRates.API.Controllers
                 string cacheKey = $"{startdate} - {enddate} - {countryId} - rank";
 
                 var result = await _queryDispatcher.DispatchAsync(
-                    _unitOfWork.LogElasticRepository<LogSummary>().SearchLogsAggregateByCountryId, 
+                    _unitOfWork.DashboardElasticRepository<LogSummary>().SearchLogsAggregateByCountryId, 
                     new GraphCriteria()
                     {
                         CountryId = (Country)countryId,

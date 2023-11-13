@@ -4,9 +4,9 @@
     margin-bottom: auto;
 }
 
-.ellipsis 
+.inputFilter
 {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    height: 40px; 
+    width: 100%;
+    font-size: 20px;
 }

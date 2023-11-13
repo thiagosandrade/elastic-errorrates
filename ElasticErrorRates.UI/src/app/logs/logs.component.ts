@@ -24,6 +24,9 @@ export class LogsComponent implements OnInit {
     gridValues: any;
     totalRecords: Number = 0;
 
+    startDate : Date | undefined;
+    endDate : Date | undefined;
+
     constructor(private activatedRoute: ActivatedRoute, private logService: LogService, private alertService: AlertService) {
         this.calendarDateDetails = new Date();
      }
@@ -55,9 +58,9 @@ export class LogsComponent implements OnInit {
     }
 
     dateChangedDetails(term : Date){
-        var startDate = new Date(term.getFullYear(), term.getMonth(), term.getDate())
-        var endDate = new Date(term.getFullYear(), term.getMonth(), term.getDate(), 23, 59, 59)
-        this.fillGrid(startDate, endDate)
+        this.startDate = new Date(term.getFullYear(), term.getMonth(), term.getDate())
+        this.endDate = new Date(term.getFullYear(), term.getMonth(), term.getDate(), 23, 59, 59)
+        this.fillGrid(this.startDate, this.endDate)
     }
 
     fillGrid(startDate : Date, endDate : Date) {
@@ -66,5 +69,32 @@ export class LogsComponent implements OnInit {
             this.totalRecords = response.totalRecords;
         })
     }
+
+    onInputText(event : Event){
+        var term = (event.target as HTMLInputElement).value ;
+        
+        if(term.length > 3){
+            this.searchByText(term);
+          }
+          else{
+            if(this.startDate !== undefined && this.endDate !== undefined){
+                this.fillGrid(this.startDate, this.endDate);
+            }
+          }
+    }
+
+    searchByText(term : string){
+
+        this.logService.findLogs(this.startDate, this.endDate, "httpUrl", "", term).subscribe((logs : any) => {
+            this.gridValues = logs.records;
+            this.totalRecords = logs.totalRecords
+          },
+          (err : any) => {
+            console.log(err);
+          },
+          () => {
+            this.isProcessing = false;
+          });  
+      }
 }
 

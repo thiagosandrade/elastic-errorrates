@@ -11,6 +11,6 @@ namespace ElasticErrorRates.Core.Persistence
         Task Bulk(IEnumerable<T> records);
         Task Delete(LogCriteria criteria);
         Task UpdateLogsToActualDate();
-        
+        Task<ElasticResponse<T>> SearchLogsAggregateByCountryId(GraphCriteria searchCriteria);
     }
 }

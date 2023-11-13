@@ -7,11 +7,9 @@ namespace ElasticErrorRates.Core.Persistence
 {
     public interface ILogElasticRepository<T> where T : class
     {
-        Task<ElasticResponse<T>> SearchLogsAggregateByCountryId(GraphCriteria criteria);
         Task<ElasticResponse<T>> SearchLogsAggregate(SearchAgreggateCriteria criteria);
         Task<ElasticResponse<T>> SearchLogsDetailed(LogSearchCriteria criteria);
         Task<ElasticResponse<T>> Find(LogSearchCriteria criteria);
-        Task Create(T product);
         Task Delete(LogCriteria criteria);
         Task Bulk(IEnumerable<T> records);
         Task<long> GetLogsQuantity(LogQuantityCriteria criteria);

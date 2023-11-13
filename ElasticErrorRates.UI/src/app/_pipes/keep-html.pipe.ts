@@ -14,6 +14,6 @@ export class KeepHtmlPipe implements PipeTransform {
 
   transform(content : any) {
     console.log(content)
-    return this.sanitizer.sanitize(SecurityContext.HTML, content);
+    return this.sanitizer.bypassSecurityTrustHtml(content);
   }
 }

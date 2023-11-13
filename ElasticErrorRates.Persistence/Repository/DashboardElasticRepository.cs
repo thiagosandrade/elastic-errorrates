@@ -18,8 +18,6 @@ namespace ElasticErrorRates.Persistence.Repository
             _dashboardElasticMappers = dashboardElasticMappers;
 
             _elasticContext.SetupIndex<DailyRate>(defaultIndex);
-
-            //_elasticContext.ElasticClient.ClearCache(defaultIndex);
         }
 
         private async Task<ISearchResponse<T>> BasicQuery(SearchDescriptor<T> queryCommand)
@@ -73,6 +71,26 @@ namespace ElasticErrorRates.Persistence.Repository
 
             return response;
 
+        }
+
+        private static async Task<Func<AggregationContainerDescriptor<T>, IAggregationContainer>> AggregateCommand()
+        {
+            return await Task.Run(() =>
+            {
+                return new Func<AggregationContainerDescriptor<T>, IAggregationContainer>
+                    (ag => ag
+                        .Terms("group_by_httpUrl",
+                            t => t.Field("httpUrl.keyword")
+                                .Aggregations(aa => aa
+                                    .Min("first_occurrence",
+                                        m => m.Field("dateTimeLogged"))
+                                    .Max("last_occurrence",
+                                        mm => mm.Field("dateTimeLogged"))
+                                )
+                                .Size(20)
+                        )
+                    );
+            });
         }
 
         public async Task<ElasticResponse<T>> SearchAggregate(GraphCriteria criteria)
@@ -146,9 +164,45 @@ namespace ElasticErrorRates.Persistence.Repository
             return response;
         }
 
-        public async Task Create(T log)
+        public async Task<ElasticResponse<T>> SearchLogsAggregateByCountryId(GraphCriteria searchCriteria)
         {
-            await _elasticContext.ElasticClient.IndexAsync<T>(log, x => x.Index(defaultIndex));
+            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
+                .Query(q => q
+                    .Bool(bl => bl
+                        .Must(
+                            fq =>
+                            {
+                                QueryContainer query = null;
+
+                                query &= fq.Term(t => t
+                                    .Field("countryId").Value(searchCriteria.CountryId)
+                                );
+
+                                return query;
+                            }
+                        )
+                        .Filter(
+                            ft => new DateRangeQuery
+                            {
+                                Field = "dateTimeLogged",
+                                GreaterThanOrEqualTo = searchCriteria.StartDateTimeLogged,
+                                LessThanOrEqualTo = searchCriteria.EndDateTimeLogged
+                            })
+                    )
+                );
+
+            queryCommand.Aggregations(DashboardElasticRepository<T>.AggregateCommand().Result);
+
+            var result = await BasicQuery(queryCommand);
+
+            var response = await _dashboardElasticMappers.MapElasticResults(result);
+
+            if (!result.IsValid)
+            {
+                throw new InvalidOperationException(result.DebugInformation);
+            }
+
+            return response;
         }
 
         public async Task Delete(LogCriteria criteria)
@@ -192,11 +246,6 @@ namespace ElasticErrorRates.Persistence.Repository
                 }
 
                 IEnumerable<T> listOfResultsToBeModified = await GetListWithUpdatedData(result);
-
-                //await Delete(new DashboardSearchCriteria
-                //{
-                //    EndDateTimeLogged = DateTime.Now.AddDays(0)
-                //});
 
                 await Bulk(listOfResultsToBeModified);
 

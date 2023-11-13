@@ -19,8 +19,6 @@ namespace ElasticErrorRates.Persistence.Repository
             _logElasticMappers = logElasticMappers;
 
             _elasticContext.SetupIndex<Log>(defaultIndex);
-
-            //_elasticContext.ElasticClient.ClearCache(defaultIndex);
         }
 
         private async Task<ISearchResponse<T>> BasicQuery(SearchDescriptor<T> queryCommand)
@@ -90,47 +88,6 @@ namespace ElasticErrorRates.Persistence.Repository
 
             return response;
 
-        }
-
-        public async Task<ElasticResponse<T>> SearchLogsAggregateByCountryId(GraphCriteria searchCriteria)
-        {
-            SearchDescriptor<T> queryCommand = new SearchDescriptor<T>()
-                .Query(q => q
-                    .Bool(bl => bl
-                        .Must(
-                            fq =>
-                            {
-                                QueryContainer query = null;
-
-                                query &= fq.Term(t => t
-                                    .Field("countryId").Value(searchCriteria.CountryId)
-                                );
-
-                                return query;
-                            }
-                        )
-                        .Filter(
-                            ft => new DateRangeQuery
-                            {
-                                Field = "dateTimeLogged",
-                                GreaterThanOrEqualTo = searchCriteria.StartDateTimeLogged,
-                                LessThanOrEqualTo = searchCriteria.EndDateTimeLogged
-                            })
-                    )
-                );
-
-            queryCommand.Aggregations(LogElasticRepository<T>.AggregateCommand().Result);
-
-            var result = await BasicQuery(queryCommand);
-
-            var response = await _logElasticMappers.MapElasticResults(result);
-
-            if (!result.IsValid)
-            {
-                throw new InvalidOperationException(result.DebugInformation);
-            }
-
-            return response;
         }
 
         public async Task<ElasticResponse<T>> SearchLogsDetailed(LogSearchCriteria criteria)
@@ -211,10 +168,20 @@ namespace ElasticErrorRates.Persistence.Repository
                             {
                                 QueryContainer query = null;
 
-                                query &= fq.Term(t => t
-                                    .Field(criteria.ColumnField)
-                                    .Value(criteria.Term.ToLower())
-                                );
+                                if (criteria.ColumnField.Equals("httpUrl"))
+                                {
+                                    query &= fq.Term(t => t
+                                        .Field($"httpUrl.keyword")
+                                        .Value(criteria.Term)
+                                    );
+                                }
+                                else
+                                {
+                                    query &= fq.Term(t => t
+                                        .Field($"{criteria.ColumnField}")
+                                        .Value(criteria.Term.ToLower())
+                                    );
+                                }
 
                                 return query;
                             }
@@ -224,9 +191,12 @@ namespace ElasticErrorRates.Persistence.Repository
                             {
                                 QueryContainer query = null;
 
-                                query &= fq.Term(
-                                    t => t.Field($"httpUrl.keyword").Value(criteria.HttpUrl)
-                                );
+                                if (!criteria.ColumnField.Equals("httpUrl"))
+                                {
+                                    query &= fq.Term(
+                                        t => t.Field($"httpUrl.keyword").Value(criteria.HttpUrl)
+                                    );
+                                }
 
                                 if (criteria.StartDateTimeLogged != DateTime.MinValue && criteria.EndDateTimeLogged != DateTime.MinValue)
                                 {
@@ -261,16 +231,11 @@ namespace ElasticErrorRates.Persistence.Repository
                 .FragmentSize(1)
                 .Order(HighlighterOrder.Score)
                 );
-                
 
-            //queryCommand.Aggregations(LogElasticRepository<T>.AggregateCommand().Result);
+
+            queryCommand.Aggregations(LogElasticRepository<T>.AggregateCommand().Result);
 
             return await BasicQuery(queryCommand);
-        }
-
-        public async Task Create(T log)
-        {
-            await _elasticContext.ElasticClient.IndexAsync<T>(log, x => x.Index(defaultIndex));
         }
 
         public async Task Delete(LogCriteria criteria)
