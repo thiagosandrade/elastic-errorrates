@@ -65,7 +65,7 @@ namespace ElasticErrorRates.API.Controllers
         }
 
         [HttpGet("searchlogsdetailed/{page}/{pageSize}")]
-        public async Task<IActionResult> SearchLogsDetailed(int page, int pageSize, string httpUrl, string term, DateTime? startdate = null, DateTime? enddate = null)
+        public async Task<IActionResult> SearchLogsDetailed(int page, int pageSize, string httpUrl, DateTime? startdate = null, DateTime? enddate = null)
         {
             try
             {

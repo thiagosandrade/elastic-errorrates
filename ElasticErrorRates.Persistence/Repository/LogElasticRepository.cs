@@ -170,16 +170,18 @@ namespace ElasticErrorRates.Persistence.Repository
 
                                 if (criteria.ColumnField.Equals("httpUrl"))
                                 {
-                                    query &= fq.Term(t => t
+                                    query &= fq.Match(t => t
                                         .Field($"httpUrl.keyword")
-                                        .Value(criteria.Term)
+                                        .Query(criteria.Term)
+                                        .Fuzziness(Fuzziness.Auto)
                                     );
                                 }
                                 else
                                 {
-                                    query &= fq.Term(t => t
+                                    query &= fq.Match(t => t
                                         .Field($"{criteria.ColumnField}")
-                                        .Value(criteria.Term.ToLower())
+                                        .Query(criteria.Term.ToLower())
+                                        .Fuzziness(Fuzziness.Auto)
                                     );
                                 }
 
